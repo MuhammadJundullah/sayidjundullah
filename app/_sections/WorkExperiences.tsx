@@ -1,26 +1,69 @@
-// import dynamic from 'next/dynamic'
+import { useEffect, useState } from "react";
 
+interface Jobdesk {
+  description: string;
+}
+
+interface WorkExperience {
+  experience_id: string;
+  company_name: string;
+  position: string;
+  duration: string;
+  type: string;
+  jobdesks: Jobdesk[];
+}
 
 const WorkExperiences = () => {
 
-  // const TiltedCard = dynamic(
-  // () => import("@/app/_components/TiltedCard/TiltedCard"),
-  //     {
-  //         ssr: false,
-  //     }
-  // );
+  const [experiences, setExperiences] = useState<WorkExperience[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch("/api/work-experiences");
+      const data = await res.json();
+      setExperiences(data);
+    };
+
+    fetchData();
+  }, []);
 
   return (
-    <section id="About">
-      <div className="h-screen flex flex-col max-w-5xl mx-auto mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0]">
-        <h1 className="text-4xl font-thin">My Work Experiences</h1>
-        
+    <section id="WorkExperiences">
+      <div className="flex flex-col max-w-5xl mx-auto mb-20 text-[#0f172a] dark:text-[#e2e8f0]">
+        <h1 className="text-4xl text-center font-bold">My Work Experiences</h1>
+        <div className="my-20">
+          {experiences.map((exp, i) => (
+            <div key={i}>
+              <ol className=" text-3xl relative space-y-8 before:absolute before:-ml-px before:h-full before:w-0.5 before:rounded-full before:bg-gray-200">
+                <li className="relative -ms-1.5 flex items-start gap-4">
+                  <span className="size-3 shrink-0 rounded-full bg-white"></span>
+
+                  <div className="-mt-2">
+                    <h3 className=" font-bold mb-3">
+                      {exp.position} at {exp.company_name}
+                    </h3>
+
+                    <time className="font-medium mt-3">
+                      {exp.duration} | {exp.type}
+                    </time>
+
+                    <ul className="list-disc list-inside text-start font-thin mb-16 mt-5">
+                      {exp.jobdesks.map((job, idx) => (
+                        <li key={idx}>
+                          <p>{job.description}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </li>
+              </ol>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
-}
+};
 
-export default WorkExperiences
+export default WorkExperiences;
 
-
-  

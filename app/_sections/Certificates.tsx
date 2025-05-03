@@ -29,7 +29,14 @@ const Certificates = () => {
   return (
     <section id="Projects">
       <div className="flex flex-col max-w-5xl mx-auto mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0]">
-        <h1 className="text-4xl font-bold">My Certifications</h1>
+        <span className="flex items-center">
+          <span className="shrink-0 pe-4 text-gray-900 dark:text-white">
+            {" "}
+            <h1 className="text-4xl font-bold">My Certifications</h1>
+          </span>
+
+          <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
+        </span>
         <div className="my-20">
           <div className="flex flex-wrap justify-center gap-8">
             {certificates.map((certificate, i) => (
@@ -45,8 +52,9 @@ const Certificates = () => {
                   rotateAmplitude={12}
                   scaleOnHover={1.2}
                   showMobileWarning={false}
+                  displayOverlayContent={true}
                   overlayContent={
-                    <p className="tilted-card-demo-text text-black">
+                    <p className="tilted-card-demo-text text-black font-medium">
                       {certificate.desc}
                     </p>
                   }

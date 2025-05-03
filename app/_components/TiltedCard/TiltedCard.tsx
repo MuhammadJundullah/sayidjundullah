@@ -1,4 +1,3 @@
-import type { SpringOptions } from "framer-motion";
 import { useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
@@ -15,10 +14,9 @@ interface TiltedCardProps {
   showMobileWarning?: boolean;
   showTooltip?: boolean;
   overlayContent?: React.ReactNode;
-  displayOverlayContent?: boolean;
 }
 
-const springValues: SpringOptions = {
+const springValues = {
   damping: 30,
   stiffness: 100,
   mass: 2,
@@ -37,7 +35,6 @@ export default function TiltedCard({
   showMobileWarning = true,
   showTooltip = true,
   overlayContent = null,
-  displayOverlayContent = false,
 }: TiltedCardProps) {
   const ref = useRef<HTMLElement>(null);
   const x = useMotionValue(0);
@@ -53,6 +50,7 @@ export default function TiltedCard({
   });
 
   const [lastY, setLastY] = useState(0);
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
 
   function handleMouse(e: React.MouseEvent<HTMLElement>) {
     if (!ref.current) return;
@@ -78,6 +76,7 @@ export default function TiltedCard({
   function handleMouseEnter() {
     scale.set(scaleOnHover);
     opacity.set(1);
+    setIsOverlayVisible(true);
   }
 
   function handleMouseLeave() {
@@ -86,6 +85,7 @@ export default function TiltedCard({
     rotateX.set(0);
     rotateY.set(0);
     rotateFigcaption.set(0);
+    setIsOverlayVisible(false);
   }
 
   return (
@@ -106,7 +106,7 @@ export default function TiltedCard({
       )}
 
       <motion.div
-        className="relative [transform-style:preserve-3d]"
+        className="relative [transform-style:preserve-3d] group"
         style={{
           width: imageWidth,
           height: imageHeight,
@@ -117,15 +117,15 @@ export default function TiltedCard({
         <motion.img
           src={imageSrc}
           alt={altText}
-          className="absolute top-0 left-0 object-cover rounded-[15px] will-change-transform [transform:translateZ(0)]"
+          className="absolute border-2 top-0 left-0 object-cover rounded-[15px] will-change-transform [transform:translateZ(0)] group-hover:blur-xs"
           style={{
             width: imageWidth,
             height: imageHeight,
           }}
         />
 
-        {displayOverlayContent && overlayContent && (
-          <motion.div className="absolute top-10 left-10 z-[2] will-change-transform [transform:translateZ(30px)]">
+        {isOverlayVisible && overlayContent && (
+          <motion.div className="absolute top-10 left-7 z-[2] will-change-transform [transform:translateZ(30px)] pointer-events-auto">
             {overlayContent}
           </motion.div>
         )}

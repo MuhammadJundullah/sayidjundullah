@@ -30,11 +30,18 @@ const WorkExperiences = () => {
   return (
     <section id="WorkExperiences">
       <div className="flex flex-col max-w-5xl mx-auto mb-20 text-[#0f172a] dark:text-[#e2e8f0]">
-        <h1 className="text-4xl text-center font-bold">My Work Experiences</h1>
+        <span className="flex items-center">
+          <span className="shrink-0 pe-4 text-gray-900 dark:text-white">
+            {" "}
+            <h1 className="text-4xl font-bold">My Work Experiences</h1>
+          </span>
+
+          <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
+        </span>
         <div className="my-20">
           {experiences.map((exp, i) => (
             <div key={i}>
-              <ol className=" text-3xl relative space-y-8 before:absolute before:-ml-px before:h-full before:w-0.5 before:rounded-full before:bg-gray-200">
+              <ol className="text-3xl relative space-y-8 before:absolute before:-ml-px before:h-full before:w-0.5 before:rounded-full before:bg-gray-200">
                 <li className="relative -ms-1.5 flex items-start gap-4">
                   <span className="size-3 shrink-0 rounded-full bg-white"></span>
 

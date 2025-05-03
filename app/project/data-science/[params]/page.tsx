@@ -1,12 +1,25 @@
-import React from 'react'
+import React from "react";
+import { fetchDataFromAPI } from "@/lib/actions";
 
-const Page = ({ params }: { params: { [key: string]: string | string[] } }) => {
+const Page = async ({ params }: { params: { params: string } }) => {
+  const slug = params.params;
+
+  if (!slug) {
+    return <h1>Error: Invalid slug</h1>;
+  }
+
+  try {
+    const data = await fetchDataFromAPI(slug);
+
     return (
-        <div>
-            <h1>Params:</h1>
-            <pre>{JSON.stringify(params, null, 2)}</pre>
-        </div>
-    )
-}
+      <div>
+        <h1>Data for slug: {slug}</h1>
+        <pre>{JSON.stringify(data, null, 2)}</pre>
+      </div>
+    );
+  } catch (error) {
+    return <h1>Error: {(error as Error).message}</h1>;
+  }
+};
 
-export default Page
+export default Page;

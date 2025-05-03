@@ -5,6 +5,7 @@ import About from "@/app/_sections/About";
 import WorkExperiences from "@/app/_sections/WorkExperiences";
 import Projects from "@/app/_sections/Projects";
 import Certificates from "@/app/_sections/Certificates";
+import Education from "@/app/_sections/Education";
 import Footer from "@/app/_sections/Footer";
 
 const Home = () => {
@@ -15,6 +16,7 @@ const Home = () => {
       <WorkExperiences></WorkExperiences>
       <Projects></Projects>
       <Certificates></Certificates>
+      <Education></Education>
       <Footer></Footer>
     </>
   );

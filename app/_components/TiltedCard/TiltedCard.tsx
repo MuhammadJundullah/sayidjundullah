@@ -6,10 +6,10 @@ interface TiltedCardProps {
   imageSrc: React.ComponentProps<"img">["src"];
   altText?: string;
   captionText?: string;
-  containerHeight?: React.CSSProperties['height'];
-  containerWidth?: React.CSSProperties['width'];
-  imageHeight?: React.CSSProperties['height'];
-  imageWidth?: React.CSSProperties['width'];
+  containerHeight?: React.CSSProperties["height"];
+  containerWidth?: React.CSSProperties["width"];
+  imageHeight?: React.CSSProperties["height"];
+  imageWidth?: React.CSSProperties["width"];
   scaleOnHover?: number;
   rotateAmplitude?: number;
   showMobileWarning?: boolean;
@@ -98,8 +98,7 @@ export default function TiltedCard({
       }}
       onMouseMove={handleMouse}
       onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
+      onMouseLeave={handleMouseLeave}>
       {showMobileWarning && (
         <div className="absolute top-4 text-center text-sm block sm:hidden">
           This effect is not optimized for mobile. Check on desktop.
@@ -114,8 +113,7 @@ export default function TiltedCard({
           rotateX,
           rotateY,
           scale,
-        }}
-      >
+        }}>
         <motion.img
           src={imageSrc}
           alt={altText}
@@ -127,9 +125,7 @@ export default function TiltedCard({
         />
 
         {displayOverlayContent && overlayContent && (
-          <motion.div
-            className="absolute top-0 left-0 z-[2] will-change-transform [transform:translateZ(30px)]"
-          >
+          <motion.div className="absolute top-10 left-10 z-[2] will-change-transform [transform:translateZ(30px)]">
             {overlayContent}
           </motion.div>
         )}
@@ -143,8 +139,7 @@ export default function TiltedCard({
             y,
             opacity,
             rotate: rotateFigcaption,
-          }}
-        >
+          }}>
           {captionText}
         </motion.figcaption>
       )}

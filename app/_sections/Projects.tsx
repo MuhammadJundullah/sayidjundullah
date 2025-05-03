@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 
 interface Projects {
   judul: string;
@@ -38,31 +39,41 @@ const Projects = () => {
       <div className="flex flex-col max-w-5xl mx-auto mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0]">
         <h1 className="text-4xl font-bold">My Projects</h1>
         <div className="my-20">
-
-            <div className="flex flex-wrap justify-center gap-8">
-              {projects.map((project, i) => (
+          <div className="flex flex-wrap justify-center gap-8">
+            {projects.map((project, i) => (
               <div key={i}>
                 <TiltedCard
-                imageSrc={"/static-image/projects/" + project.photo}
-                altText={project.judul}
-                captionText={project.category}
-                containerHeight="150px"
-                containerWidth="300px"
-                imageHeight="150px"
-                imageWidth="300px"
-                rotateAmplitude={12}
-                scaleOnHover={1.2}
-                showMobileWarning={false}
-                overlayContent={
-                  <p className="tilted-card-demo-text text-black">
-                  {project.judul}
-                  </p>
-                }
+                  imageSrc={"/static-image/projects/" + project.photo}
+                  altText={project.judul}
+                  captionText={project.category}
+                  containerHeight="200px"
+                  containerWidth="300px"
+                  imageHeight="200px"
+                  imageWidth="300px"
+                  rotateAmplitude={12}
+                  scaleOnHover={1.2}
+                  showMobileWarning={true}
+                  showTooltip={true}
+                  displayOverlayContent={true}
+                  overlayContent={
+                    <Link
+                      href={
+                        "project/" + project.categoryslug + "/" + project.slug
+                      }>
+                      <div>
+                        <p className="tilted-card-demo-text text-black font-bold">
+                          {project.judul}
+                        </p>
+                        <p className="tilted-card-demo-text text-black italic">
+                          {project.tech}
+                        </p>
+                      </div>
+                    </Link>
+                  }
                 />
               </div>
-              ))}
+            ))}
           </div>
-          
         </div>
       </div>
     </section>

@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 interface Certificates {
   name: string;
   desc: string;
+  date: string;
 }
 
 const Certificates = () => {
@@ -28,7 +29,7 @@ const Certificates = () => {
 
   return (
     <section id="Projects">
-      <div className="flex flex-col max-w-5xl mx-auto mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0]">
+      <div className="py-40 flex flex-col max-w-6xl mx-auto mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0]">
         <span className="flex items-center">
           <span className="shrink-0 pe-4 text-gray-900 dark:text-white">
             {" "}
@@ -46,17 +47,22 @@ const Certificates = () => {
                   altText={certificate.name}
                   captionText={certificate.desc}
                   containerHeight="200px"
-                  containerWidth="300px"
+                  containerWidth="350px"
                   imageHeight="200px"
-                  imageWidth="300px"
+                  imageWidth="350px"
                   rotateAmplitude={12}
                   scaleOnHover={1.2}
                   showMobileWarning={false}
-                  displayOverlayContent={true}
+                  // displayOverlayContent={true}
                   overlayContent={
-                    <p className="tilted-card-demo-text text-black font-medium">
-                      {certificate.desc}
-                    </p>
+                    <div>
+                      <p className="tilted-card-demo-text text-black font-medium">
+                        {certificate.desc}
+                      </p>
+                      <p className="tilted-card-demo-text text-black italic font-light">
+                        {certificate.date}
+                      </p>
+                    </div>
                   }
                 />
               </div>

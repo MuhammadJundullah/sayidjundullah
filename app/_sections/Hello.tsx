@@ -2,32 +2,39 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { PiGithubLogoLight } from "react-icons/pi";
-
+import { FaLinkedin } from "react-icons/fa";
 
 const Hello = () => {
-
-    const BlurText = dynamic(
+  const BlurText = dynamic(
     () => import("@/app/_components/BlurText/BlurText"),
-        {
-            ssr: false,
-        }
-    );
-     
-    const handleAnimationComplete = () => {
-        console.log("All letters have animated!");
-    };
+    {
+      ssr: false,
+    }
+  );
+
+  const handleAnimationComplete = () => {
+    console.log("All letters have animated!");
+  };
 
   return (
     <section id="hello">
       <div className="h-screen flex flex-col space-y-10 max-w-5xl mx-auto mb-20">
         <div className="flex flex-row justify-between my-10 text-3xl font-bold text-[#0f172a] dark:text-[#e2e8f0]">
           <p>My Portofolio</p>
-          <Link
-            href={"http://github.com/MuhammadJundullah"}
-            target="_blank"
-            rel="noopener noreferrer">
-            <PiGithubLogoLight />
-          </Link>
+          <div className="flex flex-row space-x-10">
+            <Link
+              href={"https://linkedin.com/in/sayidm"}
+              target="_blank"
+              rel="noopener noreferrer">
+              <FaLinkedin />
+            </Link>
+            <Link
+              href={"https://github.com/MuhammadJundullah"}
+              target="_blank"
+              rel="noopener noreferrer">
+              <PiGithubLogoLight />
+            </Link>
+          </div>
         </div>
 
         <div className="flex flex-row items-center justify-center space-x-10 pt-10 mt-32">
@@ -50,7 +57,7 @@ const Hello = () => {
               animateBy="words"
               direction="bottom"
               onAnimationComplete={handleAnimationComplete}
-              className="text-3xl font-thin text-center text-[#0f172a] dark:text-[#e2e8f0] max-w-3xl"
+              className="text-3xl font-thin text-center text-[#0f172a] dark:text-[#e2e8f0] max-w-3xl italic"
             />
           </div>
         </div>

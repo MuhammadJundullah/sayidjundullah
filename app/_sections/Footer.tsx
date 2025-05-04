@@ -2,12 +2,14 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <>
+    <section id="Footer">
       <footer className="bg-white">
         <div className="mx-auto max-w-screen-xl space-y-8 px-4 py-8 sm:px-6 lg:space-y-16 lg:px-8">
           <div className="sm:flex sm:items-center sm:justify-between">
             <div className="text-teal-600">
-              <p className="text-xl text-gray-500 italic">Sayid M. &copy; 2025</p>
+              <p className="text-xl text-gray-500 italic">
+                Sayid M. &copy; 2025
+              </p>
             </div>
 
             <ul className="mt-8 flex justify-start gap-6 sm:mt-0 sm:justify-end">
@@ -54,7 +56,7 @@ const Footer = () => {
           </div>
         </div>
       </footer>
-    </>
+    </section>
   );
 }
 

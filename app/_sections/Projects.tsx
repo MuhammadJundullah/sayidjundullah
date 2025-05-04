@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { LuSquareArrowOutUpRight } from "react-icons/lu";
 
 interface Projects {
   judul: string;
@@ -61,7 +62,7 @@ const Projects = () => {
                   scaleOnHover={1.2}
                   showMobileWarning={true}
                   showTooltip={true}
-                  displayOverlayContent={true}
+                  // displayOverlayContent={true}
                   overlayContent={
                     <Link
                       href={
@@ -73,6 +74,7 @@ const Projects = () => {
                         </p>
                         <p className="tilted-card-demo-text text-black italic font-medium">
                           {project.tech}
+                          <LuSquareArrowOutUpRight className="mx-auto mt-5" />
                         </p>
                       </div>
                     </Link>

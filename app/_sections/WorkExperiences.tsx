@@ -14,7 +14,6 @@ interface WorkExperience {
 }
 
 const WorkExperiences = () => {
-
   const [experiences, setExperiences] = useState<WorkExperience[]>([]);
 
   useEffect(() => {
@@ -46,7 +45,7 @@ const WorkExperiences = () => {
                   <span className="size-3 shrink-0 rounded-full bg-white"></span>
 
                   <div className="-mt-2">
-                    <h3 className=" font-bold mb-3">
+                    <h3 className="font-bold mb-3">
                       {exp.position} at {exp.company_name}
                     </h3>
 

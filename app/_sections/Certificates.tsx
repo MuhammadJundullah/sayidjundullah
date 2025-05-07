@@ -43,7 +43,7 @@ const Certificates = () => {
             {certificates.map((certificate, i) => (
               <div key={i}>
                 <TiltedCard
-                  imageSrc={"/static-image/certificate/" + certificate.name}
+                  imageSrc={`/static-image/certificate/${certificate.name}`}
                   altText={certificate.name}
                   captionText={certificate.desc}
                   containerHeight="200px"

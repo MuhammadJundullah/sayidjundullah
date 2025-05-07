@@ -51,7 +51,7 @@ const Projects = () => {
             {projects.map((project, i) => (
               <div key={i}>
                 <TiltedCard
-                  imageSrc={"/static-image/projects/" + project.photo}
+                  imageSrc={`/static-image/projects/${project.photo}`}
                   altText={project.judul}
                   captionText={project.category}
                   containerHeight="200px"

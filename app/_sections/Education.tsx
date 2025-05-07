@@ -25,7 +25,7 @@ const Education = () => {
   return (
     <section id="Educations">
       <div className="h-screen py-40 flex flex-col max-w-6xl mx-auto mb-20 font-thin  text-[#0f172a] dark:text-[#e2e8f0]">
-        <span className="flex items-center">
+        <span className="flex items-center mb-10">
           <span className="shrink-0 pe-4 text-gray-900 dark:text-white">
             {" "}
             <h1 className="text-4xl font-bold">Educations</h1>
@@ -40,7 +40,7 @@ const Education = () => {
                   <span className="size-3 shrink-0 rounded-full bg-white"></span>
 
                   <div className="mt-2">
-                    <h3 className="font-bold mb-3 flex items-center gap-3 -mt-12">
+                    <h3 className="font-bold mb-6 flex items-center gap-5 -mt-12">
                       <Image
                         src={`/static-image/Education/${exp.name}`}
                         alt={exp.name}
@@ -50,11 +50,11 @@ const Education = () => {
                       />
                       <span>
                         {exp.school} at {exp.major}
+                        <br />
+                        <time className="font-light">{exp.date}</time>
                       </span>
                     </h3>
-                    <div className="pb-20">
-                      <time className="font-lig">{exp.date}</time>
-                    </div>
+                    <div className="pb-20"></div>
                   </div>
                 </li>
               </ol>
@@ -65,6 +65,6 @@ const Education = () => {
     </section>
   );
 };
-
+  
 export default Education;
 

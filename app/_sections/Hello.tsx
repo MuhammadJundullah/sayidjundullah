@@ -53,7 +53,7 @@ const Hello = () => {
           <div className="flex-1 flex justify-center items-center min-h-[400px]">
             <BlurText
               text="Hi There, I'am Sayid Muhammad Jundullah   Web Developer & Data Enthusiast."
-              delay={50}
+              delay={200}
               animateBy="words"
               direction="bottom"
               onAnimationComplete={handleAnimationComplete}

@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
+import Image from "next/image";
 
 interface TiltedCardProps {
-  imageSrc: React.ComponentProps<"img">["src"];
+  imageSrc: string;
   altText?: string;
   captionText?: string;
   containerHeight?: React.CSSProperties["height"];
@@ -21,6 +22,8 @@ const springValues = {
   stiffness: 100,
   mass: 2,
 };
+
+const fallbackImage = "/fallback.jpg"; // pastikan ada di public/fallback.jpg
 
 export default function TiltedCard({
   imageSrc,
@@ -114,15 +117,15 @@ export default function TiltedCard({
           rotateY,
           scale,
         }}>
-        <motion.img
-          src={imageSrc}
-          alt={altText}
-          className="absolute border-4 top-0 left-0 object-cover rounded-[15px] will-change-transform [transform:translateZ(0)] group-hover:blur-xs group-hover:brightness-110"
-          style={{
-            width: imageWidth,
-            height: imageHeight,
-          }}
-        />
+        <div className="absolute top-0 left-0 border-4 rounded-[15px] will-change-transform [transform:translateZ(0)] group-hover:blur-xs group-hover:brightness-110 overflow-hidden">
+          <Image
+            src={imageSrc ?? fallbackImage}
+            alt={altText}
+            width={parseInt(imageWidth.toString())}
+            height={parseInt(imageHeight.toString())}
+            className="object-cover rounded-[15px]"
+          />
+        </div>
 
         {isOverlayVisible && overlayContent && (
           <motion.div className="absolute top-10 left-7 z-[2] will-change-transform [transform:translateZ(30px)] pointer-events-auto">

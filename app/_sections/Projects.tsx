@@ -48,52 +48,62 @@ const Projects = () => {
         </span>
         <div className="my-20">
           <div className="flex flex-wrap justify-center gap-8">
-            {projects.map((project, i) => (
-              <div key={i}>
-                <Card sx={{ maxWidth: 345 }}>
-                  <CardActionArea>
-                    <CardMedia>
-                      <Image
-                        src={`/static-image/Projects/${project.photo}`}
-                        alt={project.photo}
-                        height={150}
-                        width={345}
-                        objectFit="cover"
-                      />
-                    </CardMedia>
-                    <CardContent>
-                      <Typography
-                        gutterBottom
-                        component="div"
-                        className="text-gray-900 text-3xl">
-                        {project.judul}
-                      </Typography>
-                      <Typography
-                        gutterBottom
-                        component="div"
-                        className="text-gray-500 font-thin">
-                        {project.category}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        sx={{ color: "text.secondary" }}>
-                        {project.tech}
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                  <CardActions>
-                    <Button size="small" color="primary">
-                      <Link
-                        href={
-                          "project/" + project.categoryslug + "/" + project.slug
-                        }>
-                        Detail
-                      </Link>
-                    </Button>
-                  </CardActions>
-                </Card>
+            {projects.length === 0 ? (
+              <div className="flex flex-col justify-center items-center h-32">
+                <p className="mb-2">Loading projects, please wait...</p>
+                <span className="loading loading-dots loading-xl"></span>
               </div>
-            ))}
+            ) : (
+              projects.map((project, i) => (
+                <div key={i}>
+                  <Card sx={{ maxWidth: 345 }}>
+                    <CardActionArea>
+                      <CardMedia>
+                        <Image
+                          src={`/static-image/Projects/${project.photo}`}
+                          alt={project.photo}
+                          height={150}
+                          width={345}
+                          objectFit="cover"
+                        />
+                      </CardMedia>
+                      <CardContent>
+                        <Typography
+                          gutterBottom
+                          component="div"
+                          className="text-gray-900 text-3xl">
+                          {project.judul}
+                        </Typography>
+                        <Typography
+                          gutterBottom
+                          component="div"
+                          className="text-gray-500 font-thin">
+                          {project.category}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "text.secondary" }}>
+                          {project.tech}
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                    <CardActions>
+                      <Button size="small" color="primary">
+                        <Link
+                          href={
+                            "project/" +
+                            project.categoryslug +
+                            "/" +
+                            project.slug
+                          }>
+                          Detail
+                        </Link>
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

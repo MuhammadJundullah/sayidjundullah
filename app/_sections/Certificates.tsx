@@ -5,7 +5,6 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
-import Link from "next/link";
 
 interface Certificates {
   name: string;
@@ -40,12 +39,14 @@ const Certificates = () => {
         </span>
         <div className="my-20">
           <div className="flex flex-wrap justify-center gap-y-16 gap-x-8">
-            {certificates.map((certificate, i) => (
-              <div key={i}>
-                <Link
-                  href={`${certificate.site}`}
-                  target="_blank"
-                  rel="noopener noreferrer">
+            {certificates.length === 0 ? (
+              <div className="flex flex-col justify-center items-center h-32">
+                <p className="mb-2">Loading certificates, please wait...</p>
+                <span className="loading loading-dots loading-xl"></span>
+              </div>
+            ) : (
+              certificates.map((certificate, i) => (
+                <div key={i}>
                   <Card sx={{ maxWidth: 345 }}>
                     <CardMedia>
                       <Image
@@ -70,9 +71,9 @@ const Certificates = () => {
                       </Typography>
                     </CardContent>
                   </Card>
-                </Link>
-              </div>
-            ))}
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

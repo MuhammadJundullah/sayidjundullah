@@ -54,7 +54,7 @@ const Projects = () => {
                   <CardActionArea>
                     <CardMedia>
                       <Image
-                        src={`/static-image/projects/${project.photo}`}
+                        src={`/static-image/Projects/${project.photo}`}
                         alt={project.photo}
                         height={150}
                         width={345}

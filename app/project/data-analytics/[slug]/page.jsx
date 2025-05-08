@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 export default function Page({ params }) {
   const { slug } = params;
+
   const [data, setData] = useState(null);
 
   useEffect(() => {

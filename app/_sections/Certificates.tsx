@@ -49,7 +49,7 @@ const Certificates = () => {
                   <Card sx={{ maxWidth: 345 }}>
                     <CardMedia>
                       <Image
-                        src={`/static-image/certificate/${certificate.name}`}
+                        src={`/static-image/Certificate/${certificate.name}`}
                         alt={certificate.name}
                         width={345}
                         height={140}

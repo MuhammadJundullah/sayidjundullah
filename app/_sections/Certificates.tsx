@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
+import * as React from "react";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import Image from "next/image";
+import Link from "next/link";
 
 interface Certificates {
   name: string;
   desc: string;
   date: string;
+  site: string;
 }
 
 const Certificates = () => {
@@ -19,13 +26,6 @@ const Certificates = () => {
 
     fetchData();
   }, []);
-
-  const TiltedCard = dynamic(
-    () => import("@/app/_components/TiltedCard/TiltedCard"),
-    {
-      ssr: false,
-    }
-  );
 
   return (
     <section id="Projects">
@@ -42,29 +42,35 @@ const Certificates = () => {
           <div className="flex flex-wrap justify-center gap-y-16 gap-x-8">
             {certificates.map((certificate, i) => (
               <div key={i}>
-                <TiltedCard
-                  imageSrc={`/static-image/certificate/${certificate.name}`}
-                  altText={certificate.name}
-                  captionText={certificate.desc}
-                  containerHeight="200px"
-                  containerWidth="350px"
-                  imageHeight="200px"
-                  imageWidth="350px"
-                  rotateAmplitude={12}
-                  scaleOnHover={1.2}
-                  showMobileWarning={false}
-                  // displayOverlayContent={true}
-                  overlayContent={
-                    <div>
-                      <p className="tilted-card-demo-text text-black font-medium">
+                <Link
+                  href={`${certificate.site}`}
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  <Card sx={{ maxWidth: 345 }}>
+                    <CardMedia>
+                      <Image
+                        src={`/static-image/certificate/${certificate.name}`}
+                        alt={certificate.name}
+                        width={345}
+                        height={140}
+                        style={{ objectFit: "cover" }}
+                      />
+                    </CardMedia>
+                    <CardContent>
+                      <Typography
+                        gutterBottom
+                        component="div"
+                        className="text-2xl">
                         {certificate.desc}
-                      </p>
-                      <p className="tilted-card-demo-text text-black italic font-light">
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "text.secondary" }}>
                         {certificate.date}
-                      </p>
-                    </div>
-                  }
-                />
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Link>
               </div>
             ))}
           </div>

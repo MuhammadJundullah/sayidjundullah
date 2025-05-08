@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
-import { LuSquareArrowOutUpRight } from "react-icons/lu";
+import * as React from "react";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import CardActionArea from "@mui/material/CardActionArea";
+import CardActions from "@mui/material/CardActions";
+import Image from "next/image";
 
 interface Projects {
   judul: string;
@@ -28,13 +35,6 @@ const Projects = () => {
     fetchData();
   }, []);
 
-  const TiltedCard = dynamic(
-    () => import("@/app/_components/TiltedCard/TiltedCard"),
-    {
-      ssr: false,
-    }
-  );
-
   return (
     <section id="Projects">
       <div className="py-40 flex flex-col max-w-6xl mx-auto mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0]">
@@ -50,36 +50,48 @@ const Projects = () => {
           <div className="flex flex-wrap justify-center gap-8">
             {projects.map((project, i) => (
               <div key={i}>
-                <TiltedCard
-                  imageSrc={`/static-image/projects/${project.photo}`}
-                  altText={project.judul}
-                  captionText={project.category}
-                  containerHeight="200px"
-                  containerWidth="350px"
-                  imageHeight="200px"
-                  imageWidth="350px"
-                  rotateAmplitude={12}
-                  scaleOnHover={1.2}
-                  showMobileWarning={true}
-                  showTooltip={true}
-                  // displayOverlayContent={true}
-                  overlayContent={
-                    <Link
-                      href={
-                        "project/" + project.categoryslug + "/" + project.slug
-                      }>
-                      <div>
-                        <p className="tilted-card-demo-text text-black font-bold">
-                          {project.judul}
-                        </p>
-                        <p className="tilted-card-demo-text text-black italic font-medium">
-                          {project.tech}
-                          <LuSquareArrowOutUpRight className="mx-auto mt-5" />
-                        </p>
-                      </div>
-                    </Link>
-                  }
-                />
+                <Card sx={{ maxWidth: 345 }}>
+                  <CardActionArea>
+                    <CardMedia>
+                      <Image
+                        src={`/static-image/projects/${project.photo}`}
+                        alt={project.photo}
+                        height={150}
+                        width={345}
+                        objectFit="cover"
+                      />
+                    </CardMedia>
+                    <CardContent>
+                      <Typography
+                        gutterBottom
+                        component="div"
+                        className="text-gray-900 text-3xl">
+                        {project.judul}
+                      </Typography>
+                      <Typography
+                        gutterBottom
+                        component="div"
+                        className="text-gray-500 font-thin">
+                        {project.category}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "text.secondary" }}>
+                        {project.tech}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                  <CardActions>
+                    <Button size="small" color="primary">
+                      <Link
+                        href={
+                          "project/" + project.categoryslug + "/" + project.slug
+                        }>
+                        Detail
+                      </Link>
+                    </Button>
+                  </CardActions>
+                </Card>
               </div>
             ))}
           </div>

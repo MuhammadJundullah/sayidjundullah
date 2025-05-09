@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { fetchDataFromAPI } from "@/lib/actions";
+import { usefetchDataFromAPI } from "@/lib/actions";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function Page({ params }) {
   const { slug } = React.use(params);
@@ -20,10 +21,15 @@ export default function Page({ params }) {
 
   return (
     <div className="container mx-auto p-4">
+      <div>
+        <Link href="/" className="btn btn-primary mb-4">
+          Back
+        </Link>
+      </div>
       {data ? (
-        <div>
+        <div className="container mx-auto p-4">
           {data.map((item) => (
-            <div key={item.id} className="mb-8 h-screen">
+            <div key={item.id} className="mb-8">
               <h2 className="text-xl font-semibold">{item.judul}</h2>
               <p
                 className="text-gray-600 mb-2"

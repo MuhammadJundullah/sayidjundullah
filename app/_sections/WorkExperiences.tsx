@@ -31,10 +31,10 @@ const WorkExperiences = () => {
 
   return (
     <section id="WorkExperiences">
-      <div className="flex flex-col max-w-5xl mx-auto mb-20 text-[#0f172a] dark:text-[#e2e8f0]">
+      <div className="flex flex-col max-w-6xl mx-auto mb-20 text-[#0f172a] dark:text-[#e2e8f0]">
         <span className="flex items-center">
           <span className="shrink-0 pe-4 text-gray-900 dark:text-white">
-            <h1 className="text-4xl font-bold">My Work Experiences</h1>
+            <h1 className="text-6xl font-thin">My Work Experiences</h1>
           </span>
           <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
         </span>

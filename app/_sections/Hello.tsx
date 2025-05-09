@@ -18,7 +18,7 @@ const Hello = () => {
 
   return (
     <section id="hello">
-      <div className="h-screen flex flex-col space-y-10 max-w-5xl mx-auto mb-20">
+      <div className="h-screen flex flex-col space-y-10 max-w-6xl mx-auto mb-20">
         <div className="flex flex-row justify-between my-10 text-3xl font-bold text-[#0f172a] dark:text-[#e2e8f0]">
           <p>My Portofolio</p>
           <div className="flex flex-row space-x-10">
@@ -52,7 +52,7 @@ const Hello = () => {
           {/* TEXT */}
           <div className="flex-1 flex justify-center items-center min-h-[400px]">
             <BlurText
-              text="Hi There, I'am Sayid Muhammad Jundullah   Web Developer & Data Enthusiast."
+              text="Hi There, I'am Sayid Muhammad Jundullah, Web Developer & Data Enthusiast."
               delay={200}
               animateBy="words"
               direction="bottom"

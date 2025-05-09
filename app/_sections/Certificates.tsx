@@ -5,6 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 
 interface Certificates {
   name: string;
@@ -15,6 +16,13 @@ interface Certificates {
 
 const Certificates = () => {
   const [certificates, setCertificates] = useState<Certificates[]>([]);
+
+  const AnimatedContent = dynamic(
+    () => import("@/app/_components/AnimatedContent/AnimatedContent"),
+    {
+      ssr: false,
+    }
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +40,7 @@ const Certificates = () => {
         <span className="flex items-center">
           <span className="shrink-0 pe-4 text-gray-900 dark:text-white">
             {" "}
-            <h1 className="text-4xl font-bold">My Certifications</h1>
+            <h1 className="text-6xl font-thin">My Certifications</h1>
           </span>
 
           <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
@@ -47,30 +55,42 @@ const Certificates = () => {
             ) : (
               certificates.map((certificate, i) => (
                 <div key={i}>
-                  <Card sx={{ maxWidth: 345 }}>
-                    <CardMedia>
-                      <Image
-                        src={`/static-image/Certificate/${certificate.name}`}
-                        alt={certificate.name}
-                        width={345}
-                        height={140}
-                        style={{ objectFit: "cover" }}
-                      />
-                    </CardMedia>
-                    <CardContent>
-                      <Typography
-                        gutterBottom
-                        component="div"
-                        className="text-2xl">
-                        {certificate.desc}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        sx={{ color: "text.secondary" }}>
-                        {certificate.date}
-                      </Typography>
-                    </CardContent>
-                  </Card>
+                  <AnimatedContent
+                    distance={100}
+                    direction="vertical"
+                    reverse={false}
+                    config={{ tension: 50, friction: 25 }}
+                    initialOpacity={0}
+                    animateOpacity
+                    // scale={1.1}
+                    threshold={0.1}>
+                    <div>
+                      <Card sx={{ maxWidth: 345 }}>
+                        <CardMedia>
+                          <Image
+                            src={`/static-image/Certificate/${certificate.name}`}
+                            alt={certificate.name}
+                            width={345}
+                            height={140}
+                            style={{ objectFit: "cover" }}
+                          />
+                        </CardMedia>
+                        <CardContent>
+                          <Typography
+                            gutterBottom
+                            component="div"
+                            className="text-2xl">
+                            {certificate.desc}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ color: "text.secondary" }}>
+                            {certificate.date}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </AnimatedContent>
                 </div>
               ))
             )}

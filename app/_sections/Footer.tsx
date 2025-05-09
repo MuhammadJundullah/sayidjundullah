@@ -3,12 +3,12 @@ import React from 'react'
 const Footer = () => {
   return (
     <section id="Footer">
-      <footer className="bg-white">
-        <div className="mx-auto max-w-screen-xl space-y-8 px-4 py-8 sm:px-6 lg:space-y-16 lg:px-8">
+      <footer>
+        <div className="mx-auto max-w-6xl space-y-8 px-4 py-8 sm:px-6 lg:space-y-16 lg:px-8">
           <div className="sm:flex sm:items-center sm:justify-between">
-            <div className="text-teal-600">
-              <p className="text-xl text-gray-500 italic">
-                Sayid M. &copy; 2025
+            <div className="text-white">
+              <p className="text-xl text-white">
+                Sayid J. &copy; {new Date().getFullYear()}
               </p>
             </div>
 
@@ -18,7 +18,7 @@ const Footer = () => {
                   href="#"
                   rel="noreferrer"
                   target="_blank"
-                  className="text-gray-700 transition hover:opacity-75">
+                  className="text-white transition hover:opacity-75">
                   <span className="sr-only">Instagram</span>
 
                   <svg
@@ -40,7 +40,7 @@ const Footer = () => {
                   href="#"
                   rel="noreferrer"
                   target="_blank"
-                  className="text-gray-700 transition hover:opacity-75">
+                  className="text-white transition hover:opacity-75">
                   <span className="sr-only">Twitter</span>
 
                   <svg

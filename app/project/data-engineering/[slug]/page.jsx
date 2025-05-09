@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { fetchDataFromAPI } from "@/lib/actions";
+import { usefetchDataFromAPI } from "@/lib/actions";
 
 import { useEffect, useState } from "react";
 

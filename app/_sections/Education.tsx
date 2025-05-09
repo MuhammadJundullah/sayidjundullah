@@ -28,7 +28,7 @@ const Education = () => {
         <span className="flex items-center mb-10">
           <span className="shrink-0 pe-4 text-gray-900 dark:text-white">
             {" "}
-            <h1 className="text-4xl font-bold">Educations</h1>
+            <h1 className="text-6xl font-thin">Educations</h1>
           </span>
           <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
         </span>
@@ -49,7 +49,7 @@ const Education = () => {
                         className="rounded-full"
                       />
                       <span>
-                        {exp.school} at {exp.major}
+                        {exp.school} | {exp.major}
                         <br />
                         <time className="font-light">{exp.date}</time>
                       </span>

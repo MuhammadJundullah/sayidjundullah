@@ -9,6 +9,8 @@ import Button from "@mui/material/Button";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardActions from "@mui/material/CardActions";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+import { MdExpandMore } from "react-icons/md";
 
 interface Projects {
   judul: string;
@@ -24,6 +26,13 @@ interface Projects {
 
 const Projects = () => {
   const [projects, setProjects] = useState<Projects[]>([]);
+
+  const AnimatedContent = dynamic(
+    () => import("@/app/_components/AnimatedContent/AnimatedContent"),
+    {
+      ssr: false,
+    }
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,7 +50,7 @@ const Projects = () => {
         <span className="flex items-center">
           <span className="shrink-0 pe-4 text-gray-900 dark:text-white">
             {" "}
-            <h1 className="text-4xl font-bold">My Projects</h1>
+            <h1 className="text-6xl font-thin">My Projects</h1>
           </span>
 
           <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
@@ -56,51 +65,64 @@ const Projects = () => {
             ) : (
               projects.map((project, i) => (
                 <div key={i}>
-                  <Card sx={{ maxWidth: 345 }}>
-                    <CardActionArea>
-                      <CardMedia>
-                        <Image
-                          src={`/static-image/Projects/${project.photo}`}
-                          alt={project.photo}
-                          height={150}
-                          width={345}
-                          objectFit="cover"
-                        />
-                      </CardMedia>
-                      <CardContent>
-                        <Typography
-                          gutterBottom
-                          component="div"
-                          className="text-gray-900 text-3xl">
-                          {project.judul}
-                        </Typography>
-                        <Typography
-                          gutterBottom
-                          component="div"
-                          className="text-gray-500 font-thin">
-                          {project.category}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{ color: "text.secondary" }}>
-                          {project.tech}
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                    <CardActions>
-                      <Button size="small" color="primary">
-                        <Link
-                          href={
-                            "project/" +
-                            project.categoryslug +
-                            "/" +
-                            project.slug
-                          }>
-                          Detail
-                        </Link>
-                      </Button>
-                    </CardActions>
-                  </Card>
+                  <AnimatedContent
+                    distance={100}
+                    direction="vertical"
+                    reverse={false}
+                    config={{ tension: 50, friction: 25 }}
+                    initialOpacity={0}
+                    animateOpacity
+                    // scale={1.1}
+                    threshold={0.1}>
+                    <div>
+                      <Card sx={{ maxWidth: 345 }}>
+                        <CardActionArea>
+                          <CardMedia>
+                            <Image
+                              src={`/static-image/Projects/${project.photo}`}
+                              alt={project.photo}
+                              height={150}
+                              width={345}
+                              objectFit="cover"
+                            />
+                          </CardMedia>
+                          <CardContent>
+                            <Typography
+                              gutterBottom
+                              component="div"
+                              className="text-gray-900 text-3xl">
+                              {project.judul}
+                            </Typography>
+                            <Typography
+                              gutterBottom
+                              component="div"
+                              className="text-gray-500 font-thin">
+                              {project.category}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              sx={{ color: "text.secondary" }}>
+                              {project.tech}
+                            </Typography>
+                          </CardContent>
+                        </CardActionArea>
+                        <CardActions>
+                          <Button size="small" color="primary">
+                            <Link
+                              href={
+                                "project/" +
+                                project.categoryslug +
+                                "/" +
+                                project.slug
+                              }
+                              className="flex flex-row items-center space-x-2">
+                              <p>Detail</p> <MdExpandMore></MdExpandMore>
+                            </Link>
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </div>
+                  </AnimatedContent>
                 </div>
               ))
             )}
@@ -112,3 +134,5 @@ const Projects = () => {
 };
 
 export default Projects;
+
+

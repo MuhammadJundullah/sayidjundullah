@@ -48,7 +48,7 @@ const Certificates = () => {
           <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
         </span>
         <div className="my-20">
-          <div className="flex flex-wrap justify-center gap-y-16 gap-x-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {certificates.length === 0 ? (
               <div className="flex flex-col justify-center items-center h-32">
                 <span className="loading loading-dots loading-xl"></span>
@@ -63,7 +63,6 @@ const Certificates = () => {
                     config={{ tension: 50, friction: 25 }}
                     initialOpacity={0}
                     animateOpacity
-                    // scale={1.1}
                     threshold={0.1}>
                     <div>
                       <Card sx={{ maxWidth: 345 }}>

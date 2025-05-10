@@ -58,8 +58,7 @@ export default function Page({ params }) {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col h-screen justify-center items-center">
-          <p className="mb-2">Loading data, please wait...</p>
+        <div className="flex flex-col h-screen justify-center items-center h-screen">
           <span className="loading loading-dots loading-xl"></span>
         </div>
       )}

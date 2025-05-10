@@ -10,7 +10,7 @@ import CardActionArea from "@mui/material/CardActionArea";
 import CardActions from "@mui/material/CardActions";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { MdExpandMore } from "react-icons/md";
+import { FaArrowUpRightFromSquare } from "react-icons/fa6";
 
 interface Projects {
   judul: string;
@@ -63,7 +63,7 @@ const Projects = () => {
               </div>
             ) : (
               projects.map((project, i) => (
-                <div key={i}>
+                <div key={i} className="flex">
                   <AnimatedContent
                     distance={100}
                     direction="vertical"
@@ -71,11 +71,16 @@ const Projects = () => {
                     config={{ tension: 50, friction: 25 }}
                     initialOpacity={0}
                     animateOpacity
-                    // scale={1.1}
                     threshold={0.1}>
-                    <div>
-                      <Card sx={{ maxWidth: 345 }}>
-                        <CardActionArea>
+                    <div className="h-full">
+                      <Card
+                        sx={{
+                          maxWidth: 345,
+                          height: "100%",
+                          display: "flex",
+                          flexDirection: "column",
+                        }}>
+                        <CardActionArea sx={{ flexGrow: 1 }}>
                           <CardMedia>
                             <Image
                               src={`/static-image/Projects/${project.photo}`}
@@ -85,22 +90,33 @@ const Projects = () => {
                               objectFit="cover"
                             />
                           </CardMedia>
-                          <CardContent>
-                            <Typography
-                              gutterBottom
-                              component="div"
-                              className="text-gray-900 text-3xl">
-                              {project.judul}
-                            </Typography>
-                            <Typography
-                              gutterBottom
-                              component="div"
-                              className="text-gray-500 font-thin">
-                              {project.category}
-                            </Typography>
+                          <CardContent
+                            sx={{
+                              flexGrow: 1,
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "space-between",
+                            }}>
+                            <div>
+                              <Typography
+                                gutterBottom
+                                component="div"
+                                className="text-gray-900 text-3xl">
+                                {project.judul}
+                              </Typography>
+                              <Typography
+                                gutterBottom
+                                component="div"
+                                className="text-gray-500 font-bold">
+                                {project.category}
+                              </Typography>
+                            </div>
                             <Typography
                               variant="body2"
-                              sx={{ color: "text.secondary" }}>
+                              sx={{
+                                color: "text.secondary",
+                                marginTop: "auto",
+                              }}>
                               {project.tech}
                             </Typography>
                           </CardContent>
@@ -115,7 +131,8 @@ const Projects = () => {
                                 project.slug
                               }
                               className="flex flex-row items-center space-x-2">
-                              <p>Detail</p> <MdExpandMore></MdExpandMore>
+                              <p>Detail</p>{" "}
+                              <FaArrowUpRightFromSquare></FaArrowUpRightFromSquare>
                             </Link>
                           </Button>
                         </CardActions>

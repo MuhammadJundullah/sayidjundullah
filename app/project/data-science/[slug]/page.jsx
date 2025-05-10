@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { usefetchDataFromAPI } from "@/lib/actions";
+import { fetchDataFromAPI } from "@/lib/actions";
 
 import { useEffect, useState } from "react";
 
@@ -28,8 +28,7 @@ export default function Page({ params }) {
           {JSON.stringify(data, null, 2)}
         </pre>
       ) : (
-        <div className="flex flex-col justify-center items-center h-32">
-          <p className="mb-2">Loading data, please wait...</p>
+        <div className="flex flex-col justify-center items-center h-screen">
           <span className="loading loading-dots loading-xl"></span>
         </div>
       )}

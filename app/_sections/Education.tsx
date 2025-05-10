@@ -33,33 +33,39 @@ const Education = () => {
           <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
         </span>
         <div className="my-20">
-          {educations.map((exp, i) => (
-            <div key={i}>
-              <ol className="text-3xl relative space-y-8 before:absolute before:-ml-px before:h-full before:w-0.5 before:rounded-full before:bg-gray-200">
-                <li className="relative -ms-1.5 flex items-start gap-4">
-                  <span className="size-3 shrink-0 rounded-full bg-white"></span>
-
-                  <div className="mt-2">
-                    <h3 className="font-bold mb-6 flex items-center gap-5 -mt-12">
-                      <Image
-                        src={`/static-image/Education/${exp.name}`}
-                        alt={exp.name}
-                        width={100}
-                        height={100}
-                        className="rounded-full"
-                      />
-                      <span>
-                        {exp.school} | {exp.major}
-                        <br />
-                        <time className="font-light">{exp.date}</time>
-                      </span>
-                    </h3>
-                    <div className="pb-20"></div>
-                  </div>
-                </li>
-              </ol>
+          {educations.length === 0 ? (
+            <div className="flex flex-col justify-center items-center h-32">
+              <span className="loading loading-dots loading-xl"></span>
             </div>
-          ))}
+          ) : (
+            educations.map((education, index) => (
+              <div key={index}>
+                <ol className="text-3xl relative space-y-8 before:absolute before:-ml-px before:h-full before:w-0.5 before:rounded-full before:bg-gray-200">
+                  <li className="relative -ms-1.5 flex items-start gap-4">
+                    <span className="size-3 shrink-0 rounded-full bg-white"></span>
+
+                    <div className="mt-2">
+                      <h3 className="font-bold mb-6 flex items-center gap-5 -mt-12">
+                        <Image
+                          src={`/static-image/Education/${education.name}`}
+                          alt={education.name}
+                          width={100}
+                          height={100}
+                          className="rounded-full"
+                        />
+                        <span>
+                          {education.school} | {education.major}
+                          <br />
+                          <time className="font-light">{education.date}</time>
+                        </span>
+                      </h3>
+                      <div className="pb-20"></div>
+                    </div>
+                  </li>
+                </ol>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </section>

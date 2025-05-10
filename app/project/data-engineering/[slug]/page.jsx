@@ -1,9 +1,8 @@
 "use client";
-import Loading from "@/components/Loading";
+import Loading from "@/app/_components/Loading";
 import React from "react";
 import { fetchDataFromAPI } from "@/lib/actions";
 import { useEffect, useState } from "react";
-import Loading from "@/app/_components/Loading";
 
 export default function Page({ params }) {
   const { slug } = React.use(params);

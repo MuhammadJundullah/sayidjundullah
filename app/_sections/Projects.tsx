@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import CardActionArea from "@mui/material/CardActionArea";
-import CardActions from "@mui/material/CardActions";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { FaArrowUpRightFromSquare } from "react-icons/fa6";
@@ -98,57 +91,33 @@ const Projects = () => {
                     initialOpacity={0}
                     animateOpacity
                     threshold={0.1}>
-                    <div className="h-full">
-                      <Card
-                        sx={{
-                          maxWidth: 345,
-                          height: "100%",
-                          display: "flex",
-                          flexDirection: "column",
-                        }}>
-                        <CardActionArea sx={{ flexGrow: 1 }}>
-                          <CardMedia>
-                            <Image
-                              src={`/static-image/Projects/${project.photo}`}
-                              alt={project.photo}
-                              height={150}
-                              width={345}
-                              objectFit="cover"
-                            />
-                          </CardMedia>
-                          <CardContent
-                            sx={{
-                              flexGrow: 1,
-                              display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "space-between",
-                            }}>
-                            <div>
-                              <Typography
-                                gutterBottom
-                                component="div"
-                                className="text-gray-900 text-3xl">
-                                {project.judul}
-                              </Typography>
-                              <Typography
-                                gutterBottom
-                                component="div"
-                                className="text-gray-500 font-bold">
-                                {project.category}
-                              </Typography>
-                            </div>
-                            <Typography
-                              variant="body2"
-                              sx={{
-                                color: "text.secondary",
-                                marginTop: "auto",
-                              }}>
-                              {project.tech}
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                        <CardActions>
-                          <Button size="small" color="primary">
+                    <div className="h-full font-medium">
+                      <div className="w-80 border-1 border-gray-500 bg-gray-800 rounded-lg p-2">
+                        <p className="pb-2 text-start text-gray-500 font-medium text-sm">
+                          {project.category}
+                        </p>
+                        <Link
+                          href={
+                            "project/" +
+                            project.categoryslug +
+                            "/" +
+                            project.slug
+                          }
+                          className="flex flex-row items-center space-x-2">
+                          <Image
+                            src={`/static-image/Projects/${project.photo}`}
+                            alt={project.photo}
+                            height={200}
+                            width={320}
+                            objectFit="cover"
+                            className="rounded-lg"
+                          />
+                        </Link>
+                        <div className="py-3">
+                          <p>{project.judul}</p>
+                          <span className="block w-full border-t border-[0.1px] my-2 border-gray-500"></span>
+                          <p>{project.tech}</p>
+                          <p className="text-gray-500 text-sm items-center text-center justify-center pt-2 flex flex-row">
                             <Link
                               href={
                                 "project/" +
@@ -156,13 +125,12 @@ const Projects = () => {
                                 "/" +
                                 project.slug
                               }
-                              className="flex flex-row items-center space-x-2">
-                              <p>Detail</p>{" "}
+                              className="flex flex-row items-center space-x-2 pt-2">
                               <FaArrowUpRightFromSquare></FaArrowUpRightFromSquare>
                             </Link>
-                          </Button>
-                        </CardActions>
-                      </Card>
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </AnimatedContent>
                 </div>

@@ -11,6 +11,7 @@ import CardActions from "@mui/material/CardActions";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { FaArrowUpRightFromSquare } from "react-icons/fa6";
+import Loading from "@/app/_components/Loading";
 
 interface Projects {
   judul: string;
@@ -52,15 +53,40 @@ const Projects = () => {
             {" "}
             <h1 className="text-6xl font-medium text-gray-400">My Projects</h1>
           </span>
-
           <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
         </span>
+
+        <div className="flex justify-center mt-12 space-x-4">
+          {[
+            { label: "All", value: "all" },
+            { label: "Web Development", value: "web-development" },
+            { label: "Data Science", value: "data-science" },
+            { label: "Data Engineering", value: "data-engineering" },
+            { label: "Data Analytics", value: "data-analytics" },
+          ].map((category) => (
+            <button
+              key={category.value}
+              onClick={() => {
+                if (category.value === "all") {
+                  fetch("/api/projects")
+                    .then((res) => res.json())
+                    .then((data) => setProjects(data));
+                } else {
+                  fetch(`/api/projects?category=${category.value}`)
+                    .then((res) => res.json())
+                    .then((data) => setProjects(data));
+                }
+              }}
+              className="px-4 py-2 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 border hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+              {category.label}
+            </button>
+          ))}
+        </div>
+
         <div className="my-20">
           <div className="flex flex-wrap justify-center gap-8">
             {projects.length === 0 ? (
-              <div className="flex flex-col justify-center items-center h-32">
-                <span className="loading loading-dots loading-xl"></span>
-              </div>
+              <Loading />
             ) : (
               projects.map((project, i) => (
                 <div key={i} className="flex">
@@ -68,7 +94,7 @@ const Projects = () => {
                     distance={100}
                     direction="vertical"
                     reverse={false}
-                    config={{ tension: 50, friction: 25 }}
+                    config={{ tension: 120, friction: 14 }}
                     initialOpacity={0}
                     animateOpacity
                     threshold={0.1}>

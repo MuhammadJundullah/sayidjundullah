@@ -1,6 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Loading from "@/app/_components/Loading";
 
 interface Educations {
   name: string;
@@ -34,9 +35,7 @@ const Education = () => {
         </span>
         <div className="my-20">
           {educations.length === 0 ? (
-            <div className="flex flex-col justify-center items-center h-32">
-              <span className="loading loading-dots loading-xl"></span>
-            </div>
+            <Loading />
           ) : (
             educations.map((education, index) => (
               <div key={index}>

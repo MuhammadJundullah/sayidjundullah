@@ -1,10 +1,9 @@
 "use client";
-
+import Loading from "@/components/Loading";
 import React from "react";
-
 import { fetchDataFromAPI } from "@/lib/actions";
-
 import { useEffect, useState } from "react";
+import Loading from "@/app/_components/Loading";
 
 export default function Page({ params }) {
   const { slug } = React.use(params);
@@ -28,9 +27,7 @@ export default function Page({ params }) {
           {JSON.stringify(data, null, 2)}
         </pre>
       ) : (
-        <div className="flex flex-col justify-center items-center h-screen">
-          <span className="loading loading-dots loading-xl"></span>
-        </div>
+        <Loading />
       )}
     </div>
   );

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Loading from "@/app/_components/Loading";
 
 interface Jobdesk {
   description: string;
@@ -42,9 +43,7 @@ const WorkExperiences = () => {
         </span>
         <div className="my-20">
           {loading ? (
-            <div className="flex flex-col justify-center items-center h-32">
-              <span className="loading loading-dots loading-xl"></span>
-            </div>
+            <Loading />
           ) : (
             experiences.map((exp, i) => (
               <div key={i}>

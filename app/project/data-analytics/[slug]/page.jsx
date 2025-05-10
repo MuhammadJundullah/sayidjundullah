@@ -4,6 +4,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchDataFromAPI } from "@/lib/actions";
+import Loading from "@/app/_components/Loading";
 
 export default function Page({ params }) {
   const { slug } = React.use(params);
@@ -22,7 +23,7 @@ export default function Page({ params }) {
   return (
     <div className="container mx-auto p-4">
       <div>
-        <Link href="/" className="btn btn-primary mb-4">
+        <Link href="/#projects" className="btn btn-primary mb-4">
           Back
         </Link>
       </div>
@@ -58,9 +59,7 @@ export default function Page({ params }) {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col h-screen justify-center items-center h-screen">
-          <span className="loading loading-dots loading-xl"></span>
-        </div>
+        <Loading />
       )}
     </div>
   );

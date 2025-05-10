@@ -4,11 +4,12 @@ const Footer = () => {
   return (
     <section id="Footer">
       <footer>
-        <div className="mx-auto max-w-6xl space-y-8 px-4 py-8 sm:px-6 lg:space-y-16 lg:px-8">
+        <div className="mx-auto max-w-6xl space-y-8 py-8 lg:space-y-16 ">
+          <p className="text-sm text-gray-400">Last updated on May 10, 2025 </p>
           <div className="sm:flex sm:items-center sm:justify-between">
             <div className="text-white">
-              <p className="text-xl text-white">
-                Sayid J. &copy; {new Date().getFullYear()}
+              <p className="text-xl text-white ">
+                Sayid J &copy; {new Date().getFullYear()}
               </p>
             </div>
 

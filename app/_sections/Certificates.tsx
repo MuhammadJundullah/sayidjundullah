@@ -6,6 +6,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import Loading from "@/app/_components/Loading";
 
 interface Certificates {
   name: string;
@@ -50,9 +51,7 @@ const Certificates = () => {
         <div className="my-20">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {certificates.length === 0 ? (
-              <div className="flex flex-col justify-center items-center h-32">
-                <span className="loading loading-dots loading-xl"></span>
-              </div>
+              <Loading />
             ) : (
               certificates.map((certificate, i) => (
                 <div key={i}>
@@ -60,7 +59,7 @@ const Certificates = () => {
                     distance={100}
                     direction="vertical"
                     reverse={false}
-                    config={{ tension: 50, friction: 25 }}
+                    config={{ tension: 120, friction: 14 }}
                     initialOpacity={0}
                     animateOpacity
                     threshold={0.1}>

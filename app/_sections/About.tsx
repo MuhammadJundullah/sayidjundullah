@@ -13,7 +13,7 @@ const About = () => {
   return (
     <section id="About">
       <div className="h-screen flex flex-col max-w-6xl mx-auto mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0]">
-        <SiAboutdotme className="text-9xl mx-auto" />
+        <SiAboutdotme className="text-9xl mx-auto text-gray-400" />
         <ScrollReveal
           baseOpacity={8}
           enableBlur={true}

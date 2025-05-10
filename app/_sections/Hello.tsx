@@ -45,7 +45,7 @@ const Hello = () => {
               alt="Ahmad"
               width={300}
               height={300}
-              className="rounded-full border-2 border-[#0f172a] shadow-lg shadow-[#0f172a] hover:shadow-[#0f172a] transition-all duration-300 ease-in-out"
+              className="rounded-full border-2 border-[#0f172a] shadow-lg shadow-[#0f172a] hover:shadow-[0_0_20px_5px_#0f172a] transition-all duration-300 ease-in-out"
             />
           </div>
 
@@ -57,7 +57,7 @@ const Hello = () => {
               animateBy="words"
               direction="bottom"
               onAnimationComplete={handleAnimationComplete}
-              className="text-3xl font-thin text-center text-[#0f172a] dark:text-[#e2e8f0] max-w-3xl italic"
+              className="text-3xl font-medium text-center text-[#0f172a] dark:text-[#e2e8f0] max-w-3xl"
             />
           </div>
         </div>

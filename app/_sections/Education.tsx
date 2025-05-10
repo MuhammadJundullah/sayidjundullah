@@ -26,9 +26,9 @@ const Education = () => {
     <section id="Educations">
       <div className="h-screen py-40 flex flex-col max-w-6xl mx-auto mb-20 font-thin  text-[#0f172a] dark:text-[#e2e8f0]">
         <span className="flex items-center mb-10">
-          <span className="shrink-0 pe-4 text-gray-900 dark:text-white">
+          <span className="shrink-0 pe-4 dark:text-white">
             {" "}
-            <h1 className="text-6xl font-thin">Educations</h1>
+            <h1 className="text-6xl font-medium text-gray-400">Educations</h1>
           </span>
           <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
         </span>

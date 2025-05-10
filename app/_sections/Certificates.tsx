@@ -38,9 +38,11 @@ const Certificates = () => {
     <section id="Projects">
       <div className="py-40 flex flex-col max-w-6xl mx-auto mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0]">
         <span className="flex items-center">
-          <span className="shrink-0 pe-4 text-gray-900 dark:text-white">
+          <span className="shrink-0 pe-4 dark:text-white">
             {" "}
-            <h1 className="text-6xl font-thin">My Certifications</h1>
+            <h1 className="text-6xl font-medium text-gray-400">
+              My Certifications
+            </h1>
           </span>
 
           <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
@@ -49,7 +51,6 @@ const Certificates = () => {
           <div className="flex flex-wrap justify-center gap-y-16 gap-x-8">
             {certificates.length === 0 ? (
               <div className="flex flex-col justify-center items-center h-32">
-                <p className="mb-2">Loading certificates, please wait...</p>
                 <span className="loading loading-dots loading-xl"></span>
               </div>
             ) : (

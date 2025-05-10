@@ -33,15 +33,16 @@ const WorkExperiences = () => {
     <section id="WorkExperiences">
       <div className="flex flex-col max-w-6xl mx-auto mb-20 text-[#0f172a] dark:text-[#e2e8f0]">
         <span className="flex items-center">
-          <span className="shrink-0 pe-4 text-gray-900 dark:text-white">
-            <h1 className="text-6xl font-thin">My Work Experiences</h1>
+          <span className="shrink-0 pe-4 dark:text-white">
+            <h1 className="text-6xl font-medium text-gray-400">
+              My Work Experiences
+            </h1>
           </span>
           <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
         </span>
         <div className="my-20">
           {loading ? (
             <div className="flex flex-col justify-center items-center h-32">
-              <p className="mb-2">Loading experiences, please wait...</p>
               <span className="loading loading-dots loading-xl"></span>
             </div>
           ) : (

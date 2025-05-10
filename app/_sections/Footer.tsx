@@ -15,7 +15,7 @@ const Footer = () => {
             <ul className="mt-8 flex justify-start gap-6 sm:mt-0 sm:justify-end">
               <li>
                 <a
-                  href="#"
+                  href="https://www.instagram.com/saed.m_"
                   rel="noreferrer"
                   target="_blank"
                   className="text-white transition hover:opacity-75">
@@ -37,7 +37,7 @@ const Footer = () => {
 
               <li>
                 <a
-                  href="#"
+                  href="https://x.com/MuhammadJndllh"
                   rel="noreferrer"
                   target="_blank"
                   className="text-white transition hover:opacity-75">

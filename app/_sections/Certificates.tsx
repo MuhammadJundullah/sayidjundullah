@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import Loading from "@/app/_components/Loading";
@@ -64,30 +60,22 @@ const Certificates = () => {
                     animateOpacity
                     threshold={0.1}>
                     <div>
-                      <Card sx={{ maxWidth: 345 }}>
-                        <CardMedia>
-                          <Image
-                            src={`/static-image/Certificate/${certificate.name}`}
-                            alt={certificate.name}
-                            width={345}
-                            height={140}
-                            style={{ objectFit: "cover" }}
-                          />
-                        </CardMedia>
-                        <CardContent>
-                          <Typography
-                            gutterBottom
-                            component="div"
-                            className="text-2xl">
-                            {certificate.desc}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: "text.secondary" }}>
-                            {certificate.date}
-                          </Typography>
-                        </CardContent>
-                      </Card>
+                      <Image
+                        src={`/static-image/Certificate/${certificate.name}`}
+                        alt={certificate.name}
+                        width={345}
+                        height={140}
+                        className="rounded-lg shadow-lg"
+                        style={{ objectFit: "cover" }}
+                      />
+                      <div className="mx-auto mt-4 items-center justify-center text-center">
+                        <h3 className="font-semibold mb-4">
+                          {certificate.desc}
+                        </h3>
+                        <time className=" text-gray-500 font-medium">
+                          {certificate.date}
+                        </time>
+                      </div>
                     </div>
                   </AnimatedContent>
                 </div>

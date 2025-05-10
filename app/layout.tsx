@@ -25,8 +25,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${fontSans.variable} ${fontMono.variable} antialiased`}>
-        <div className="bg-gradient-to-b from-[#0f172a] to-[#36445c]">
-          {children} 
+        <div
+        // className="bg-gradient-to-b from-[#0f172a] to-[#36445c]"
+        >
+          {children}
         </div>
       </body>
     </html>

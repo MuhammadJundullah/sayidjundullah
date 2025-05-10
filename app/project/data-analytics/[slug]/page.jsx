@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { usefetchDataFromAPI } from "@/lib/actions";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { fetchDataFromAPI } from "@/lib/actions";
 
 export default function Page({ params }) {
   const { slug } = React.use(params);
@@ -58,7 +58,7 @@ export default function Page({ params }) {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col justify-center items-center h-32">
+        <div className="flex flex-col h-screen justify-center items-center">
           <p className="mb-2">Loading data, please wait...</p>
           <span className="loading loading-dots loading-xl"></span>
         </div>

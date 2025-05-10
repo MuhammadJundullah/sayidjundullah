@@ -43,13 +43,13 @@ const Education = () => {
                   <li className="relative -ms-1.5 flex items-start gap-4">
                     <span className="size-3 shrink-0 rounded-full bg-white"></span>
 
-                    <div className="mt-2">
-                      <h3 className="font-bold mb-6 flex items-center gap-5 -mt-12">
+                    <div className="mt-10">
+                      <h3 className="font-bold mb-6 flex items-center gap-6 -mt-16">
                         <Image
                           src={`/static-image/Education/${education.name}`}
                           alt={education.name}
-                          width={100}
-                          height={100}
+                          width={70}
+                          height={70}
                           className="rounded-full"
                         />
                         <span>

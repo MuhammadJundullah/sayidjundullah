@@ -49,7 +49,7 @@ const Certificates = () => {
           <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
         </span>
         <div className="my-20">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="flex flex-wrap justify-center gap-8">
             {certificates.length === 0 ? (
               <Loading />
             ) : (

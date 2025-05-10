@@ -37,7 +37,7 @@ export default function Page({ params }) {
           {data.map((item) => (
             <div key={item.id} className="mb-8">
               <h2 className="text-5xl font-semibold my-4">{item.judul}</h2>
-              <div className="my-6 flex justify-center items-center">
+              <div className="my-10 flex justify-center items-center">
                 <Image
                   src={`/static-image/Projects/${item.photo}`}
                   alt={item.judul}
@@ -53,7 +53,15 @@ export default function Page({ params }) {
                 />
                 <div className="w-full">
                   <p className="py-2">
-                    <strong>Category:</strong> {item.category}
+                    <strong>Site:</strong>
+                    <a
+                      href={item.site}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline">
+                      {" "}
+                      {item.site}
+                    </a>
                   </p>
                   <p className="py-2">
                     <strong>Technologies:</strong> {item.tech}

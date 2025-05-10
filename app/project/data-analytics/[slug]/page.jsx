@@ -41,7 +41,7 @@ export default function Page({ params }) {
                   className="my-4"
                   dangerouslySetInnerHTML={{ __html: item.desc }}
                 />
-                <div className="w-4xl ">
+                <div className="w-full ">
                   <p className="py-2">
                     <strong>Category:</strong> {item.category}
                   </p>

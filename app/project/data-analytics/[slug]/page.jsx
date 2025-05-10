@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchDataFromAPI } from "@/lib/actions";
 import Loading from "@/app/_components/Loading";
+import { FaArrowLeft } from "react-icons/fa6";
 
 export default function Page({ params }) {
   const { slug } = React.use(params);
@@ -21,38 +22,45 @@ export default function Page({ params }) {
   }, [slug]);
 
   return (
-    <div className="container mx-auto p-4">
-      <div>
-        <Link href="/#projects" className="btn btn-primary mb-4">
-          Back
-        </Link>
-      </div>
+    <div className="container mx-auto max-w-6xl flex flex-col justify-center min-h-screen">
       {data ? (
-        <div className="container mx-auto p-4">
+        <div className="container mx-auto py-8">
+          <div className="flex justify-between items-center py-4">
+            <Link
+              href="/#projects"
+              className="flex  hover:text-white text-gray-400">
+              <FaArrowLeft className="mt-1" />
+              <span className="ml-2">Back to Projects</span>
+            </Link>
+          </div>
           {data.map((item) => (
             <div key={item.id} className="mb-8">
-              <h2 className="text-xl font-semibold">{item.judul}</h2>
-              <p
-                className="text-gray-600 mb-2"
-                dangerouslySetInnerHTML={{ __html: item.desc }}></p>
-              <p>
-                <strong>Category:</strong> {item.category}
-              </p>
-              <p>
-                <strong>Technologies:</strong> {item.tech}
-              </p>
-              <p>
-                <strong>GitHub URL:</strong>{" "}
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 underline">
-                  {item.url}
-                </a>
-              </p>
-              <div className="mt-4">
-                <strong>Dashboard:</strong>
+              <h2 className="text-5xl font-semibold my-4">{item.judul}</h2>
+              <div className="flex flex-col md:flex-row mt-4 gap-5">
+                <p
+                  className="my-4"
+                  dangerouslySetInnerHTML={{ __html: item.desc }}
+                />
+                <div className="w-4xl ">
+                  <p className="py-2">
+                    <strong>Category:</strong> {item.category}
+                  </p>
+                  <p className="py-2">
+                    <strong>Technologies:</strong> {item.tech}
+                  </p>
+                  <p className="py-2">
+                    <strong>GitHub URL:</strong>{" "}
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline">
+                      Notebook.ipynb
+                    </a>
+                  </p>
+                </div>
+              </div>
+              <div className="my-6 flex justify-center items-center">
                 <div dangerouslySetInnerHTML={{ __html: item.site }} />
               </div>
             </div>

@@ -34,7 +34,7 @@ const Certificates = () => {
   return (
     <section id="certificates">
       <div className="sm:py-40 flex flex-col max-w-6xl sm:mx-auto mx-5 mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0]">
-        <span className="text-4xl flex items-center">
+        <span className="text-3xl flex items-center">
           <span className="shrink-0 pe-4 ">
             <h1 className="sm:text-6xl font-medium dark:text-white text-gray-800">
               My Certifications

@@ -19,7 +19,7 @@ const Hello = () => {
   return (
     <section id="hello">
       <div className="h-screen flex flex-col sm:space-y-10 max-w-6xl sm:mb-20 sm:mx-auto mx-5">
-        <div className="flex flex-row justify-between my-10 sm:text-3xl text-2xl font-bold text-gray-900 dark:text-gray-200">
+        <div className="flex flex-row justify-between sm:my-10 my-5 sm:text-3xl text-2xl font-bold text-gray-900 dark:text-gray-200">
           <p>My Portfolio</p>
           <div className="flex flex-row sm:space-x-10 space-x-4">
             <Link
@@ -51,7 +51,7 @@ const Hello = () => {
             />
           </div>
 
-          <span className="block w-full border-t border-[0.1px] my-10 border-gray-500 sm:hidden"></span>
+          <span className="block w-full border-t border-[0.1px] my-10 dark:border-gray-500 border-gray-200 sm:hidden"></span>
 
           {/* TEXT */}
           <div className="flex-1 flex justify-center items-center sm:min-h-[400px]">

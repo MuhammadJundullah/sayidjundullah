@@ -33,7 +33,7 @@ const WorkExperiences = () => {
   return (
     <section id="WorkExperiences">
       <div className="flex flex-col max-w-6xl sm:mx-auto mx-5 sm:mb-20 text-gray-800 dark:text-gray-200">
-        <span className="text-4xl flex items-center">
+        <span className="text-3xl flex items-center">
           <span className="shrink-0 pe-4">
             <h1 className="sm:text-6xl font-medium dark:text-white text-gray-800 my-10">
               My Work Experiences

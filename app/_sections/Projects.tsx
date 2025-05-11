@@ -41,7 +41,7 @@ const Projects = () => {
   return (
     <section id="projects">
       <div className="py-40 flex flex-col max-w-6xl sm:mx-auto mx-5 sm:mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0]">
-        <span className="text-4xl flex items-center">
+        <span className="text-3xl flex items-center">
           <span className="shrink-0 pe-4">
             {" "}
             <h1 className="sm:text-5xl font-medium dark:text-white text-gray-800">
@@ -51,7 +51,7 @@ const Projects = () => {
           <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
         </span>
 
-        <div className="flex justify-center mt-12 space-x-4 overflow-x-auto sm:overflow-visible scrollbar-hide px-4">
+        <div className="flex justify-center mt-12 space-x-4 overflow-x-auto sm:overflow-visible px-4 scrollbar-hide">
           {[
             { label: "All", value: "all" },
             { label: "Web Development", value: "web-development" },
@@ -121,7 +121,7 @@ const Projects = () => {
                           <p className="text-gray-700 dark:text-gray-200">
                             {project.judul}
                           </p>
-                          <span className="block w-full border-t border-[0.1px] my-2 border-gray-500"></span>
+                          <span className="block w-full border-t border-[0.1px] my-2 border-gray-300"></span>
                           <p className="text-gray-700 dark:text-gray-300 font-light">
                             {project.tech}
                           </p>

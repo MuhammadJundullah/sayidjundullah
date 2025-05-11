@@ -26,7 +26,7 @@ const Education = () => {
   return (
     <section id="Educations">
       <div className="sm:h-screen sm:py-40 flex flex-col max-w-6xl sm:mx-auto mx-5 sm:mb-20 font-thin text-gray-800 dark:text-gray-200">
-        <span className="text-4xl flex items-center sm:mb-10">
+        <span className="text-3xl flex items-center sm:mb-10">
           <span className="shrink-0 pe-4 dark:text-white">
             <h1 className="sm:text-6xl font-medium dark:text-white text-gray-800">
               Educations

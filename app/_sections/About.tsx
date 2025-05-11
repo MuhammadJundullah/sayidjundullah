@@ -11,8 +11,8 @@ const About = () => {
   return (
     <section id="About">
       <div className="flex flex-col max-w-6xl mb-20 sm:mx-auto mx-5 font-thin sm:text-center text-gray-800 dark:text-gray-200">
-        <div className="text-4xl mt-10 mb-20 pb-20">
-          <span className="flex items-center my-10">
+        <div className="text-3xl mt-10 mb-20 pb-20">
+          <span className="flex items-center sm:my-10">
             <span className="shrink-0 pe-4">
               <h1 className="sm:text-6xl font-medium text-gray-600 dark:text-gray-300 sm:mx-0">
                 About Me
@@ -26,7 +26,7 @@ const About = () => {
               enableBlur={true}
               baseRotation={2}
               blurStrength={2}
-              textClassName="font-thin sm:text-4xl text-2xl text-gray-700 dark:text-gray-300">
+              textClassName="font-thin sm:text-4xl text-xl text-gray-700 dark:text-gray-300">
               I’m a curious and self-driven learner who loves solving problems
               with technology. As an introvert and deep thinker, I enjoy working
               behind the scenes—coding, analyzing data, and turning ideas into
@@ -41,14 +41,14 @@ const About = () => {
           </div>
         </div>
 
-        <div className="sm:text-4xl sm:my-40 pb-20 text-2xl">
-          <span className="flex items-center my-10 max-w-xl mx-auto">
+        <div className="sm:text-4xl sm:my-20 pb-20 text-xl">
+          <span className="flex items-center my-5 max-w-xl mx-auto">
             <span className="shrink-0 pe-4">
               <h1 className="sm:text-4xl text-2xl font-medium text-gray-600 dark:text-gray-300">
-                What I do?
+                What I do
               </h1>
             </span>
-            <span className="text-2xl h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
+            <span className="text-xl h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
           </span>
 
           <p className="leading-normal text-gray-700 dark:text-gray-300">

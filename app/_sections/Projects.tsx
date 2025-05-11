@@ -51,7 +51,7 @@ const Projects = () => {
           <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
         </span>
 
-        <div className="flex justify-center mt-12 space-x-4 overflow-x-auto sm:overflow-visible">
+        <div className="flex justify-center mt-12 space-x-4 overflow-x-auto sm:overflow-visible scrollbar-hide px-4">
           {[
             { label: "All", value: "all" },
             { label: "Web Development", value: "web-development" },
@@ -122,7 +122,7 @@ const Projects = () => {
                             {project.judul}
                           </p>
                           <span className="block w-full border-t border-[0.1px] my-2 border-gray-500"></span>
-                          <p className="text-gray-700 dark:text-gray-300">
+                          <p className="text-gray-700 dark:text-gray-300 font-light">
                             {project.tech}
                           </p>
                           <p className="text-gray-500 dark:text-gray-400 text-sm items-center text-center justify-center pt-2 flex flex-row">

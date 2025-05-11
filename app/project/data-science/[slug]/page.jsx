@@ -22,7 +22,7 @@ export default function Page({ params }) {
   }, [slug]);
 
   return (
-    <div className="container sm:mx-auto mx-5 max-w-6xl flex flex-col justify-center min-h-screen">
+    <div className="sm:mx-auto mx-5 max-w-6xl flex flex-col justify-center min-h-screen">
       {data ? (
         <div className="container mx-auto py-8">
           <div className="flex justify-between items-center py-4">

@@ -28,7 +28,7 @@ export default function Page({ params }) {
           <div className="flex justify-between items-center py-4">
             <Link
               href="/#projects"
-              className="flex hover:text-white text-gray-400">
+              className="flex  dark:hover:text-white hover:text-black text-gray-400">
               <FaArrowLeft className="mt-1" />
               <span className="ml-2">Back to Projects</span>
             </Link>

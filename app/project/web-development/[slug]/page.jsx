@@ -29,7 +29,7 @@ export default function Page({ params }) {
           <div className="flex justify-between items-center py-4">
             <Link
               href="/#projects"
-              className="flex  hover:text-white text-gray-400">
+              className="flex  dark:hover:text-white hover:text-black text-gray-400">
               <FaArrowLeft className="mt-1" />
               <span className="ml-2">Back to Projects</span>
             </Link>
@@ -45,7 +45,7 @@ export default function Page({ params }) {
                   alt={item.judul}
                   width={800}
                   height={600}
-                  className="rounded-lg"
+                  className="rounded-lg border-2 border-gray-300 shadow-lg"
                 />
               </div>
               <div className="sm:flex flex-col sm:flex-row mt-4 sm:gap-5">

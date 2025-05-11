@@ -29,7 +29,7 @@ export default function Page({ params }) {
           <div className="flex justify-between items-center py-4">
             <Link
               href="/#projects"
-              className="flex  hover:text-white text-gray-400">
+              className="flex  dark:hover:text-white hover:text-black text-gray-400">
               <FaArrowLeft className="mt-1" />
               <span className="ml-2">Back to Projects</span>
             </Link>
@@ -39,13 +39,13 @@ export default function Page({ params }) {
               <h2 className="sm:text-5xl text-3xl font-semibold my-4">
                 {item.judul}
               </h2>
-              <div className="my-6 flex justify-center items-center">
+              <div className="my-10 flex justify-center items-center">
                 <Image
                   src={`/static-image/Projects/${item.photo}`}
                   alt={item.judul}
                   width={800}
                   height={600}
-                  className="rounded-lg"
+                  className="rounded-lg border-2 border-gray-300 shadow-lg"
                 />
               </div>
               <div className="flex flex-col md:flex-row mt-4 gap-5">

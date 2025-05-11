@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <section id="Footer">
       <footer>
-        <div className="sm:mx-auto mx-5 max-w-6xl space-y-8 py-8 lg:space-y-16">
+        <div className="sm:mx-auto mx-5 max-w-6xl space-y-8 py-8 ">
           <p className="text-sm text-gray-400 dark:text-gray-500">
             Last updated on May 10, 2025
           </p>
@@ -15,7 +15,7 @@ const Footer = () => {
               </p>
             </div>
 
-            <ul className=" flex justify-start gap-6 sm:justify-end">
+            <ul className="flex justify-start gap-6 sm:justify-end">
               <li>
                 <a
                   href="https://www.instagram.com/saed.m_"

@@ -43,7 +43,7 @@ const Hello = () => {
           {/* IMAGE */}
           <div className="sm:min-w-[400px] sm:min-h-[400px] min-w-[200px] min-h-[200px] flex justify-center items-center">
             <Image
-              src="/static-image/ahmad.png"
+              src="/static-image/ahmad.jpg"
               alt="Ahmad"
               width={200}
               height={200}

@@ -23,7 +23,7 @@ export default function Page({ params }) {
   }, [slug]);
 
   return (
-    <div className="container mx-auto max-w-6xl flex flex-col justify-center min-h-screen">
+    <div className="container sm:mx-auto mx-5 max-w-6xl flex flex-col justify-center min-h-screen">
       {data ? (
         <div className="container mx-auto py-8">
           <div className="flex justify-between items-center py-4">
@@ -36,7 +36,9 @@ export default function Page({ params }) {
           </div>
           {data.map((item) => (
             <div key={item.id} className="mb-8">
-              <h2 className="text-5xl font-semibold my-4">{item.judul}</h2>
+              <h2 className="sm:text-5xl text-3xl font-semibold my-4">
+                {item.judul}
+              </h2>
               <div className="my-6 flex justify-center items-center">
                 <Image
                   src={`/static-image/Projects/${item.photo}`}

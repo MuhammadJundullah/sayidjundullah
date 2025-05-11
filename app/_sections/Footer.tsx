@@ -10,7 +10,7 @@ const Footer = () => {
           </p>
           <div className="flex justify-between">
             <div>
-              <p className="text-xl text-gray-900 dark:text-white">
+              <p className="sm:text-xl text-gray-900 dark:text-white">
                 Sayid J &copy; {new Date().getFullYear()}
               </p>
             </div>

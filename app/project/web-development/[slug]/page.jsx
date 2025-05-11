@@ -23,9 +23,9 @@ export default function Page({ params }) {
   }, [slug]);
 
   return (
-    <div className="container mx-auto max-w-6xl flex flex-col justify-center min-h-screen">
+    <div className="container sm:mx-auto mx-5 max-w-6xl flex flex-col justify-center min-h-screen">
       {data ? (
-        <div className="container mx-auto py-8">
+        <div className="container sm:mx-auto py-8">
           <div className="flex justify-between items-center py-4">
             <Link
               href="/#projects"
@@ -36,7 +36,9 @@ export default function Page({ params }) {
           </div>
           {data.map((item) => (
             <div key={item.id} className="mb-8">
-              <h2 className="text-5xl font-semibold my-4">{item.judul}</h2>
+              <h2 className="sm:text-5xl text-3xl font-semibold my-4">
+                {item.judul}
+              </h2>
               <div className="my-10 flex justify-center items-center">
                 <Image
                   src={`/static-image/Projects/${item.photo}`}
@@ -46,7 +48,7 @@ export default function Page({ params }) {
                   className="rounded-lg"
                 />
               </div>
-              <div className="flex flex-col md:flex-row mt-4 gap-5">
+              <div className="sm:flex flex-col sm:flex-row mt-4 sm:gap-5">
                 <p
                   className="my-4"
                   dangerouslySetInnerHTML={{ __html: item.desc }}

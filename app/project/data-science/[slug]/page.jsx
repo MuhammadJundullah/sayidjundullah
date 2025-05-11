@@ -22,26 +22,28 @@ export default function Page({ params }) {
   }, [slug]);
 
   return (
-    <div className="container mx-auto max-w-6xl flex flex-col justify-center min-h-screen">
+    <div className="container sm:mx-auto mx-5 max-w-6xl flex flex-col justify-center min-h-screen">
       {data ? (
         <div className="container mx-auto py-8">
           <div className="flex justify-between items-center py-4">
             <Link
               href="/#projects"
-              className="flex  hover:text-white text-gray-400">
+              className="flex hover:text-white text-gray-400">
               <FaArrowLeft className="mt-1" />
               <span className="ml-2">Back to Projects</span>
             </Link>
           </div>
           {data.map((item) => (
             <div key={item.id} className="mb-8">
-              <h2 className="text-5xl font-semibold my-4">{item.judul}</h2>
+              <h2 className="sm:text-5xl text-3xl font-semibold my-4">
+                {item.judul}
+              </h2>
               <div className="flex flex-col md:flex-row mt-4 gap-5">
                 <p
                   className="my-4"
                   dangerouslySetInnerHTML={{ __html: item.desc }}
                 />
-                <div className="w-full ">
+                <div className="w-full">
                   <p className="py-2">
                     <strong>Category:</strong> {item.category}
                   </p>
@@ -60,7 +62,7 @@ export default function Page({ params }) {
                   </p>
                 </div>
               </div>
-              <div className="my-6 flex justify-center items-center">
+              <div className="my-6 sm:flex justify-center items-center hidden md:block">
                 <div dangerouslySetInnerHTML={{ __html: item.site }} />
               </div>
             </div>

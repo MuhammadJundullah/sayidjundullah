@@ -10,12 +10,12 @@ const Footer = () => {
           </p>
           <div className="flex justify-between">
             <div>
-              <p className="sm:text-xl text-gray-900 dark:text-white">
+              <p className="text-xl text-gray-900 dark:text-white">
                 Sayid J &copy; {new Date().getFullYear()}
               </p>
             </div>
 
-            <ul className="sm:mt-8 flex justify-start gap-6 sm:justify-end">
+            <ul className=" flex justify-start gap-6 sm:justify-end">
               <li>
                 <a
                   href="https://www.instagram.com/saed.m_"

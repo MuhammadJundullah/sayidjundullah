@@ -25,13 +25,14 @@ const Education = () => {
 
   return (
     <section id="Educations">
-      <div className="h-screen py-40 flex flex-col max-w-6xl mx-auto mb-20 font-thin  text-[#0f172a] dark:text-[#e2e8f0]">
-        <span className="flex items-center mb-10">
+      <div className="sm:h-screen sm:py-40 flex flex-col max-w-6xl sm:mx-auto mx-5 sm:mb-20 font-thin text-gray-800 dark:text-gray-200">
+        <span className="text-4xl flex items-center sm:mb-10">
           <span className="shrink-0 pe-4 dark:text-white">
-            {" "}
-            <h1 className="text-6xl font-medium text-gray-400">Educations</h1>
+            <h1 className="sm:text-6xl font-medium dark:text-white text-gray-800">
+              Educations
+            </h1>
           </span>
-          <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
+          <span className="h-px flex-1 bg-gray-600 dark:bg-white"></span>
         </span>
         <div className="my-20">
           {educations.length === 0 ? (
@@ -39,12 +40,12 @@ const Education = () => {
           ) : (
             educations.map((education, index) => (
               <div key={index}>
-                <ol className="text-3xl relative space-y-8 before:absolute before:-ml-px before:h-full before:w-0.5 before:rounded-full before:bg-gray-200">
+                <ol className="sm:text-3xl relative space-y-8 before:absolute before:-ml-px before:h-full before:w-0.5 before:rounded-full before:bg-gray-200 dark:before:bg-gray-600">
                   <li className="relative -ms-1.5 flex items-start gap-4">
-                    <span className="size-3 shrink-0 rounded-full bg-white"></span>
+                    <span className="size-3 shrink-0 rounded-full bg-gray-800 dark:bg-white"></span>
 
-                    <div className="mt-10">
-                      <h3 className="font-bold mb-6 flex items-center gap-6 -mt-16">
+                    <div className="sm:mt-10">
+                      <h3 className="font-bold mb-6 flex items-center gap-6 sm:-mt-16 -mt-5 text-gray-700 dark:text-gray-300">
                         <Image
                           src={`/static-image/Education/${education.name}`}
                           alt={education.name}
@@ -55,7 +56,9 @@ const Education = () => {
                         <span>
                           {education.school} | {education.major}
                           <br />
-                          <time className="font-light">{education.date}</time>
+                          <time className="font-light text-gray-500 dark:text-gray-400">
+                            {education.date}
+                          </time>
                         </span>
                       </h3>
                       <div className="pb-20"></div>
@@ -70,6 +73,5 @@ const Education = () => {
     </section>
   );
 };
-  
-export default Education;
 
+export default Education;

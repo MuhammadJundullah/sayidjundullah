@@ -40,16 +40,18 @@ const Projects = () => {
 
   return (
     <section id="projects">
-      <div className="py-40 flex flex-col max-w-6xl mx-auto mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0]">
-        <span className="flex items-center">
-          <span className="shrink-0 pe-4 dark:text-white">
+      <div className="py-40 flex flex-col max-w-6xl sm:mx-auto mx-5 sm:mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0]">
+        <span className="text-4xl flex items-center">
+          <span className="shrink-0 pe-4">
             {" "}
-            <h1 className="text-6xl font-medium text-gray-400">My Projects</h1>
+            <h1 className="sm:text-5xl font-medium dark:text-white text-gray-800">
+              My Projects
+            </h1>
           </span>
           <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
         </span>
 
-        <div className="flex justify-center mt-12 space-x-4">
+        <div className="flex justify-center mt-12 space-x-4 overflow-x-auto sm:overflow-visible">
           {[
             { label: "All", value: "all" },
             { label: "Web Development", value: "web-development" },
@@ -70,13 +72,13 @@ const Projects = () => {
                     .then((data) => setProjects(data));
                 }
               }}
-              className="px-4 py-2 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 border hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+              className="px-4 py-2 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 border hover:bg-gray-300 dark:hover:bg-gray-600 transition whitespace-nowrap">
               {category.label}
             </button>
           ))}
         </div>
 
-        <div className="my-20">
+        <div className="my-20 ">
           <div className="flex flex-wrap justify-center gap-8">
             {projects.length === 0 ? (
               <Loading />
@@ -94,8 +96,8 @@ const Projects = () => {
                     animateOpacity
                     threshold={0.1}>
                     <div className="h-full font-medium">
-                      <div className="w-80 border-1 border-gray-500 bg-gray-800 rounded-lg p-2">
-                        <p className="pb-2 text-start text-gray-500 font-medium text-sm">
+                      <div className="w-80 border-1 dark:border-gray-500 border-gray-300 bg-gray-200 dark:bg-gray-800 rounded-lg p-2">
+                        <p className="pb-2 text-start text-gray-500 dark:text-gray-400 font-medium text-sm">
                           {project.category}
                         </p>
                         <Link
@@ -116,10 +118,14 @@ const Projects = () => {
                           />
                         </Link>
                         <div className="py-3">
-                          <p>{project.judul}</p>
+                          <p className="text-gray-700 dark:text-gray-200">
+                            {project.judul}
+                          </p>
                           <span className="block w-full border-t border-[0.1px] my-2 border-gray-500"></span>
-                          <p>{project.tech}</p>
-                          <p className="text-gray-500 text-sm items-center text-center justify-center pt-2 flex flex-row">
+                          <p className="text-gray-700 dark:text-gray-300">
+                            {project.tech}
+                          </p>
+                          <p className="text-gray-500 dark:text-gray-400 text-sm items-center text-center justify-center pt-2 flex flex-row">
                             <Link
                               href={
                                 "project/" +
@@ -146,5 +152,3 @@ const Projects = () => {
 };
 
 export default Projects;
-
-

@@ -33,15 +33,13 @@ const Certificates = () => {
 
   return (
     <section id="Projects">
-      <div className="py-40 flex flex-col max-w-6xl mx-auto mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0]">
-        <span className="flex items-center">
-          <span className="shrink-0 pe-4 dark:text-white">
-            {" "}
-            <h1 className="text-6xl font-medium text-gray-400">
+      <div className="sm:py-40 flex flex-col max-w-6xl sm:mx-auto mx-5 mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0]">
+        <span className="text-4xl flex items-center">
+          <span className="shrink-0 pe-4 ">
+            <h1 className="sm:text-6xl font-medium dark:text-white text-gray-800">
               My Certifications
             </h1>
           </span>
-
           <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
         </span>
         <div className="my-20">
@@ -71,8 +69,10 @@ const Certificates = () => {
                         style={{ objectFit: "cover" }}
                       />
                       <div className="mx-auto mt-4 items-center justify-center text-center mb-7">
-                        <h3 className="font-semibold">{certificate.desc}</h3>
-                        <time className=" text-gray-500 font-medium">
+                        <h3 className="font-semibold dark:text-white text-gray-800">
+                          {certificate.desc}
+                        </h3>
+                        <time className="text-gray-500 dark:text-gray-400 font-medium">
                           {certificate.date}
                         </time>
                       </div>

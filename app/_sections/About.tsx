@@ -1,5 +1,3 @@
-// import dynamic from 'next/dynamic';
-
 import dynamic from "next/dynamic";
 
 const About = () => {
@@ -12,46 +10,48 @@ const About = () => {
 
   return (
     <section id="About">
-      <div className=" flex flex-col max-w-6xl mb-20 mx-auto font-thin text-center text-[#0f172a] dark:text-[#e2e8f0]">
+      <div className="flex flex-col max-w-6xl mb-20 sm:mx-auto mx-5 font-thin sm:text-center text-gray-800 dark:text-gray-200">
         <div className="text-4xl mt-10 mb-20 pb-20">
-          <span className="flex items-center">
-            <span className="shrink-0 pe-4 dark:text-white">
-              {" "}
-              <h1 className="text-6xl font-medium text-gray-400">About Me</h1>
+          <span className="flex items-center my-10">
+            <span className="shrink-0 pe-4">
+              <h1 className="sm:text-6xl font-medium text-gray-600 dark:text-gray-300 sm:mx-0">
+                About Me
+              </h1>
             </span>
-
             <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
           </span>
-          <div>
+          <div className="sm:mx-0">
             <ScrollReveal
               baseOpacity={8}
               enableBlur={true}
               baseRotation={2}
               blurStrength={2}
-              textClassName="font-thin text-4xl">
-              I am a 6th-semester Informatics Engineering student with an
-              interest in web development and data-related fields. I have
-              experience in web development, as well as skills in dashboard
-              creation and data prediction. I am open to remote freelance
-              projects and ready to join a team to work while continuously
-              learning together.
+              textClassName="font-thin sm:text-4xl text-2xl text-gray-700 dark:text-gray-300">
+              I’m a curious and self-driven learner who loves solving problems
+              with technology. As an introvert and deep thinker, I enjoy working
+              behind the scenes—coding, analyzing data, and turning ideas into
+              real digital solutions. I’m the type of person who learns fast,
+              asks the right questions, and keeps improving with every project I
+              take on. I thrive in flexible environments where I can focus,
+              grow, and collaborate remotely. Whether it&apos;s building
+              websites, creating data dashboards, or predicting trends from raw
+              data—I&apos;m all in. My goal is simple: to keep learning, stay
+              useful, and build things that matter.
             </ScrollReveal>
           </div>
         </div>
 
-        <div className="text-4xl mt-10 mv-10 mb-20 pb-20">
-          <span className="flex items-center my-10">
-            <span className="shrink-0 pe-4 dark:text-white">
-              {" "}
-              <h1 className="text-4xl font-medium text-gray-400">
-                What i do ?
+        <div className="sm:text-4xl sm:my-40 pb-20 text-2xl">
+          <span className="flex items-center my-10 max-w-xl mx-auto">
+            <span className="shrink-0 pe-4">
+              <h1 className="sm:text-4xl text-2xl font-medium text-gray-600 dark:text-gray-300">
+                What I do?
               </h1>
             </span>
-
-            <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
+            <span className="text-2xl h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
           </span>
 
-          <p className="leading-normal">
+          <p className="leading-normal text-gray-700 dark:text-gray-300">
             I specialize in creating responsive websites and data-driven
             applications using modern technologies. From backend development
             using Laravel and PostgreSQL, to analyzing data pipelines with tools

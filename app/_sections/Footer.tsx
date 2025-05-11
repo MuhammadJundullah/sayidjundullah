@@ -4,22 +4,24 @@ const Footer = () => {
   return (
     <section id="Footer">
       <footer>
-        <div className="mx-auto max-w-6xl space-y-8 py-8 lg:space-y-16 ">
-          <p className="text-sm text-gray-400">Last updated on May 10, 2025 </p>
-          <div className="sm:flex sm:items-center sm:justify-between">
-            <div className="text-white">
-              <p className="text-xl text-white ">
+        <div className="sm:mx-auto mx-5 max-w-6xl space-y-8 py-8 lg:space-y-16">
+          <p className="text-sm text-gray-400 dark:text-gray-500">
+            Last updated on May 10, 2025
+          </p>
+          <div className="flex justify-between">
+            <div>
+              <p className="text-xl text-gray-900 dark:text-white">
                 Sayid J &copy; {new Date().getFullYear()}
               </p>
             </div>
 
-            <ul className="mt-8 flex justify-start gap-6 sm:mt-0 sm:justify-end">
+            <ul className="sm:mt-8 flex justify-start gap-6 sm:justify-end">
               <li>
                 <a
                   href="https://www.instagram.com/saed.m_"
                   rel="noreferrer"
                   target="_blank"
-                  className="text-white transition hover:opacity-75">
+                  className="text-gray-900 dark:text-white transition hover:opacity-75">
                   <span className="sr-only">Instagram</span>
 
                   <svg
@@ -41,7 +43,7 @@ const Footer = () => {
                   href="https://x.com/MuhammadJndllh"
                   rel="noreferrer"
                   target="_blank"
-                  className="text-white transition hover:opacity-75">
+                  className="text-gray-900 dark:text-white transition hover:opacity-75">
                   <span className="sr-only">Twitter</span>
 
                   <svg

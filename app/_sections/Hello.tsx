@@ -18,51 +18,50 @@ const Hello = () => {
 
   return (
     <section id="hello">
-      <div className="h-screen flex flex-col space-y-10 max-w-6xl mx-auto mb-20">
-        <div className="flex flex-row justify-between my-10 text-3xl font-bold text-[#0f172a] dark:text-[#e2e8f0]">
-          <p>My Portofolio</p>
-          <div className="flex flex-row space-x-10">
-            {/* <Link
-              href={"/blog"}
-              className="text-sm font-bold text-[#0f172a] dark:text-[#e2e8f0] hover:underline">
-              Read My Blog
-            </Link> */}
+      <div className="h-screen flex flex-col sm:space-y-10 max-w-6xl sm:mb-20 sm:mx-auto mx-5">
+        <div className="flex flex-row justify-between my-10 sm:text-3xl text-2xl font-bold text-gray-900 dark:text-gray-200">
+          <p>My Portfolio</p>
+          <div className="flex flex-row sm:space-x-10 space-x-4">
             <Link
               href={"https://linkedin.com/in/sayidm"}
               target="_blank"
-              rel="noopener noreferrer">
+              rel="noopener noreferrer"
+              className="text-gray-900 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
               <FaLinkedin />
             </Link>
             <Link
               href={"https://github.com/MuhammadJundullah"}
               target="_blank"
-              rel="noopener noreferrer">
+              rel="noopener noreferrer"
+              className="text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-400 transition-colors">
               <PiGithubLogoLight />
             </Link>
           </div>
         </div>
 
-        <div className="flex flex-row items-center justify-center space-x-10 pt-10 mt-32">
+        <div className="flex flex-col sm:flex-row items-center justify-center space-y-5 sm:space-y-0 sm:space-x-10 sm:pt-10 sm:mt-32 mt-10">
           {/* IMAGE */}
-          <div className="min-w-[400px] min-h-[400px] flex justify-center items-center">
+          <div className="sm:min-w-[400px] sm:min-h-[400px] min-w-[200px] min-h-[200px] flex justify-center items-center">
             <Image
               src="/static-image/ahmad.jpg"
               alt="Ahmad"
-              width={300}
-              height={300}
-              className="rounded-full border-2 border-[#0f172a] shadow-lg shadow-[#0f172a] hover:shadow-[0_0_20px_5px_#0f172a] transition-all duration-300 ease-in-out"
+              width={200}
+              height={200}
+              className="rounded-full border-2 border-gray-900 dark:border-gray-200 shadow-lg shadow-gray-900 dark:shadow-gray-200 hover:shadow-[0_0_20px_5px_#0f172a] dark:hover:shadow-[0_0_20px_5px_#e2e8f0] transition-all duration-300 ease-in-out sm:w-[300px] sm:h-[300px]"
             />
           </div>
 
+          <span className="block w-full border-t border-[0.1px] my-10 border-gray-500 sm:hidden"></span>
+
           {/* TEXT */}
-          <div className="flex-1 flex justify-center items-center min-h-[400px]">
+          <div className="flex-1 flex justify-center items-center sm:min-h-[400px]">
             <BlurText
               text="Hi There, I'am Sayid Muhammad Jundullah, Web Developer & Data Enthusiast."
               delay={200}
               animateBy="words"
               direction="bottom"
               onAnimationComplete={handleAnimationComplete}
-              className="text-3xl font-medium text-center text-[#0f172a] dark:text-[#e2e8f0] max-w-3xl"
+              className="sm:text-3xl font-medium text-center text-gray-900 dark:text-gray-200 max-w-3xl"
             />
           </div>
         </div>

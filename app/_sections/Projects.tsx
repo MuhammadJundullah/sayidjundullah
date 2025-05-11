@@ -82,7 +82,9 @@ const Projects = () => {
               <Loading />
             ) : (
               projects.map((project, i) => (
-                <div key={i} className="flex">
+                <div
+                  key={i}
+                  className="flex hover:scale-105 transition-all duration-300">
                   <AnimatedContent
                     distance={100}
                     direction="vertical"

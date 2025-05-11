@@ -50,7 +50,9 @@ const Certificates = () => {
               <Loading />
             ) : (
               certificates.map((certificate, i) => (
-                <div key={i}>
+                <div
+                  key={i}
+                  className="hover:scale-105 transition-all duration-300 ease-in-out">
                   <AnimatedContent
                     distance={100}
                     direction="vertical"
@@ -68,10 +70,8 @@ const Certificates = () => {
                         className="rounded-lg shadow-lg"
                         style={{ objectFit: "cover" }}
                       />
-                      <div className="mx-auto mt-4 items-center justify-center text-center">
-                        <h3 className="font-semibold mb-4">
-                          {certificate.desc}
-                        </h3>
+                      <div className="mx-auto mt-4 items-center justify-center text-center mb-7">
+                        <h3 className="font-semibold">{certificate.desc}</h3>
                         <time className=" text-gray-500 font-medium">
                           {certificate.date}
                         </time>

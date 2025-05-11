@@ -22,6 +22,11 @@ const Hello = () => {
         <div className="flex flex-row justify-between my-10 text-3xl font-bold text-[#0f172a] dark:text-[#e2e8f0]">
           <p>My Portofolio</p>
           <div className="flex flex-row space-x-10">
+            {/* <Link
+              href={"/blog"}
+              className="text-sm font-bold text-[#0f172a] dark:text-[#e2e8f0] hover:underline">
+              Read My Blog
+            </Link> */}
             <Link
               href={"https://linkedin.com/in/sayidm"}
               target="_blank"

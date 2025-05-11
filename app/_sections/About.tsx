@@ -1,4 +1,7 @@
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import { BiLogoGmail } from "react-icons/bi";
+import { FaWhatsapp } from "react-icons/fa6";
 
 const About = () => {
   const ScrollReveal = dynamic(
@@ -62,6 +65,24 @@ const About = () => {
             transforming complex data into useful insights and building web apps
             that are not just functional, but also meaningful.
           </p>
+          <div className="flex justify-center mt-20 space-x-4 overflow-x-auto sm:overflow-visible px-4 scrollbar-hide gap-4">
+            <Link
+              href={
+                "https://api.whatsapp.com/send/?phone=%2B6283853291755&text&type=phone_number&app_absent=0"
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-900 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+              <FaWhatsapp />
+            </Link>
+            <Link
+              href={"mailto:sayidmuhammad15@gmail.com"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-900 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+              <BiLogoGmail />
+            </Link>
+          </div>
         </div>
       </div>
     </section>

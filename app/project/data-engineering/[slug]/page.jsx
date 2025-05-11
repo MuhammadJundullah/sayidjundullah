@@ -41,7 +41,7 @@ export default function Page({ params }) {
               </h2>
               <div className="my-10 flex justify-center items-center">
                 <Image
-                  src={`/static-image/Projects/${item.photo}`}
+                  src={`https://res.cloudinary.com/dislphwb0/image/upload/v1747003784/${item.photo}`}
                   alt={item.judul}
                   width={800}
                   height={600}

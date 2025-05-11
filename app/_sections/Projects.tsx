@@ -109,7 +109,8 @@ const Projects = () => {
                           }
                           className="flex flex-row items-center space-x-2">
                           <Image
-                            src={`/static-image/Projects/${project.photo}`}
+                            src={`https://res.cloudinary.com/dislphwb0/image/upload/v1747003784/${project.photo}`}
+                            // src={`/static-image/Projects/${project.photo}`}
                             alt={project.photo}
                             height={200}
                             width={320}

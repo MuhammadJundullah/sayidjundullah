@@ -61,7 +61,8 @@ const Certificates = () => {
                     threshold={0.1}>
                     <div>
                       <Image
-                        src={`/static-image/Certificate/${certificate.name}`}
+                        src={`https://res.cloudinary.com/dislphwb0/image/upload/v1747003789/${certificate.name}`}
+                        // src={`/static-image/Certificate/${certificate.name}`}
                         alt={certificate.name}
                         width={345}
                         height={140}

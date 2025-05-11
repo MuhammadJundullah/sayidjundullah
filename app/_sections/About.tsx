@@ -1,7 +1,5 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { BiLogoGmail } from "react-icons/bi";
-import { FaWhatsapp } from "react-icons/fa6";
 
 const About = () => {
   const ScrollReveal = dynamic(

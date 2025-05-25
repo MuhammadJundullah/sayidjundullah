@@ -44,7 +44,7 @@ const Projects = () => {
         <span className="text-3xl flex items-center">
           <span className="shrink-0 pe-4">
             {" "}
-            <h1 className="sm:text-5xl font-medium dark:text-white text-gray-800">
+            <h1 className="sm:text-5xl font-mono dark:text-white text-gray-800">
               My Projects
             </h1>
           </span>
@@ -72,7 +72,7 @@ const Projects = () => {
                     .then((data) => setProjects(data));
                 }
               }}
-              className="px-4 py-2 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 border hover:bg-gray-300 dark:hover:bg-gray-600 transition whitespace-nowrap">
+              className="px-4 py-2 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 border hover:bg-gray-300 dark:hover:bg-gray-600 transition whitespace-nowrap hover:cursor-pointer">
               {category.label}
             </button>
           ))}

@@ -26,7 +26,7 @@ const Hello = () => {
               href={"https://linkedin.com/in/sayidm"}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-900 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+              className="text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-blue-400 transition-colors">
               <FaLinkedin />
             </Link>
             <Link

@@ -28,7 +28,7 @@ const Education = () => {
       <div className="sm:h-screen sm:py-40 flex flex-col max-w-6xl sm:mx-auto mx-5 sm:mb-20 font-thin text-gray-800 dark:text-gray-200">
         <span className="text-3xl flex items-center sm:mb-10">
           <span className="shrink-0 pe-4 dark:text-white">
-            <h1 className="sm:text-6xl font-medium dark:text-white text-gray-800">
+            <h1 className="sm:text-5xl font-mono dark:text-white text-gray-800">
               Educations
             </h1>
           </span>
@@ -49,8 +49,8 @@ const Education = () => {
                         <Image
                           src={`/static-image/Education/${education.name}`}
                           alt={education.name}
-                          width={70}
-                          height={70}
+                          width={90}
+                          height={90}
                           className="rounded-full"
                         />
                         <span>

@@ -6,6 +6,8 @@ import WorkExperiences from "@/app/_sections/WorkExperiences";
 import Projects from "@/app/_sections/Projects";
 import Certificates from "@/app/_sections/Certificates";
 import Education from "@/app/_sections/Education";
+import { Suspense } from "react";
+import Loading from "./_components/Loading";
 
 const Home = () => {
   return (
@@ -13,7 +15,9 @@ const Home = () => {
       <Hello></Hello>
       <About></About>
       <WorkExperiences></WorkExperiences>
-      <Projects></Projects>
+      <Suspense fallback={<Loading />}>
+        <Projects></Projects>
+      </Suspense>
       <Certificates></Certificates>
       <Education></Education>
     </>

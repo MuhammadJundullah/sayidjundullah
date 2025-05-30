@@ -93,8 +93,10 @@ export default function InputForm() {
             </FormItem>
           )}
         />
-        <ErrorMessage/>
-        <Button type="submit">Submit</Button>
+        <ErrorMessage />
+        <Button type="submit" className="hover:cursor-pointer">
+          Submit
+        </Button>
       </form>
     </Form>
   );

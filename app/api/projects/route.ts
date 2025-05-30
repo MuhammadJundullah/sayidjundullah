@@ -346,3 +346,89 @@ export async function PATCH(request: NextRequest) {
     );
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const slug = searchParams.get("slug");
+
+    if (!slug) {
+      return new Response(
+        JSON.stringify({ error: "Slug parameter is required" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // 1. Ambil data project (termasuk URL foto)
+    const projectQuery = await pool.query(
+      "SELECT photo FROM projects WHERE slug = $1",
+      [slug]
+    );
+
+    if (projectQuery.rows.length === 0) {
+      return new Response(JSON.stringify({ message: "Project not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const photoUrl = projectQuery.rows[0]?.photo;
+
+    // 2. Hapus foto dari Cloudinary jika ada
+    if (photoUrl) {
+      const match = photoUrl.match(/\/v\d+\/(.+)\.\w+$/);
+      const publicId = match ? match[1] : null;
+
+      if (publicId) {
+        try {
+          await cloudinary.uploader.destroy(publicId);
+        } catch (err) {
+          console.error("Gagal hapus foto dari Cloudinary:", err);
+          // Lanjut proses hapus meskipun gagal hapus foto
+        }
+      }
+    }
+
+    // 3. Hapus data dari database
+    const deleteQuery = await pool.query(
+      "DELETE FROM projects WHERE slug = $1 RETURNING *",
+      [slug]
+    );
+
+    if (deleteQuery.rows.length === 0) {
+      return new Response(
+        JSON.stringify({ message: "Failed to delete project" }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    return new Response(
+      JSON.stringify({
+        message: "Project berhasil dihapus",
+        deletedProject: deleteQuery.rows[0],
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  } catch (err) {
+    console.error("Error deleting project:", err);
+    return new Response(
+      JSON.stringify({
+        error: "Gagal menghapus project",
+        detail: err instanceof Error ? err.message : String(err),
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
+}

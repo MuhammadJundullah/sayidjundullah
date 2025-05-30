@@ -5,7 +5,14 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Loading from "@/app/_components/Loading";
 import StatusDropdown from "../_components/StatusDropdown";
-import { SquarePen, Delete, Search, FilePlus } from "lucide-react";
+import {
+  SquarePen,
+  Delete,
+  Search,
+  FilePlus,
+  RefreshCwIcon,
+} from "lucide-react";
+
 import { Input } from "@/components/ui/input";
 import {
   Card,
@@ -38,6 +45,7 @@ const ManageProjects = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -59,7 +67,7 @@ const ManageProjects = () => {
         if (!response.ok) throw new Error("Gagal memuat data proyek");
         const data = await response.json();
         setProjects(data);
-        setFilteredProjects(data); 
+        setFilteredProjects(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Terjadi kesalahan");
       } finally {
@@ -80,10 +88,34 @@ const ManageProjects = () => {
     [projects]
   );
 
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    const response = await fetch("/api/projects");
+    const data = await response.json();
+    setProjects(data);
+    setIsRefreshing(false);
+  };
+
+  const handleDelete = async (slug: string) => {
+    if (!confirm("Yakin ingin menghapus project ini?")) return;
+
+    try {
+      const response = await fetch(`/api/projects?slug=${slug}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        handleRefresh();
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+    }
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       handleSearch(searchKeyword);
-    }, 300);
+    }, 100);
 
     return () => clearTimeout(timer);
   }, [searchKeyword, handleSearch]);
@@ -164,12 +196,21 @@ const ManageProjects = () => {
       </div>
 
       <div className="border-b border-gray-300 mb-10 lg:w-7xl" />
-      <Link
-        href={"/admin/projects/add"}
-        className="flex gap-2 pb-5 hover:text-gray-700 transition">
-        <FilePlus />
-        <span>New Project</span>
-      </Link>
+      <div className="flex items-center justify-between">
+        <Link
+          href={"/admin/projects/add"}
+          className="flex gap-2 pb-5 hover:text-gray-700 transition">
+          <FilePlus />
+          <span>New Project</span>
+        </Link>
+        <button
+          className="flex gap-2 pb-5 hover:text-gray-700 transition hover:cursor-pointer"
+          onClick={handleRefresh}
+          disabled={isRefreshing}>
+          <RefreshCwIcon />
+          <span>Refresh</span>
+        </button>
+      </div>
 
       {filteredProjects.length === 0 ? (
         <div className="text-center py-20 ">
@@ -219,14 +260,13 @@ const ManageProjects = () => {
               </CardContent>
 
               <CardFooter className="flex justify-end gap-2">
-                <Link href={`/admin/projects/delete/${project.slug}`}>
-                  <Button
-                    variant="ghost2"
-                    className="flex items-center gap-2 hover:cursor-pointer">
-                    <Delete size={16} />
-                    Hapus
-                  </Button>
-                </Link>
+                <Button
+                  variant="ghost2"
+                  className="flex items-center gap-2 hover:cursor-pointer"
+                  onClick={() => handleDelete(project.slug)}>
+                  <Delete size={16} />
+                  Hapus
+                </Button>
 
                 <Link href={`/admin/projects/edit/${project.slug}`}>
                   <Button

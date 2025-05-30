@@ -45,11 +45,11 @@ const ProjectsComponent = ({ initialCategory = "all" }: ProjectsProps) => {
       try {
         const url =
           currentCategory === "all"
-            ? "/api/projects"
-            : `/api/projects?category=${currentCategory}`;
+            ? "/api/projects?status=published"
+            : `/api/projects?category=${currentCategory}&status=published`;
 
         const res = await fetch(url, {
-          next: { revalidate: 3600 }, 
+          next: { revalidate: 3600 },
         });
         const data = await res.json();
         setProjects(data);
@@ -65,7 +65,7 @@ const ProjectsComponent = ({ initialCategory = "all" }: ProjectsProps) => {
 
   const handleCategoryChange = (category: string) => {
     setCurrentCategory(category);
-    
+
     const params = new URLSearchParams(searchParams.toString());
     if (category === "all") {
       params.delete("category");
@@ -140,7 +140,8 @@ const ProjectsComponent = ({ initialCategory = "all" }: ProjectsProps) => {
                           }
                           className="flex flex-row items-center space-x-2">
                           <Image
-                            src={`https://res.cloudinary.com/dislphwb0/image/upload/v1747003784/${project.photo}`}
+                            // src={`https://res.cloudinary.com/dislphwb0/image/upload/v1747003784/${project.photo}`}
+                            src={project.photo}
                             alt={project.photo}
                             height={200}
                             width={320}

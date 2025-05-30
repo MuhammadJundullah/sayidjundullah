@@ -1,54 +1,139 @@
 import pool from "@/lib/db";
 import { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { v2 as cloudinary } from "cloudinary";
+import { Readable } from "stream";
+
+if (process.env.CLOUDINARY_URL) {
+  cloudinary.config({
+    secure: true,
+  });
+} else {
+  throw new Error("CLOUDINARY_URL environment variable is required");
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const formData = await req.formData();
+
+    const judul = formData.get("judul")?.toString() || "";
+    const category = formData.get("category")?.toString() || "";
+    const desc = formData.get("desc")?.toString() || "";
+    const status = formData.get("status")?.toString() || "";
+    const url = formData.get("url")?.toString() || "";
+    const tech = formData.get("tech")?.toString() || "";
+    const site = formData.get("site")?.toString() || "";
+
+    const photo = formData.get("photo");
+
+    if (!judul || !category) {
+      return NextResponse.json(
+        { error: "Field 'judul' dan 'category' wajib diisi" },
+        { status: 400 }
+      );
+    }
+
+    let photoUrl: string | null = null;
+
+    if (photo && photo instanceof File) {
+      const bytes = await photo.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+
+      const uploadResult = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "projects" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        stream.end(buffer);
+      });
+
+      photoUrl = (uploadResult as any).secure_url;
+    }
+
+    const slug = judul.toLowerCase().replace(/\s+/g, "-");
+    const categoryslug = category.toLowerCase().replace(/\s+/g, "-");
+
+    await pool.query(
+      `INSERT INTO projects 
+      (judul, slug, category, categoryslug, url, tech, site, status, "desc", photo) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+      [
+        judul,
+        slug,
+        category,
+        categoryslug,
+        url,
+        tech,
+        site,
+        status,
+        desc,
+        photoUrl,
+      ]
+    );
+
+    return NextResponse.json(
+      { message: "Project berhasil dibuat" },
+      { status: 201 }
+    );
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: `Error creating project: ${error.message}` },
+      { status: 500 }
+    );
+  }
+}
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const slug = searchParams.get("slug");
     const category = searchParams.get("category");
+    const status = searchParams.get("status");
 
     let result;
 
-    if (slug) {
+    if (slug && status) {
+      result = await pool.query(
+        "SELECT * FROM projects WHERE slug = $1 AND status = $2",
+        [slug, status]
+      );
+    } else if (category && status) {
+      result = await pool.query(
+        "SELECT * FROM projects WHERE categoryslug = $1 AND status = $2",
+        [category, status]
+      );
+    } else if (slug) {
       result = await pool.query("SELECT * FROM projects WHERE slug = $1", [
         slug,
       ]);
-
-      if (result.rows.length === 0) {
-        return new Response(JSON.stringify({ message: "Data not found" }), {
-          status: 404,
-          headers: { "Content-Type": "application/json" },
-        });
-      }
     } else if (category) {
       result = await pool.query(
         "SELECT * FROM projects WHERE categoryslug = $1",
         [category]
       );
-
-      if (result.rows.length === 0) {
-        return new Response(JSON.stringify({ message: "No data available" }), {
-          status: 404,
-          headers: { "Content-Type": "application/json" },
-        });
-      }
+    } else if (status) {
+      result = await pool.query("SELECT * FROM projects WHERE status = $1", [
+        status,
+      ]);
     } else {
       result = await pool.query(
         `SELECT * FROM projects 
          ORDER BY CASE 
-           WHEN category = 'Web Development' THEN 1 
-           WHEN category = 'Data Science' THEN 2 
-           WHEN category = 'Data Analyst' THEN 3 
-           ELSE 4 
+           WHEN status = 'published' THEN 1 
+           WHEN status = 'archived' THEN 2 
+           ELSE 3
          END`
       );
+    }
 
-      if (result.rows.length === 0) {
-        return new Response(JSON.stringify({ message: "No data available" }), {
-          status: 404,
-          headers: { "Content-Type": "application/json" },
-        });
-      }
+    if (result.rows.length === 0) {
+      return new Response(JSON.stringify({ message: "No data available" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     return new Response(JSON.stringify(result.rows), {
@@ -61,5 +146,203 @@ export async function GET(req: NextRequest) {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
+  }
+}
+
+// Utility untuk convert file ke stream buffer
+async function streamToBuffer(stream: Readable): Promise<Buffer> {
+  const chunks: Uint8Array[] = [];
+  for await (const chunk of stream) {
+    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks);
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+    const slug = searchParams.get("slug");
+
+    if (!id && !slug) {
+      return new Response(
+        JSON.stringify({ error: "ID or slug parameter is required" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const formData = await req.formData();
+    const allowedFields = [
+      "judul",
+      "slug",
+      "category",
+      "categoryslug",
+      "url",
+      "tech",
+      "site",
+      "desc",
+      "status",
+    ];
+    const updateData: Record<string, any> = {};
+    const setClauses: string[] = [];
+    const values: any[] = [];
+
+    // Ambil semua field selain foto
+    allowedFields.forEach((field) => {
+      const value = formData.get(field);
+      if (value) {
+        updateData[field] = value;
+        const dbField = field === "desc" ? `"desc"` : field; // khusus "desc"
+        setClauses.push(`${dbField} = $${setClauses.length + 1}`);
+        values.push(value);
+      }
+    });
+
+    // Jika ada file foto baru, upload ke Cloudinary dan hapus yang lama
+    const newPhotoFile = formData.get("photo") as File | null;
+    if (newPhotoFile && newPhotoFile.size > 0) {
+      // Ambil foto lama
+      const oldPhotoQuery = id
+        ? await pool.query("SELECT photo FROM projects WHERE id = $1", [id])
+        : await pool.query("SELECT photo FROM projects WHERE slug = $1", [
+            slug,
+          ]);
+
+      const oldPhotoUrl = oldPhotoQuery.rows[0]?.photo;
+      if (oldPhotoUrl) {
+        const match = oldPhotoUrl.match(/\/v\d+\/(.+)\.\w+$/);
+        const publicId = match ? match[1] : null;
+        if (publicId) {
+          try {
+            await cloudinary.uploader.destroy(publicId);
+          } catch (err) {
+            console.error("Gagal hapus foto lama:", err);
+          }
+        }
+      }
+
+      // Upload foto baru
+      const buffer = await streamToBuffer(newPhotoFile.stream() as any);
+      const uploadResult = await new Promise<any>((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          { folder: "portfolio" },
+          (err, result) => {
+            if (err) reject(err);
+            else resolve(result);
+          }
+        );
+        Readable.from(buffer).pipe(uploadStream);
+      });
+
+      const photoUrl = uploadResult.secure_url;
+      updateData.photo = photoUrl;
+      setClauses.push(`photo = $${setClauses.length + 1}`);
+      values.push(photoUrl);
+    }
+
+    if (setClauses.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "No valid fields to update" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const setClause = setClauses.join(", ");
+    let query = `UPDATE projects SET ${setClause} WHERE `;
+
+    if (id) {
+      query += `id = $${values.length + 1}`;
+      values.push(id);
+    } else {
+      query += `slug = $${values.length + 1}`;
+      values.push(slug);
+    }
+
+    query += " RETURNING *";
+    const result = await pool.query(query, values);
+
+    if (result.rows.length === 0) {
+      return new Response(JSON.stringify({ message: "Data not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    return new Response(
+      JSON.stringify({ message: "Data berhasil diperbarui", status: "ok" }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  } catch (err) {
+    console.error("Error updating project:", err);
+    return new Response(
+      JSON.stringify({
+        error: "Gagal memperbarui data",
+        detail: err instanceof Error ? err.message : String(err),
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const projectId = searchParams.get("statuschange");
+
+    if (!projectId || isNaN(Number(projectId))) {
+      return NextResponse.json(
+        { error: "Invalid project ID" },
+        { status: 400 }
+      );
+    }
+
+    const { status } = await request.json();
+    if (!["published", "archived"].includes(status)) {
+      return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+    }
+
+    const client = await pool.connect();
+    try {
+      await client.query("BEGIN");
+
+      const { rows } = await client.query(
+        `UPDATE projects 
+         SET status = $1 
+         WHERE id = $2 
+         RETURNING id, judul, status`,
+        [status, projectId]
+      );
+
+      await client.query("COMMIT");
+
+      return rows[0]
+        ? NextResponse.json({
+            success: true,
+            data: rows[0],
+            message: "Status updated successfully",
+          })
+        : NextResponse.json({ error: "Project not found" }, { status: 404 });
+    } finally {
+      await client.query("ROLLBACK").catch(() => {});
+      client.release();
+    }
+  } catch (error) {
+    console.error("Status update error:", error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Server error" },
+      { status: 500 }
+    );
   }
 }

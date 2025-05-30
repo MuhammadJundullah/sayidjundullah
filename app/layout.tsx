@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Source_Sans_3 , JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import Footer from "@/app/_sections/Footer";
 
 const fontSans = Source_Sans_3({
   variable: "--font-sans",
@@ -30,7 +29,6 @@ export default function RootLayout({
         // className="bg-gradient-to-b from-[#0f172a] to-[#36445c]"
         >
           {children}
-          <Footer></Footer>
         </div>
       </body>
     </html>

@@ -164,7 +164,9 @@ const ManageProjects = () => {
       </div>
 
       <div className="border-b border-gray-300 mb-10 lg:w-7xl" />
-      <Link href={"/admin/projects/add"} className="flex gap-2 pb-5 hover:text-gray-700 transition">
+      <Link
+        href={"/admin/projects/add"}
+        className="flex gap-2 pb-5 hover:text-gray-700 transition">
         <FilePlus />
         <span>New Project</span>
       </Link>
@@ -217,9 +219,7 @@ const ManageProjects = () => {
               </CardContent>
 
               <CardFooter className="flex justify-end gap-2">
-                <Link
-                  href={`${process.env.NEXT_PUBLIC_API_URL}/admin/projects/delete/${project.slug}`}
-                  passHref>
+                <Link href={`/admin/projects/delete/${project.slug}`}>
                   <Button
                     variant="ghost2"
                     className="flex items-center gap-2 hover:cursor-pointer">
@@ -228,9 +228,7 @@ const ManageProjects = () => {
                   </Button>
                 </Link>
 
-                <Link
-                  href={`${process.env.NEXT_PUBLIC_API_URL}/admin/projects/edit/${project.slug}`}
-                  passHref>
+                <Link href={`/admin/projects/edit/${project.slug}`}>
                   <Button
                     variant="outline"
                     className="flex items-center gap-2 hover:cursor-pointer">

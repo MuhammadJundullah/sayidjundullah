@@ -84,7 +84,7 @@ export default function AddProject() {
       }
 
       // Mengirim request ke API
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/projects`, {
+      const response = await fetch(`/api/projects`, {
         method: "POST",
         body: formData,
       });

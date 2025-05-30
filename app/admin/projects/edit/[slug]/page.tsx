@@ -50,9 +50,7 @@ export default function EditProject({ params }: { params: Promise<{ slug: string
     const fetchProject = async () => {
       try {
         setIsLoading(true);
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/projects?slug=${slug}`
-        );
+        const res = await fetch(`/api/projects?slug=${slug}`);
 
         if (!res.ok) throw new Error("Failed to fetch project");
 
@@ -122,13 +120,10 @@ export default function EditProject({ params }: { params: Promise<{ slug: string
         formData.append("photo", project.photo);
       }
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/projects?slug=${project.slug}`,
-        {
-          method: "PUT",
-          body: formData, // Tidak perlu headers Content-Type
-        }
-      );
+      const res = await fetch(`/api/projects?slug=${project.slug}`, {
+        method: "PUT",
+        body: formData,
+      });
 
       if (res.ok) {
         alert("Project berhasil diperbarui");

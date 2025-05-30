@@ -219,7 +219,7 @@ const ManageProjects = () => {
               </CardContent>
 
               <CardFooter className="flex justify-end gap-2">
-                <Link href={`/delete/${project.slug}`}>
+                <Link href={`/admin/projects/delete/${project.slug}`}>
                   <Button
                     variant="ghost2"
                     className="flex items-center gap-2 hover:cursor-pointer">
@@ -228,7 +228,7 @@ const ManageProjects = () => {
                   </Button>
                 </Link>
 
-                <Link href={`/edit/${project.slug}`}>
+                <Link href={`/admin/projects/edit/${project.slug}`}>
                   <Button
                     variant="outline"
                     className="flex items-center gap-2 hover:cursor-pointer">

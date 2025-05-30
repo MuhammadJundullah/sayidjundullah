@@ -5,7 +5,7 @@ import InputForm  from './_components/InputForm'
 
 const loginPage = () => {
   return (
-    <Suspense fallback={<Loading/>}>
+    <Suspense fallback={<Loading />}>
       <div className="h-screen items-center mx-auto max-w-lg justify-center flex flex-col">
         <div className="py-5 gap-2 flex flex-col ">
           <h1 className="text-3xl font-bold ">
@@ -14,12 +14,12 @@ const loginPage = () => {
             </span>
             <span> Portofolio admin.</span>
           </h1>
-          <span className="top-2 font-light">Build with Next.</span>
+          {/* <span className="top-2 font-light">Build with Next.</span> */}
         </div>
         <InputForm />
       </div>
-      </Suspense>
-    );
+    </Suspense>
+  );
 }
 
 export default loginPage

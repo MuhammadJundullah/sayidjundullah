@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
+"use client";
+
+import { useState } from "react";
 import * as React from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import Loading from "@/app/_components/Loading";
+import type { CertificatesType } from "@/lib/type";
 
-interface Certificates {
-  name: string;
-  desc: string;
-  date: string;
-  site: string;
+interface CertificatesProps {
+  data: CertificatesType[];
 }
 
-const Certificates = () => {
-  const [certificates, setCertificates] = useState<Certificates[]>([]);
+export default function CertificatesComponent({ data }: CertificatesProps) {
+  const [certificates] = useState<CertificatesType[]>(data);
 
   const AnimatedContent = dynamic(
     () => import("@/app/_components/AnimatedContent/AnimatedContent"),
@@ -20,16 +20,6 @@ const Certificates = () => {
       ssr: false,
     }
   );
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("/api/certificates");
-      const data = await res.json();
-      setCertificates(data);
-    };
-
-    fetchData();
-  }, []);
 
   return (
     <section id="certificates">
@@ -87,6 +77,4 @@ const Certificates = () => {
       </div>
     </section>
   );
-};
-
-export default Certificates;
+}

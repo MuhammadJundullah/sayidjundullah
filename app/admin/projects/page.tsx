@@ -115,14 +115,17 @@ const ManageProjects = () => {
     if (!confirm("Yakin ingin menghapus project ini?")) return;
 
     try {
+      setIsLoading(true);
       const response = await fetch(`/api/projects?slug=${slug}`, {
         method: "DELETE",
       });
 
       if (response.ok) {
+        setIsLoading(false);
         handleRefresh();
       }
     } catch (error) {
+      setIsLoading(false);
       console.error("Delete error:", error);
     }
   };

@@ -14,7 +14,7 @@ const About = () => {
             <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
           </span>
           <div className="sm:mx-0">
-            <p className="font-thin sm:text-4xl text-xl text-gray-700 dark:text-gray-300">
+            <p className="leading-normal font-thin sm:text-4xl text-xl text-gray-700 dark:text-gray-300">
               I’m a curious and self-driven learner who loves solving problems
               with technology. As an introvert and deep thinker, I enjoy working
               behind the scenes—coding, analyzing data, and turning ideas into
@@ -32,8 +32,8 @@ const About = () => {
         <div className="sm:text-4xl sm:my-20 text-xl">
           <span className="flex items-center my-5 max-w-xl mx-auto">
             <span className="shrink-0 pe-4">
-              <h1 className="sm:text-4xl text-2xl font-mono dark:text-gray-300 bg-black text-white rounded-xl px-5 py-2">
-                What I do
+              <h1 className="sm:text-3xl text-2xl font-mono dark:text-gray-300 bg-black text-white rounded-xl px-7 py-2">
+                What i do
               </h1>
             </span>
             <span className="text-xl h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>

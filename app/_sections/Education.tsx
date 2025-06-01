@@ -1,27 +1,17 @@
-import React from 'react'
-import { useEffect, useState } from "react";
+"use client";
+
+import React from "react";
+import { useState } from "react";
 import Image from "next/image";
+import type { EducationsType } from "@/lib/type";
 import Loading from "@/app/_components/Loading";
 
-interface Educations {
-  name: string;
-  school: string;
-  major: string;
-  date: string;
+interface EducationsProps {
+  data: EducationsType[];
 }
 
-const Education = () => {
-  const [educations, setEducations] = useState<Educations[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("/api/educations");
-      const data = await res.json();
-      setEducations(data);
-    };
-
-    fetchData();
-  }, []);
+export default function Educations({ data }: EducationsProps) {
+  const [educations] = useState<EducationsType[]>(data);
 
   return (
     <section id="Educations">
@@ -72,6 +62,4 @@ const Education = () => {
       </div>
     </section>
   );
-};
-
-export default Education;
+}

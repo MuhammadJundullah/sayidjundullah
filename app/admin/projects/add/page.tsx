@@ -106,9 +106,10 @@ export default function AddProject() {
     }
   };
 
+  // show loading before data loaded
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen w-7xl absolute">
+      <div className="flex items-center justify-center h-screen w-7xl">
         <Loading />
       </div>
     );

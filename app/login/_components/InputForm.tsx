@@ -5,7 +5,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { signIn } from "next-auth/react";
+import { useToast } from "@/hooks/use-toast";
+import { Toast } from "../_components/Toast";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import Loading from "@/app/_components/Loading";
 import {
   Form,
   FormControl,
@@ -21,12 +25,15 @@ const FormSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  password: z.string().min(2, {
-    message: "Password must be at least 2 characters.",
+  password: z.string().min(1, {
+    message: "Password is required.",
   }),
 });
 
 export default function InputForm() {
+  const [isLoading, setLoading] = useState(false);
+  const { toast, showToast } = useToast();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -37,6 +44,7 @@ export default function InputForm() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
+      setLoading(true);
       const result = await signIn("credentials", {
         redirect: false,
         username: data.username,
@@ -45,16 +53,27 @@ export default function InputForm() {
       });
 
       if (result?.error) {
-        alert("Username atau Password tidak sesuai.")
+        setLoading(false);
+        showToast("Login failed: Invalid credentials", "error");
       }
 
       if (result?.url) {
         window.location.href = result.url;
+        setLoading(false);
       }
     } catch (error) {
+      setLoading(false);
       console.error("Login failed:", error);
-      alert(error instanceof Error ? error.message : "Login failed");
+      showToast("An unexpected error occurred", "error");
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center w-full">
+        <Loading />
+      </div>
+    );
   }
 
   return (
@@ -67,7 +86,7 @@ export default function InputForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="..." {...field} />
+                <Input placeholder="type ur username" {...field} />
               </FormControl>
               {/* <FormDescription>
                 This is your public display name.
@@ -84,7 +103,7 @@ export default function InputForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="..." {...field} />
+                <Input type="password" placeholder="ur passsword" {...field} />
               </FormControl>
               {/* <FormDescription>
                 This is your public display name.
@@ -94,10 +113,13 @@ export default function InputForm() {
           )}
         />
         <ErrorMessage />
-        <Button type="submit" className="hover:cursor-pointer">
-          Submit
+        <Button
+          type="submit"
+          className="hover:cursor-pointer bg-black text-white ">
+          Login
         </Button>
       </form>
+      {toast && <Toast message={toast.message} type={toast.type} />}
     </Form>
   );
 }

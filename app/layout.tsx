@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Source_Sans_3 , JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import Footer from "./_sections/Footer";
 
 const fontSans = Source_Sans_3({
   variable: "--font-sans",
@@ -25,10 +26,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${fontSans.variable} ${fontMono.variable} antialiased`}>
-        <div
-        // className="bg-gradient-to-b from-[#0f172a] to-[#36445c]"
-        >
-          {children}
+        <div className="min-h-screen flex flex-col mx-auto max-w-6xl">
+          <div className="flex-1 flex flex-col items-center justify-center pb-10">
+            {children}
+          </div>
+          <div className=" w-full border-t border-gray-200">
+            <Footer />
+          </div>
         </div>
       </body>
     </html>

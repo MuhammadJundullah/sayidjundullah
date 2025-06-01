@@ -47,11 +47,11 @@ const ManageProjects = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  // handle search shortcut
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Cek kombinasi Cmd+K (Mac) atau Ctrl+K (Windows/Linux)
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault(); // Mencegah perilaku default browser
+        e.preventDefault();
         searchInputRef.current?.focus();
       }
     };
@@ -60,6 +60,7 @@ const ManageProjects = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  // handle fetch data projects with client side rendering
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -78,6 +79,7 @@ const ManageProjects = () => {
     fetchData();
   }, []);
 
+  // logic search
   const handleSearch = useCallback(
     (keyword: string) => {
       const filtered = projects.filter((project) =>
@@ -88,14 +90,27 @@ const ManageProjects = () => {
     [projects]
   );
 
+  // time to reload data after typing in search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      handleSearch(searchKeyword);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [searchKeyword, handleSearch]);
+
+  // for refresh data without reload page
   const handleRefresh = async () => {
     setIsRefreshing(true);
+    setIsLoading(true);
     const response = await fetch("/api/projects");
     const data = await response.json();
     setProjects(data);
+    setIsLoading(false);
     setIsRefreshing(false);
   };
 
+  // handle delete project
   const handleDelete = async (slug: string) => {
     if (!confirm("Yakin ingin menghapus project ini?")) return;
 
@@ -112,14 +127,7 @@ const ManageProjects = () => {
     }
   };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      handleSearch(searchKeyword);
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [searchKeyword, handleSearch]);
-
+  // handle update status only
   const handleStatusUpdate = async (
     projectId: string,
     newStatus: "published" | "archived"
@@ -147,9 +155,10 @@ const ManageProjects = () => {
     }
   };
 
+  // show loading before data loaded
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen w-7xl absolute">
+      <div className="flex items-center justify-center h-screen w-7xl">
         <Loading />
       </div>
     );
@@ -172,44 +181,51 @@ const ManageProjects = () => {
   }
 
   return (
-    <div className="mx-auto px-4 py-8">
-      <div className="mb-10">
+    <div className="mx-auto sm:px-4 max-w-6xl">
+      <div className="sm:my-10">
         <h1 className="text-3xl font-bold">Manage Projects</h1>
-        <div className="flex justify-between">
-          <p className="text-gray-500 font-medium">
-            Kelola proyek Anda dengan rapi dan profesional dengan mengarsipkan
-            proyek yang tidak relevan.
-          </p>
-          <div className="flex gap-3 items-center">
-            <Search className="text-gray-400" />
-            <Input
-              type="text"
-              ref={searchInputRef}
-              placeholder="⌘ + K / Ctrl + K to Search"
-              className="max-w-3xs"
-              aria-label="search"
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
-            />
-          </div>
-        </div>
+        <p className="text-gray-500 font-medium">
+          Kelola proyek kamu dengan rapi dan profesional dengan mengarsipkan
+          proyek yang tidak relevan.
+        </p>
       </div>
 
-      <div className="border-b border-gray-300 mb-10 lg:w-7xl" />
-      <div className="flex items-center justify-between">
-        <Link
-          href={"/admin/projects/add"}
-          className="flex gap-2 pb-5 hover:text-gray-700 transition">
-          <FilePlus />
-          <span>New Project</span>
-        </Link>
-        <button
-          className="flex gap-2 pb-5 hover:text-gray-700 transition hover:cursor-pointer"
-          onClick={handleRefresh}
-          disabled={isRefreshing}>
-          <RefreshCwIcon />
-          <span>Refresh</span>
-        </button>
+      <div className="sm:flex gap-3 items-center mb-10">
+        <div className="flex items-center gap-2 my-10 sm:my-0">
+          <Search className="text-gray-400" />
+          <Input
+            type="text"
+            ref={searchInputRef}
+            placeholder="⌘ + K / Ctrl + K to Search"
+            className="min-w-3xs border-gray-200 placeholder:text-gray-400"
+            aria-label="search"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+          />
+        </div>
+
+        <div className="border-b border-gray-300 lg:w-7xl sm:block md:block lg:block hidden" />
+
+        <div className="flex items-center gap-4 p-2 bg-white rounded-lg shadow-sm justify-around">
+          {/* New Project Button */}
+          <Link
+            href="/admin/projects/add"
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors rounded-md hover:bg-gray-100 hover:text-gray-900 hover:cursor-pointer">
+            <FilePlus />
+            <span className="w-19">New Project</span>
+          </Link>
+
+          {/* Refresh Button */}
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors rounded-md hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed hover:cursor-pointer">
+            <RefreshCwIcon
+              className={`w-5 h-5 ${isRefreshing ? "animate-spin" : ""}`}
+            />
+            <span>{isRefreshing ? "Refreshing..." : "Refresh"}</span>
+          </button>
+        </div>
       </div>
 
       {filteredProjects.length === 0 ? (
@@ -262,7 +278,7 @@ const ManageProjects = () => {
               <CardFooter className="flex justify-end gap-2">
                 <Button
                   variant="ghost2"
-                  className="flex items-center gap-2 hover:cursor-pointer"
+                  className="flex items-center gap-2 hover:cursor-pointer text-red-500"
                   onClick={() => handleDelete(project.slug)}>
                   <Delete size={16} />
                   Hapus
@@ -271,7 +287,7 @@ const ManageProjects = () => {
                 <Link href={`/admin/projects/edit/${project.slug}`}>
                   <Button
                     variant="outline"
-                    className="flex items-center gap-2 hover:cursor-pointer">
+                    className="flex items-center gap-2 hover:cursor-pointer border-gray-300">
                     <SquarePen size={16} />
                     Edit
                   </Button>

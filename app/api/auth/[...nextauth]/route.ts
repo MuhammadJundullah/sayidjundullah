@@ -13,7 +13,6 @@ const handler = NextAuth({
       },
 
       async authorize(credentials) {
-
         if (!credentials?.username || !credentials?.password) {
           return null;
         }
@@ -33,10 +32,10 @@ const handler = NextAuth({
             user.password
           );
 
-          return isValid ? { id: user.id, name: user.username } : null; 
+          return isValid ? { id: user.id, name: user.username } : null;
         } catch (error) {
           console.error("Database error:", error);
-          return null; 
+          return null;
         }
       },
     }),
@@ -44,6 +43,19 @@ const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
+    maxAge: 30 * 60,
+  },
+  jwt: {
+    maxAge: 30 * 60,
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.expires = Date.now() + 30 * 60 * 1000;
+      }
+      return token;
+    },
   },
   pages: {
     signIn: "/admin/projects",

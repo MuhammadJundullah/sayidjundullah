@@ -71,7 +71,7 @@ export default function EditProject({ params }: { params: Promise<{ slug: string
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen mx-10  w-7xl absolute">
+      <div className="flex items-center justify-center h-screen mx-10  w-7xl">
         <Loading />
       </div>
     );
@@ -88,7 +88,9 @@ export default function EditProject({ params }: { params: Promise<{ slug: string
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setProject((prev) => (prev ? { ...prev, [name]: value } : prev));
   };
@@ -104,6 +106,7 @@ export default function EditProject({ params }: { params: Promise<{ slug: string
     if (!project) return;
 
     try {
+      setIsLoading(true);
       const formData = new FormData();
 
       // Append semua field text
@@ -127,30 +130,25 @@ export default function EditProject({ params }: { params: Promise<{ slug: string
 
       if (res.ok) {
         alert("Project berhasil diperbarui");
+        setIsLoading(false);
         router.push("/admin/projects");
       } else {
         const errorData = await res.json();
+        setIsLoading(false);
         alert(errorData.message || "Gagal memperbarui project");
       }
     } catch (error) {
       console.error("Error:", error);
+      setIsLoading(false);
       alert("Terjadi kesalahan saat mengupdate project");
     }
   };
 
-  if (!project) {
-    return (
-      <div className="flex items-center justify-center h-screen mx-10  w-7xl absolute">
-        <Loading />
-      </div>
-    );
-  }
-
   return (
-    <div className="sm:mx-auto mx-5 w-6xl flex flex-col justify-center text-black">
+    <div className="md:w-6xl flex flex-col justify-center text-black">
       <Link
         href="/admin/projects"
-        className="flex items-center gap-3 dark:hover:text-white hover:text-black text-gray-400 my-5">
+        className="flex items-center gap-3 dark:hover:text-white hover:text-black text-gray-400 my-10">
         <FaArrowLeft />
         <span>Kembali</span>
       </Link>
@@ -173,7 +171,7 @@ export default function EditProject({ params }: { params: Promise<{ slug: string
               <select
                 id="category"
                 name="category"
-                className="select bg-gray-100 border-2 rounded-2xl px-3 py-2"
+                className="select bg-gray-100 rounded-2xl px-3 py-2"
                 value={project.category}
                 onChange={handleChange}>
                 <option value="" disabled>
@@ -201,7 +199,7 @@ export default function EditProject({ params }: { params: Promise<{ slug: string
           <div className="grid w-full gap-1.5">
             <div className="grid w-full gap-1.5">
               <Label htmlFor="photo">Ubah Foto</Label>
-              <div className="w-lg aspect-[2/1] relative mb-8">
+              <div className="sm:w-lg aspect-[2/1] relative mb-8">
                 <Image
                   src={
                     typeof project.photo === "string"
@@ -259,7 +257,7 @@ export default function EditProject({ params }: { params: Promise<{ slug: string
               <select
                 id="status"
                 name="status"
-                className="select bg-gray-100 border-2 rounded-2xl px-3 py-2"
+                className="select bg-gray-100 rounded-2xl px-3 py-2"
                 value={project.status}
                 onChange={handleChange}>
                 <option value="" disabled>
@@ -288,7 +286,7 @@ export default function EditProject({ params }: { params: Promise<{ slug: string
           <Button
             type="submit"
             ref={buttonRef}
-            className="mt-5 my-10 text-white hover:cursor-pointer"
+            className="mt-5 my-10 text-white bg-black hover:cursor-pointer"
             onClick={handleSubmit}>
             Simpan Perubahan
           </Button>

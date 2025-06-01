@@ -4,13 +4,13 @@ const Footer = () => {
   return (
     <section id="Footer">
       <footer>
-        <div className="sm:mx-auto mx-5 max-w-6xl space-y-8 py-8 ">
+        <div className="md:mx-auto mx-5 max-w-6xl sm:space-y-3 sm:py-5 py-3">
           <p className="text-sm text-gray-400 dark:text-gray-500">
             Last updated on May 10, 2025
           </p>
           <div className="flex justify-between">
             <div>
-              <p className="text-xl text-gray-900 dark:text-white">
+              <p className="sm:text-xl text-3xs text-gray-900 dark:text-white ">
                 Sayid J &copy; {new Date().getFullYear()}
               </p>
             </div>
@@ -25,7 +25,7 @@ const Footer = () => {
                   <span className="sr-only">Instagram</span>
 
                   <svg
-                    className="size-6"
+                    className="sm:size-6 size-5"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                     aria-hidden="true">
@@ -47,7 +47,7 @@ const Footer = () => {
                   <span className="sr-only">Twitter</span>
 
                   <svg
-                    className="size-6"
+                    className="sm:size-6 size-5"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                     aria-hidden="true">

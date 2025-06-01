@@ -8,7 +8,6 @@ import Certificates from "@/app/_sections/Certificates";
 import Education from "@/app/_sections/Education";
 import { Suspense } from "react";
 import Loading from "./_components/Loading";
-import Footer from "./_sections/Footer";
 
 const Home = () => {
   return (
@@ -21,7 +20,6 @@ const Home = () => {
       </Suspense>
       <Certificates></Certificates>
       <Education></Education>
-      <Footer></Footer>
     </>
   );
 };

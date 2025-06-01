@@ -8,13 +8,15 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
+import Loading from "@/app/_components/Loading";
 
 export default function AddProject() {
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitRef = useRef<HTMLButtonElement>(null);
 
   const router = useRouter();
-  
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
@@ -63,9 +65,10 @@ export default function AddProject() {
 
     if (!window.confirm("Apakah Anda yakin ingin menambahkan project?")) {
       return;
-    }  
+    }
 
     try {
+      setIsLoading(true);
       // Membuat FormData object
       const formData = new FormData();
 
@@ -79,7 +82,7 @@ export default function AddProject() {
       formData.append("site", project.site);
 
       // Menambahkan file photo jika ada
-      if (project.photo) { 
+      if (project.photo) {
         formData.append("photo", project.photo);
       }
 
@@ -94,17 +97,25 @@ export default function AddProject() {
         throw new Error(errorData.error || "Gagal membuat project");
       }
 
+      setIsLoading(false);
       alert("Submitted Successfully");
       router.push("/admin/projects");
-      
     } catch {
+      setIsLoading(false);
       alert("Submitted Failed");
-    
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen w-7xl absolute">
+        <Loading />
+      </div>
+    );
+  }
+
   return (
-    <div className="sm:mx-auto mx-5 w-6xl flex flex-col justify-center text-black">
+    <div className="sm:mx-auto sm:w-6xl flex flex-col justify-center text-black">
       <Link
         href="/admin/projects"
         className="flex items-center gap-3 dark:hover:text-white hover:text-black text-gray-400 my-5">
@@ -127,12 +138,12 @@ export default function AddProject() {
           </div>
 
           <div className="grid w-xs gap-1.5">
-            <Label htmlFor="status">Category</Label>
+            <Label htmlFor="status">Kategori</Label>
             <select
               name="category"
               value={project.category}
               onChange={handleChange}
-              className="select bg-gray-100 border-2 rounded-2xl px-3 py-2"
+              className="select bg-gray-100 rounded-2xl px-3 py-2"
               required>
               <option value="" disabled>
                 Pilih kategori
@@ -198,7 +209,7 @@ export default function AddProject() {
               name="status"
               value={project.status}
               onChange={handleChange}
-              className="select bg-gray-100 border-2 rounded-2xl px-3 py-2"
+              className="select bg-gray-100 rounded-2xl px-3 py-2"
               required>
               <option value="" disabled>
                 Pilih status
@@ -224,7 +235,7 @@ export default function AddProject() {
           <Button
             type="submit"
             ref={submitRef}
-            className="mt-5 my-10 text-white hover:cursor-pointer">
+            className="mt-5 my-10 text-white bg-black hover:cursor-pointer">
             Add Project
           </Button>
           <span className="text-gray-500">

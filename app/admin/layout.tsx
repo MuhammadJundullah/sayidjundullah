@@ -1,17 +1,17 @@
-import {
-  SidebarProvider,
-  SidebarTrigger
-} from "@/components/ui/sidebar";
-import { AppSidebar } from "@/app/admin/_components/app-sidebar";
+import NavMenu from "./_components/NavMenu";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider>
-      <AppSidebar/>
-        <SidebarTrigger/>
-        <main className="mx-10 py-10">
-            {children}
-        </main>
-    </SidebarProvider>
+    <main className="sm:mx-10 mx-5 py-5">
+      <div className="mx-auto sm:px-4 max-w-6xl">
+        <div className="flex items-end">
+          <div className="sm:block md:block lg:block hidden">
+            <NavMenu />
+          </div>
+        </div>
+        <div className="border-b border-gray-300 lg:w-full sm:block md:block lg:block hidden mt-5" />
+      </div>
+      {children}
+    </main>
   );
 }

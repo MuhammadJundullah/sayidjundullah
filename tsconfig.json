@@ -27,8 +27,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "types.d.ts"
-    // "app/project/data-analytics/[slug]/page.jsx"
+    "types.d.ts",
+    "app/project/data-analytics/[slug]/page.jsx"
   ],
   "exclude": ["node_modules"]
 }

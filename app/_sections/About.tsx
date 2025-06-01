@@ -29,10 +29,10 @@ const About = () => {
           </div>
         </div>
 
-        <div className="sm:text-4xl sm:my-20 pb-20 text-xl">
+        <div className="sm:text-4xl sm:my-20 text-xl">
           <span className="flex items-center my-5 max-w-xl mx-auto">
             <span className="shrink-0 pe-4">
-              <h1 className="sm:text-4xl text-2xl font-mono text-gray-600 dark:text-gray-300">
+              <h1 className="sm:text-4xl text-2xl font-mono dark:text-gray-300 bg-black text-white rounded-xl px-5 py-2">
                 What I do
               </h1>
             </span>

@@ -16,9 +16,9 @@ export default function Educations({ data }: EducationsProps) {
   return (
     <section id="Educations">
       <div className="sm:h-screen sm:py-40 flex flex-col max-w-6xl sm:mx-auto mx-5 sm:mb-20 font-thin text-gray-800 dark:text-gray-200">
-        <span className="text-3xl flex items-center sm:mb-10">
+        <span className="text-2xl flex items-center sm:mb-10">
           <span className="shrink-0 pe-4 dark:text-white">
-            <h1 className="sm:text-5xl font-mono dark:text-white text-gray-800">
+            <h1 className="sm:text-5xl font-mono font-semibold dark:text-white text-gray-800">
               Educations
             </h1>
           </span>
@@ -46,7 +46,7 @@ export default function Educations({ data }: EducationsProps) {
                         <span>
                           {education.school} | {education.major}
                           <br />
-                          <time className="font-light text-gray-500 dark:text-gray-400">
+                          <time className="font-light text-black dark:text-gray-400">
                             {education.date}
                           </time>
                         </span>

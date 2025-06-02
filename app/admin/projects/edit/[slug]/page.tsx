@@ -11,6 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { useRef } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { Toast } from "@/app/login/_components/Toast";
 
 interface Project {
   judul: string;
@@ -18,15 +20,19 @@ interface Project {
   category: string;
   categoryslug: string;
   url: string;
-  photo?: File | string; 
+  photo?: File | string;
   tech: string;
   site: string;
   desc: string;
   status: "published" | "archived";
 }
 
-export default function EditProject({ params }: { params: Promise<{ slug: string }> }) {
-  
+export default function EditProject({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { toast, showToast } = useToast();
   const [project, setProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { slug } = use(params);
@@ -67,7 +73,7 @@ export default function EditProject({ params }: { params: Promise<{ slug: string
     if (slug) {
       fetchProject();
     }
-  }, [slug, router]); 
+  }, [slug, router]);
 
   if (isLoading) {
     return (
@@ -129,13 +135,12 @@ export default function EditProject({ params }: { params: Promise<{ slug: string
       });
 
       if (res.ok) {
-        alert("Project berhasil diperbarui");
         setIsLoading(false);
-        router.push("/admin/projects");
+        showToast("Project has been updated successfully!", "success");
       } else {
         const errorData = await res.json();
         setIsLoading(false);
-        alert(errorData.message || "Gagal memperbarui project");
+        showToast(errorData.message, "success");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -293,6 +298,7 @@ export default function EditProject({ params }: { params: Promise<{ slug: string
           <span className="text-gray-500">⌘ + S / Ctrl + S</span>
         </div>
       </form>
+      {toast && <Toast message={toast.message} type={toast.type} />}
     </div>
   );
 }

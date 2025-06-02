@@ -29,14 +29,14 @@ const Hello = () => {
         </div>
 
         <div className="h-full text-center items-center flex flex-col justify-center">
-          <h1 className="sm:text-4xl text-xl font-semibold sm:font-light text-black mx-auto text-center">
+          <h1 className="sm:text-4xl text-xl font-light text-black mx-auto text-center">
             Hi There, I am Sayid Muhammad Jundullah,{" "}
             <span className="px-2 bg-black text-white dark:bg-white dark:text-black rounded-md sm:inline block sm:my-0 my-4">
               Web Developer & Data Enthusiast.
             </span>
           </h1>
           <p className="sm:text-xl text-lg font-light text-gray-600 dark:text-gray-400 mt-4">
-            Scroll down to discover more about my work and experience!
+            Scroll down to discover more about my work and experience !
           </p>
         </div>
       </div>

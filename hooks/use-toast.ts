@@ -8,8 +8,8 @@ export const useToast = () => {
   } | null>(null);
 
   const showToast = (
-    message: string, 
-    type: 'success' | 'error' | 'info' | 'warning' = 'error'
+    message: string,
+    type: "success" | "error" | "info" | "warning"
   ) => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);

@@ -8,12 +8,12 @@ import { signIn } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
 import { Toast } from "../_components/Toast";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Loading from "@/app/_components/Loading";
+import { useSearchParams } from "next/navigation";
 import {
   Form,
   FormControl,
-  // FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -31,6 +31,15 @@ const FormSchema = z.object({
 });
 
 export default function InputForm() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
+
+  useEffect(() => {
+    if (callbackUrl) {
+      showToast("Session expired. Please login again.", "error");
+    }
+  }, [callbackUrl]);
+
   const [isLoading, setLoading] = useState(false);
   const { toast, showToast } = useToast();
 
@@ -59,7 +68,6 @@ export default function InputForm() {
 
       if (result?.url) {
         window.location.href = result.url;
-        setLoading(false);
       }
     } catch (error) {
       setLoading(false);
@@ -88,9 +96,6 @@ export default function InputForm() {
               <FormControl>
                 <Input placeholder="type ur username" {...field} />
               </FormControl>
-              {/* <FormDescription>
-                This is your public display name.
-              </FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
@@ -105,9 +110,6 @@ export default function InputForm() {
               <FormControl>
                 <Input type="password" placeholder="ur passsword" {...field} />
               </FormControl>
-              {/* <FormDescription>
-                This is your public display name.
-              </FormDescription> */}
               <FormMessage />
             </FormItem>
           )}

@@ -115,9 +115,10 @@ export async function GET(req: NextRequest) {
         [category]
       );
     } else if (status) {
-      result = await pool.query("SELECT * FROM projects WHERE status = $1", [
-        status,
-      ]);
+      result = await pool.query(
+        "SELECT judul, slug, category, categoryslug, photos, tech FROM projects WHERE status = $1 ORDER BY judul DESC",
+        [status]
+      );
     } else {
       result = await pool.query(
         `SELECT * FROM projects 

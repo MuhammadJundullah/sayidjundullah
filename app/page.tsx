@@ -16,8 +16,7 @@ import Education from "@/app/_sections/Education";
 export default async function Home(): Promise<React.JSX.Element> {
   const headersList = headers();
   const host = (await headersList).get("host");
-  const protocol = process.env.NODE_ENV === "development" ? "http:" : "http:";
-  const baseUrl = `${protocol}//${host}`;
+  const baseUrl = `http://${host}`;
 
   // Fetch all data in parallel with proper typing
   const [workExperiences, projects, certificates, educations] =

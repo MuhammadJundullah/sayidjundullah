@@ -22,6 +22,8 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { Toast } from "@/app/login/_components/Toast";
 
 interface Project {
   id: string;
@@ -39,6 +41,7 @@ interface Project {
 }
 
 const ManageProjects = () => {
+  const { toast, showToast } = useToast();
   const [projects, setProjects] = useState<Project[]>([]);
   const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -123,6 +126,7 @@ const ManageProjects = () => {
       if (response.ok) {
         setIsLoading(false);
         handleRefresh();
+        showToast("Project has been deleted successfully!", "success");
       }
     } catch (error) {
       setIsLoading(false);
@@ -153,19 +157,12 @@ const ManageProjects = () => {
           project.id === projectId ? { ...project, status: newStatus } : project
         )
       );
+
+      showToast(`Project has been ${newStatus} successfully!`, "success");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal memperbarui status");
     }
   };
-
-  // show loading before data loaded
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen w-7xl">
-        <Loading />
-      </div>
-    );
-  }
 
   if (error) {
     return (
@@ -231,7 +228,11 @@ const ManageProjects = () => {
         </div>
       </div>
 
-      {filteredProjects.length === 0 ? (
+      {isLoading ? (
+        <div className="flex items-center justify-center h-screen">
+          <Loading />
+        </div>
+      ) : filteredProjects.length === 0 ? (
         <div className="text-center py-20 ">
           <p className="text-gray-500">
             {searchKeyword
@@ -300,6 +301,7 @@ const ManageProjects = () => {
           ))}
         </div>
       )}
+      {toast && <Toast message={toast.message} type={toast.type} />}
     </div>
   );
 };

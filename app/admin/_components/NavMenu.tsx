@@ -16,7 +16,7 @@ import {
 
 export default function NavMenu() {
   return (
-    <NavigationMenu viewport={false}>
+    <NavigationMenu viewport={false} className="z-1">
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
@@ -85,9 +85,10 @@ export default function NavMenu() {
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
             <Button
-              onClick={() => {
+              onClick={async () => {
                 localStorage.removeItem("token");
-                signOut();
+                await signOut({ redirect: false });
+                window.location.href = "/login";
               }}
               className="text-white bg-black hover:bg-gray-800 hover:text-white hover:cursor-pointer">
               Logout

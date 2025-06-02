@@ -5,16 +5,16 @@ const About = () => {
     <section id="About">
       <div className="flex flex-col max-w-6xl mb-20 sm:mx-auto mx-5 font-thin sm:text-center text-gray-800 dark:text-gray-200">
         <div className="text-3xl mt-10 mb-20 pb-20">
-          <span className="flex items-center sm:my-10">
+          <span className="flex items-center sm:my-10 my-5">
             <span className="shrink-0 pe-4">
-              <h1 className="sm:text-6xl font-mono text-gray-600 dark:text-gray-300 sm:mx-0">
+              <h1 className="sm:text-6xl text-3xl font-mono font-semibold text-black dark:text-gray-300 sm:mx-0">
                 About Me
               </h1>
             </span>
             <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
           </span>
           <div className="sm:mx-0">
-            <p className="leading-normal font-thin sm:text-4xl text-xl text-gray-700 dark:text-gray-300">
+            <p className="leading-normal sm:text-4xl text-lg text-black dark:text-gray-300 sm:font-light font-normal">
               I’m a curious and self-driven learner who loves solving problems
               with technology. As an introvert and deep thinker, I enjoy working
               behind the scenes—coding, analyzing data, and turning ideas into
@@ -32,14 +32,14 @@ const About = () => {
         <div className="sm:text-4xl sm:my-20 text-xl">
           <span className="flex items-center my-5 max-w-xl mx-auto">
             <span className="shrink-0 pe-4">
-              <h1 className="sm:text-3xl text-2xl font-mono dark:text-gray-300 bg-black text-white rounded-xl px-7 py-2">
+              <h1 className="sm:text-5xl text-2xl font-mono font-semibold dark:text-gray-30 text-black rounded-xl px-7 py-2">
                 What i do
               </h1>
             </span>
             <span className="text-xl h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
           </span>
 
-          <p className="leading-normal text-gray-700 dark:text-gray-300">
+          <p className="leading-normal text-black dark:text-gray-300 sm:text-4xl text-lg sm:font-light font-normal">
             I specialize in creating responsive websites and data-driven
             applications using modern technologies. From backend development
             using Laravel and PostgreSQL, to analyzing data pipelines with tools

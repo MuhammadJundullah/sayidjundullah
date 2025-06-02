@@ -7,15 +7,16 @@ import { FaArrowLeft } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
+import { Toast } from "@/app/login/_components/Toast";
 import Loading from "@/app/_components/Loading";
 
 export default function AddProject() {
+  const { toast, showToast } = useToast();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const submitRef = useRef<HTMLButtonElement>(null);
-
-  const router = useRouter();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -98,22 +99,22 @@ export default function AddProject() {
       }
 
       setIsLoading(false);
-      alert("Submitted Successfully");
-      router.push("/admin/projects");
+      showToast("Project has been added successfully!", "success");
+      setProject({
+        judul: "",
+        category: "",
+        url: "",
+        photo: null,
+        tech: "",
+        site: "",
+        status: "",
+        desc: "",
+      });
     } catch {
       setIsLoading(false);
-      alert("Submitted Failed");
+      showToast("Login failed: Invalid credentials", "error");
     }
   };
-
-  // show loading before data loaded
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen w-7xl">
-        <Loading />
-      </div>
-    );
-  }
 
   return (
     <div className="sm:mx-auto sm:w-6xl flex flex-col justify-center text-black">
@@ -124,126 +125,133 @@ export default function AddProject() {
         <span>Kembali</span>
       </Link>
 
-      <form className="py-3" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-8">
-          <div className="grid w-full gap-1.5">
-            <Label htmlFor="judul">Nama Projek</Label>
-            <Input
-              type="text"
-              name="judul"
-              value={project.judul}
-              onChange={handleChange}
-              placeholder="Nama Projek"
-              required
-            />
-          </div>
-
-          <div className="grid w-xs gap-1.5">
-            <Label htmlFor="status">Kategori</Label>
-            <select
-              name="category"
-              value={project.category}
-              onChange={handleChange}
-              className="select bg-gray-100 rounded-2xl px-3 py-2"
-              required>
-              <option value="" disabled>
-                Pilih kategori
-              </option>
-              <option value="Data Analytics">Data Analytics</option>
-              <option value="Data Science">Data Science</option>
-              <option value="Data Engineering">Data Engineering</option>
-              <option value="Web Development">Web Development</option>
-            </select>
-          </div>
-
-          <div className="grid w-full gap-1.5">
-            <Label htmlFor="url">URL Repository Github</Label>
-            <Input
-              type="text"
-              name="url"
-              value={project.url}
-              onChange={handleChange}
-              placeholder="URL Repository Github"
-              required
-            />
-          </div>
-
-          <div className="grid w-full gap-1.5">
-            <Label htmlFor="photo">Ubah Foto</Label>
-            <Input
-              type="file"
-              id="photo"
-              name="photo"
-              onChange={handleFileChange}
-              accept="image/*"
-              required
-            />
-          </div>
-
-          <div className="grid w-full gap-1.5">
-            <Label htmlFor="tech">Teknologi terkait (framework dsb.)</Label>
-            <Input
-              type="text"
-              name="tech"
-              value={project.tech}
-              onChange={handleChange}
-              placeholder="Teknologi terkait"
-              required
-            />
-          </div>
-
-          <div className="grid w-full gap-1.5">
-            <Label htmlFor="site">URL Deploy/Dashboard link</Label>
-            <Input
-              type="text"
-              name="site"
-              value={project.site}
-              onChange={handleChange}
-              placeholder="URL Deploy/Dashboard link"
-              required
-            />
-          </div>
-
-          <div className="grid w-xs gap-1.5">
-            <Label htmlFor="status">Status</Label>
-            <select
-              name="status"
-              value={project.status}
-              onChange={handleChange}
-              className="select bg-gray-100 rounded-2xl px-3 py-2"
-              required>
-              <option value="" disabled>
-                Pilih status
-              </option>
-              <option value="published">Published</option>
-              <option value="archived">Archived</option>
-            </select>
-          </div>
-
-          <div className="grid w-full gap-1.5">
-            <Label htmlFor="desc">Description (bisa pakai tag HTML)</Label>
-            <Textarea
-              name="desc"
-              value={project.desc}
-              onChange={handleTextareaChange}
-              placeholder="Deskripsi"
-              required
-            />
-          </div>
+      {isLoading ? (
+        <div className="flex items-center justify-center h-screen w-full">
+          <Loading />
         </div>
+      ) : (
+        <form className="py-3" onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-8">
+            <div className="grid w-full gap-1.5">
+              <Label htmlFor="judul">Nama Projek</Label>
+              <Input
+                type="text"
+                name="judul"
+                value={project.judul}
+                onChange={handleChange}
+                placeholder="Nama Projek"
+                required
+              />
+            </div>
 
-        <div className="flex gap-3 items-center">
-          <Button
-            type="submit"
-            ref={submitRef}
-            className="mt-5 my-10 text-white bg-black hover:cursor-pointer">
-            Add Project
-          </Button>
-          <span className="text-gray-500">
-            ⌘ + Return / Ctrl + Enter to Save
-          </span>
-        </div>
-      </form>
+            <div className="grid w-xs gap-1.5">
+              <Label htmlFor="status">Kategori</Label>
+              <select
+                name="category"
+                value={project.category}
+                onChange={handleChange}
+                className="select bg-gray-100 rounded-2xl px-3 py-2"
+                required>
+                <option value="" disabled>
+                  Pilih kategori
+                </option>
+                <option value="Data Analytics">Data Analytics</option>
+                <option value="Data Science">Data Science</option>
+                <option value="Data Engineering">Data Engineering</option>
+                <option value="Web Development">Web Development</option>
+              </select>
+            </div>
+
+            <div className="grid w-full gap-1.5">
+              <Label htmlFor="url">URL Repository Github</Label>
+              <Input
+                type="text"
+                name="url"
+                value={project.url}
+                onChange={handleChange}
+                placeholder="URL Repository Github"
+                required
+              />
+            </div>
+
+            <div className="grid w-full gap-1.5">
+              <Label htmlFor="photo">Ubah Foto</Label>
+              <Input
+                type="file"
+                id="photo"
+                name="photo"
+                onChange={handleFileChange}
+                accept="image/*"
+                required
+              />
+            </div>
+
+            <div className="grid w-full gap-1.5">
+              <Label htmlFor="tech">Teknologi terkait (framework dsb.)</Label>
+              <Input
+                type="text"
+                name="tech"
+                value={project.tech}
+                onChange={handleChange}
+                placeholder="Teknologi terkait"
+                required
+              />
+            </div>
+
+            <div className="grid w-full gap-1.5">
+              <Label htmlFor="site">URL Deploy/Dashboard link</Label>
+              <Input
+                type="text"
+                name="site"
+                value={project.site}
+                onChange={handleChange}
+                placeholder="URL Deploy/Dashboard link"
+                required
+              />
+            </div>
+
+            <div className="grid w-xs gap-1.5">
+              <Label htmlFor="status">Status</Label>
+              <select
+                name="status"
+                value={project.status}
+                onChange={handleChange}
+                className="select bg-gray-100 rounded-2xl px-3 py-2"
+                required>
+                <option value="" disabled>
+                  Pilih status
+                </option>
+                <option value="published">Published</option>
+                <option value="archived">Archived</option>
+              </select>
+            </div>
+
+            <div className="grid w-full gap-1.5">
+              <Label htmlFor="desc">Description (bisa pakai tag HTML)</Label>
+              <Textarea
+                name="desc"
+                value={project.desc}
+                onChange={handleTextareaChange}
+                placeholder="Deskripsi"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-3 items-center">
+            <Button
+              type="submit"
+              ref={submitRef}
+              className="mt-5 my-10 text-white bg-black hover:cursor-pointer">
+              Add Project
+            </Button>
+            <span className="text-gray-500">
+              ⌘ + Return / Ctrl + Enter to Save
+            </span>
+          </div>
+        </form>
+      )}
+      {toast && <Toast message={toast.message} type={toast.type} />}
     </div>
   );
 }

@@ -25,16 +25,16 @@ export default function ProjectsComponent({ data }: ProjectsProps) {
   return (
     <section id="projects">
       <div className="py-40 flex flex-col sm:mx-auto mx-5 sm:mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0] max-w-6xl">
-        <span className="text-3xl flex items-center">
+        <span className="flex items-center">
           <span className="shrink-0 pe-4">
             {" "}
-            <h1 className="sm:text-5xl font-mono dark:text-white text-gray-800">
+            <h1 className="sm:text-5xl text-2xl font-mono font-semibold dark:text-white text-gray-800">
               My Projects
             </h1>
           </span>
           <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
         </span>
-        <div className="my-20 ">
+        <div className="sm:my-20 my-8">
           <div className="flex flex-wrap justify-center gap-8">
             {projects.map((project, i) => (
               <div
@@ -49,7 +49,7 @@ export default function ProjectsComponent({ data }: ProjectsProps) {
                   animateOpacity
                   threshold={0.1}>
                   <div className="h-full font-medium">
-                    <div className="w-80 border-1 dark:border-gray-500 border-gray-300 bg-gray-200 dark:bg-gray-800 rounded-lg p-2">
+                    <div className="w-80 border-1 dark:border-gray-500 border-gray-300 bg-gray-200 dark:bg-gray-800 rounded-md p-2">
                       <p className="pb-2 text-start text-gray-500 dark:text-gray-400 font-medium text-sm">
                         {project.category}
                       </p>
@@ -64,7 +64,7 @@ export default function ProjectsComponent({ data }: ProjectsProps) {
                           alt={project.photo}
                           height={200}
                           width={320}
-                          className="rounded-lg"
+                          className="rounded-md"
                         />
                       </Link>
                       <div className="py-3">

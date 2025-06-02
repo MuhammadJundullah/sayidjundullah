@@ -93,6 +93,7 @@ export async function GET(req: NextRequest) {
     const category = searchParams.get("category");
     const status = searchParams.get("status");
 
+
     let result;
 
     if (slug && status) {
@@ -105,6 +106,10 @@ export async function GET(req: NextRequest) {
         "SELECT * FROM projects WHERE categoryslug = $1 AND status = $2",
         [category, status]
       );
+    } else if (status) {
+      result = await pool.query("SELECT * FROM projects WHERE status = $1", [
+        status,
+      ]);
     } else if (slug) {
       result = await pool.query("SELECT * FROM projects WHERE slug = $1", [
         slug,

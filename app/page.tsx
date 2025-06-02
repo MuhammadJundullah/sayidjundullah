@@ -18,13 +18,13 @@ export default async function Home(): Promise<React.JSX.Element> {
   const host = (await headersList).get("host");
   const baseUrl = `http://${host}`;
 
-  // Fetch all data in parallel with proper typing
+  // Fetch all data in parallel with proper typingcl
   const [workExperiences, projects, certificates, educations] =
     await Promise.all([
       fetch(`${baseUrl}/api/work-experiences`).then(
         (res) => res.json() as Promise<WorkExperienceType[]>
       ),
-      fetch(`${baseUrl}/api/projects`).then(
+      fetch(`${baseUrl}/api/projects?status=published`).then(
         (res) => res.json() as Promise<ProjectsType[]>
       ),
       fetch(`${baseUrl}/api/certificates`).then(

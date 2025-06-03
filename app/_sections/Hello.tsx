@@ -3,8 +3,16 @@
 import Link from "next/link";
 import { PiGithubLogoLight } from "react-icons/pi";
 import { FaLinkedin } from "react-icons/fa";
+import dynamic from "next/dynamic";
 
 const Hello = () => {
+  const BlurText = dynamic(
+    () => import("@/app/_components/BlurText/BlurText"),
+    {
+      ssr: false,
+    }
+  );
+
   return (
     <section id="hello">
       <div className="h-screen sm:space-y-10 max-w-6xl sm:mx-auto mx-5 item-center py-5">
@@ -29,8 +37,14 @@ const Hello = () => {
         </div>
 
         <div className="h-full text-center items-center flex flex-col justify-center">
-          <h1 className="sm:text-4xl text-xl font-light text-black mx-auto text-center">
-            Hi There, I am Sayid Muhammad Jundullah,{" "}
+          <h1 className="sm:flex sm:text-4xl text-xl font-light text-black mx-auto text-center">
+            <BlurText
+              text="Hi There, I am Sayid Muhammad Jundullah, "
+              delay={150}
+              animateBy="words"
+              direction="top"
+            />
+            {/* Hi There, I am Sayid Muhammad Jundullah,{" "} */}
             <span className="px-2 bg-black text-white dark:bg-white dark:text-black rounded-md sm:inline block sm:my-0 my-4">
               Web Developer & Data Enthusiast.
             </span>

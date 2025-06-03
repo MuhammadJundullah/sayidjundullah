@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import  pool  from "@/lib/db";
 import { v2 as cloudinary } from "cloudinary";
+import { getToken } from "next-auth/jwt";
 
 // Konfigurasi Cloudinary dari environment variable
 if (process.env.CLOUDINARY_URL) {
   cloudinary.config({
-    secure: true, 
+    secure: true,
   });
 } else {
   throw new Error("CLOUDINARY_URL environment variable is required");
@@ -16,10 +17,18 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const id  = (await params).id;
+  const id = (await params).id;
 
   if (!id || isNaN(Number(id))) {
     return NextResponse.json({ error: "Invalid project ID" }, { status: 400 });
+  }
+
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -27,7 +36,6 @@ export async function PUT(
     const status = formData.get("status");
     const newPhoto = formData.get("photo") as File | null;
 
-    // Validasi status
     if (!status || !["published", "archived"].includes(status.toString())) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
@@ -43,7 +51,6 @@ export async function PUT(
       let photoUrl = existingProject?.photo;
       let publicIdToDelete: string | null = null;
 
-      // 2. Handle new photo upload
       if (newPhoto && newPhoto.size > 0) {
         // Extract public_id from old photo URL if exists
         if (existingProject?.photo) {
@@ -104,6 +111,14 @@ export async function PUT(
 }
 
 export async function PATCH(request: NextRequest) {
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get("statuschange");

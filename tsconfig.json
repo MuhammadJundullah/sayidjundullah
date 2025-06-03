@@ -28,7 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "types.d.ts",
-    "app/project/data-analytics/[slug]/page.jsx"
+    "app/project/data-analytics/[slug]/page.jsx",
+    "lib/db.js"
   ],
   "exclude": ["node_modules"]
 }

@@ -44,10 +44,10 @@ const Hello = () => {
           </div>
         </div>
 
-        <div className="h-full text-center items-center flex flex-col justify-center sm:w-6xl">
-          <h1 className="sm:flex sm:text-4xl text-xl font-light text-black mx-auto text-center">
+        <div className="h-full text-center items-center flex flex-col justify-evenly sm:w-6xl">
+          <h1 className="sm:flex sm:text-4xl font-light text-black mx-auto subpixel-antialiased">
             <BlurText
-              text="Hi There, I am Sayid Muhammad Jundullah, "
+              text="Hi, I am Sayid Muhammad Jundullah, "
               delay={150}
               animateBy="words"
               direction="top"
@@ -55,9 +55,9 @@ const Hello = () => {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 2 }}
+              transition={{ delay: 2.5, duration: 0.5 }}
               className="">
-              <span className="px-2 bg-black text-white dark:bg-white dark:text-black rounded-lg sm:inline block sm:my-0 my-4">
+              <span className=" px-2 bg-black subpixel-antialiased text-white dark:bg-white dark:text-black rounded-lg sm:inline block sm:my-0 my-4">
                 Web Developer & Data Enthusiast.
               </span>
             </motion.p>

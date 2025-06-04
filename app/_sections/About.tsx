@@ -14,22 +14,25 @@ const About = () => {
             <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
           </span>
           <div className="sm:mx-0">
-            <p className="leading-normal sm:text-4xl text-lg text-black dark:text-gray-300 sm:font-light font-normal">
-              I’m a curious and self-driven learner who loves solving problems
-              with technology. As an introvert and deep thinker, I enjoy working
-              behind the scenes—coding, analyzing data, and turning ideas into
-              real digital solutions. I’m the type of person who learns fast,
-              asks the right questions, and keeps improving with every project I
-              take on. I thrive in flexible environments where I can focus,
-              grow, and collaborate remotely. Whether it&apos;s building
-              websites, creating data dashboards, or predicting trends from raw
-              data—I&apos;m all in. My goal is simple: to keep learning, stay
-              useful, and build things that matter.
+            <p className="leading-normal sm:text-3xl text-lg text-black dark:text-gray-300 sm:font-light font-normal">
+              I’m a 6th-semester Computer Science student who thrives in
+              self-directed learning. While I’ve chosen not to join campus
+              organizations, I dedicate my time to mastering backend and
+              frontend web development—building a strong technical foundation
+              for the future. Curiosity drives me. I love dissecting how things
+              work, experimenting with new tools, and turning theoretical
+              knowledge into practical solutions. Remote-friendly environments
+              suit me best: they let me focus deeply, learn at my own pace, and
+              collaborate effectively despite distance. Based in Aceh, I’m eager
+              to contribute professionally—whether it’s developing web
+              applications, crafting data dashboards, or solving technical
+              problems. For now, I’m keeping it simple: learn relentlessly,
+              build meaningfully, and prepare for bigger challenges ahead.
             </p>
           </div>
         </div>
 
-        <div className="sm:text-4xl sm:my-20 text-xl">
+        <div className="sm:my-20 text-xl">
           <span className="flex items-center my-5 max-w-xl mx-auto">
             <span className="shrink-0 pe-4">
               <h1 className="sm:text-5xl text-2xl font-mono font-semibold dark:text-gray-30 text-black rounded-xl px-7 py-2">
@@ -39,16 +42,20 @@ const About = () => {
             <span className="text-xl h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
           </span>
 
-          <p className="leading-normal text-black dark:text-gray-300 sm:text-4xl text-lg sm:font-light font-normal">
-            I specialize in creating responsive websites and data-driven
-            applications using modern technologies. From backend development
-            using Laravel and PostgreSQL, to analyzing data pipelines with tools
-            like Apache Airflow and Kafka — I aim to combine clean code with
-            impactful functionality. As someone who grew up around the hard work
-            of a coffee-farming family, I bring the same dedication and
-            attention to detail into every project I work on. I love
-            transforming complex data into useful insights and building web apps
-            that are not just functional, but also meaningful. <br />
+          <p className="leading-normal text-black dark:text-gray-300 sm:text-3xl text-lg sm:font-light font-normal">
+            I specialize in building responsive websites using modern
+            technologies like React.js, Next.js, and Laravel, with experience
+            spanning from backend development to data pipeline analysis using
+            tools like Apache Airflow and Kafka. I strive to write clean,
+            maintainable code while delivering impactful functionality.
+            Currently, I’m diving deeper into Nest.js for a university-related
+            project, expanding my backend expertise. Previously, I focused on
+            Laravel for web application development. Beyond web dev, I’m
+            passionate about data analysis—particularly creating predictive
+            models, as I’ve done in past learning projects—and I’m exploring
+            data engineering as a self-proclaimed data enthusiast. I’m also
+            wrapping up my internship at Winnicode, where I’ve gained hands-on
+            experience in real-world development workflows. <br />
             <br />
             <Link
               href="mailto:sayidmuhammad15@gmail.com"
@@ -67,8 +74,6 @@ const About = () => {
             </Link>
             . Let’s connect and create something great together!
           </p>
-
-          <div></div>
         </div>
       </div>
     </section>

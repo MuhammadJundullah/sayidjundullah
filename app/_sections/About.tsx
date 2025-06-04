@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const About = () => {
   return (
-    <section id="About">
+    <section id="about">
       <div className="flex flex-col max-w-6xl mb-20 sm:mx-auto mx-5 font-thin sm:text-center text-gray-800 dark:text-gray-200">
         <div className="text-3xl mt-10 mb-20 pb-20">
           <span className="flex items-center sm:my-10 my-5">

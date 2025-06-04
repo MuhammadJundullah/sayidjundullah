@@ -5,16 +5,18 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchDataFromAPI } from "@/lib/actions";
 import Loading from "@/app/_components/Loading";
+import Image from "next/image";
 import { FaArrowLeft } from "react-icons/fa6";
+import { ProjectsType } from "@/lib/type";
+import { use } from "react";
 
-export default function Page({ params }) {
-  const { slug } = React.use(params);
-
-  const [data, setData] = useState(null);
+export default function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const slug = use(params);
+  const [data, setData] = useState<ProjectsType[] | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await fetchDataFromAPI(slug);
+      const result = await fetchDataFromAPI(slug.slug);
       setData(result);
     };
 
@@ -38,12 +40,21 @@ export default function Page({ params }) {
               <h2 className="sm:text-5xl text-3xl font-semibold my-4">
                 {item.judul}
               </h2>
+              <div className="my-10 flex justify-center items-center">
+                <Image
+                  src={item.photo}
+                  alt={item.judul}
+                  width={800}
+                  height={600}
+                  className="rounded-lg border-2 border-gray-300 shadow-lg"
+                />
+              </div>
               <div className="flex flex-col md:flex-row mt-4 gap-5">
                 <p
                   className="my-4"
                   dangerouslySetInnerHTML={{ __html: item.desc }}
                 />
-                <div className="w-full">
+                <div className="w-full ">
                   <p className="py-2">
                     <strong>Category:</strong> {item.category}
                   </p>
@@ -51,19 +62,16 @@ export default function Page({ params }) {
                     <strong>Technologies:</strong> {item.tech}
                   </p>
                   <p className="py-2">
-                    <strong>GitHub URL:</strong>{" "}
+                    <strong>Source code:</strong>{" "}
                     <a
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-500 underline">
-                      Notebook.ipynb
+                      Github Repository
                     </a>
                   </p>
                 </div>
-              </div>
-              <div className="my-6 sm:flex justify-center items-center hidden md:block">
-                <div dangerouslySetInnerHTML={{ __html: item.site }} />
               </div>
             </div>
           ))}

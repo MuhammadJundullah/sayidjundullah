@@ -12,6 +12,7 @@ export type WorkExperienceType = {
 }
 
 export type ProjectsType = {
+  id: string;
   judul: string;
   slug: string;
   category: string;
@@ -21,7 +22,7 @@ export type ProjectsType = {
   tech: string;
   site: string;
   desc: string;
-}
+};
 
 export type CertificatesType = {
   name: string;

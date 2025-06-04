@@ -80,7 +80,9 @@ const Hello = () => {
               colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
               animationSpeed={3}
               showBorder={false}>
-              <p>Scroll down to discover more about my work and experience !</p>
+              <p className="transition-colors">
+                Scroll down to discover more about my work and experience !
+              </p>
             </GradientText>
           </motion.h1>
         </div>

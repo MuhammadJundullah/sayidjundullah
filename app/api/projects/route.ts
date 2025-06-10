@@ -160,7 +160,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// Utility untuk convert file ke stream buffer
 async function streamToBuffer(stream: Readable): Promise<Buffer> {
   const chunks: Uint8Array[] = [];
   for await (const chunk of stream) {
@@ -177,6 +176,7 @@ export async function PUT(req: NextRequest) {
       headers: { "Content-Type": "application/json" },
     });
   }
+
   if (!req.body) {
     return new Response(JSON.stringify({ error: "Request body is required" }), {
       status: 400,

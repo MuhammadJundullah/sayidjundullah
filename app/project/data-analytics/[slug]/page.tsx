@@ -50,7 +50,7 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
                     <strong>Category:</strong> {item.category}
                   </p>
                   <p className="py-2">
-                    <strong>Technologies:</strong> {item.tech}
+                    <strong>Tech Stack:</strong> {item.tech}
                   </p>
                   <p className="py-2">
                     <strong>Source code:</strong>{" "}

@@ -15,16 +15,9 @@ const Hello = () => {
     }
   );
 
-  const GradientText = dynamic(
-    () => import("@/app/_components/GradientText/GradientText"),
-    {
-      ssr: false,
-    }
-  );
-
   return (
     <section id="hello">
-      <div className="h-screen sm:space-y-10 mx-5 lg:item-center py-5">
+      <div className="h-screen sm:space-y-10 mx-5 lg:item-center py-5 pb-30">
         <div className="flex flex-row justify-between sm:text-3xl text-2xl font-bold text-gray-900 dark:text-gray-200 ">
           <p>Sayid&apos;s Portfolio</p>
           <div className="flex flex-row sm:space-x-10 space-x-4">
@@ -51,7 +44,7 @@ const Hello = () => {
             alt="Sayid Muhammad Jundullah"
             width={200}
             height={200}
-            className="rounded-xl mx-auto sm:w-40 sm:h-40 object-cover shadow-lg dark:shadow-gray-800 transition-all duration-300 hover:scale-105"
+            className="rounded-xl mx-auto sm:w-70 sm:h-70 object-cover shadow-lg dark:shadow-gray-800 transition-all duration-300 hover:scale-105"
           />
 
           <h1 className="sm:flex sm:text-4xl text-xl font-light text-black mx-auto subpixel-antialiased">
@@ -76,14 +69,9 @@ const Hello = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 4 }}
             className="sm:text-xl text-md font-light text-gray-600 dark:text-gray-400 mt-4">
-            <GradientText
-              colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
-              animationSpeed={3}
-              showBorder={false}>
-              <p className="transition-colors">
-                Scroll down to discover more about my work and experience !
-              </p>
-            </GradientText>
+            <p className="transition-colors">
+              Scroll down to discover more about my work and experience !
+            </p>
           </motion.h1>
         </div>
       </div>

@@ -94,7 +94,11 @@ export default function InputForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="type ur username" {...field} />
+                <Input
+                  placeholder="type ur username"
+                  {...field}
+                  autoComplete="false"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -108,7 +112,12 @@ export default function InputForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="ur passsword" {...field} />
+                <Input
+                  type="password"
+                  placeholder="ur passsword"
+                  {...field}
+                  autoComplete="false"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

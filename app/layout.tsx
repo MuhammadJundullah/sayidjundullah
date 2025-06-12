@@ -31,7 +31,7 @@ export default function RootLayout({
           <div className="flex-1 flex flex-col items-center justify-center pb-10">
             {children}
           </div>
-          <div className=" w-full border-t border-gray-200 mt-30">
+          <div className=" w-full border-t border-gray-200">
             <Footer />
           </div>
         </div>

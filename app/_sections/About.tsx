@@ -14,7 +14,7 @@ const About = () => {
             <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
           </span>
           <div className="sm:mx-0">
-            <p className="leading-normal sm:text-3xl text-lg text-black dark:text-gray-300 sm:font-light font-normal">
+            <p className="leading-normal sm:text-3xl text-lg text-black dark:text-gray-300 sm:font-light font-normal shadow-lg transition p-10 rounded-3xl bg-gray-100">
               I’m a 6th-semester Computer Science student who thrives in
               self-directed learning. While I’ve chosen not to join campus
               organizations, I dedicate my time to mastering backend and
@@ -42,7 +42,7 @@ const About = () => {
             <span className="text-xl h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
           </span>
 
-          <p className="leading-normal text-black dark:text-gray-300 sm:text-3xl text-lg sm:font-light font-normal">
+          <p className="leading-normal text-black dark:text-gray-300 sm:text-3xl text-lg sm:font-light font-normal hover:cursor-pointer shadow-lg p-10 rounded-3xl bg-gray-100">
             I specialize in building responsive websites using modern
             technologies like React.js, Next.js, and Laravel, with experience
             spanning from backend development to data pipeline analysis using

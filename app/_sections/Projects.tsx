@@ -49,10 +49,10 @@ export default function ProjectsComponent({ data }: ProjectsProps) {
                   animateOpacity
                   threshold={0.1}>
                   <div className="h-full font-medium">
-                    <div className="w-80 border-1 dark:border-gray-500 border-gray-300 bg-gray-200 dark:bg-gray-800 rounded-md p-2">
-                      <p className="pb-2 text-start text-gray-500 dark:text-gray-400 font-medium text-sm">
+                    <div className="w-80 border-1 dark:bg-gray-800 rounded-md p-2">
+                      {/* <p className="pb-2 text-start text-gray-500 dark:text-gray-400 font-medium text-sm">
                         {project.category}
-                      </p>
+                      </p> */}
                       <Link
                         href={
                           "project/" + project.categoryslug + "/" + project.slug
@@ -71,7 +71,7 @@ export default function ProjectsComponent({ data }: ProjectsProps) {
                         <p className="text-gray-700 dark:text-gray-200">
                           {project.judul}
                         </p>
-                        <span className="block w-full border-t border-[0.1px] my-2 border-gray-300"></span>
+                        <span className="block w-full my-2 border-gray-300"></span>
                         <p className="text-gray-700 dark:text-gray-300 font-light">
                           {project.tech}
                         </p>

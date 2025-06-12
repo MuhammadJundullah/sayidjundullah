@@ -47,7 +47,7 @@ const Hello = () => {
             className="rounded-xl mx-auto sm:w-70 sm:h-70 object-cover shadow-lg dark:shadow-gray-800 transition-all duration-300 hover:scale-105"
           />
 
-          <h1 className="sm:flex sm:text-4xl text-xl font-light text-black mx-auto subpixel-antialiased">
+          <h1 className="sm:flex sm:text-4xl text-xl font-semibold text-black mx-auto subpixel-antialiased">
             <BlurText
               text="Hi, I am Sayid Muhammad Jundullah, "
               delay={150}
@@ -60,7 +60,7 @@ const Hello = () => {
               transition={{ delay: 2.5, duration: 0.5 }}
               className="">
               <span className="px-2 sm:text-4xl text-xl bg-black subpixel-antialiased text-white dark:bg-white dark:text-black rounded-lg sm:inline block sm:my-0 my-4">
-                Web Developer & Data Enthusiast.
+                Web Developer.
               </span>
             </motion.p>
           </h1>

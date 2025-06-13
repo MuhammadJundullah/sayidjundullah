@@ -49,6 +49,7 @@ const ManageProjects = () => {
   const [error, setError] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isRevalidating, setRevalidating] = useState(false);
 
   // handle search shortcut
   useEffect(() => {
@@ -180,6 +181,31 @@ const ManageProjects = () => {
     );
   }
 
+  const handleRevalidate = async () => {
+    try {
+      setRevalidating(true);
+      const res = await fetch("/api/revalidate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_REVALIDATE_SECRET}`,
+        },
+        body: JSON.stringify({
+          paths: ["/"],
+          tags: ["projects"],
+        }),
+      });
+      setRevalidating(false);
+
+      const data = await res.json();
+      if (data.success) {
+        alert("Home page revalidated successfully!");
+      }
+    } catch (err) {
+      alert("Failed to revalidate " + err);
+    }
+  };
+
   return (
     <div className="mx-auto sm:px-4 max-w-6xl">
       <div className="sm:my-10">
@@ -224,6 +250,16 @@ const ManageProjects = () => {
               className={`w-5 h-5 ${isRefreshing ? "animate-spin" : ""}`}
             />
             <span>{isRefreshing ? "Refreshing..." : "Refresh"}</span>
+          </button>
+
+          <button
+            onClick={handleRevalidate}
+            disabled={isRefreshing}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors rounded-md hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed hover:cursor-pointer">
+            <RefreshCwIcon
+              className={`w-5 h-5 ${isRevalidating ? "animate-spin" : ""}`}
+            />
+            <span>{isRevalidating ? "Revalidating..." : "Revalidate"}</span>
           </button>
         </div>
       </div>

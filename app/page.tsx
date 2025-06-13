@@ -13,7 +13,7 @@ import ProjectsComponent from "@/app/_sections/Projects";
 import Certificates from "@/app/_sections/Certificates";
 import Education from "@/app/_sections/Education";
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export default async function Home(): Promise<React.JSX.Element> {
   const headersList = headers();
@@ -27,7 +27,7 @@ export default async function Home(): Promise<React.JSX.Element> {
         next: { revalidate: revalidate },
       }).then((res) => res.json() as Promise<WorkExperienceType[]>),
       fetch(`${baseUrl}/api/projects?status=published`, {
-        next: { revalidate: revalidate },
+        next: { tags: ["projects"], revalidate: revalidate },
       }).then((res) => res.json() as Promise<ProjectsType[]>),
       fetch(`${baseUrl}/api/certificates`, {
         next: { revalidate: revalidate },

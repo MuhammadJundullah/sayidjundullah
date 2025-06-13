@@ -5,13 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Loading from "@/app/_components/Loading";
 import StatusDropdown from "../_components/StatusDropdown";
-import {
-  SquarePen,
-  Delete,
-  Search,
-  FilePlus,
-  RefreshCwIcon,
-} from "lucide-react";
+import { SquarePen, Delete, Search, FilePlus } from "lucide-react";
 import { VscRefresh } from "react-icons/vsc";
 
 import { Input } from "@/components/ui/input";

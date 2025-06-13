@@ -20,7 +20,9 @@ export default function NavMenu() {
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link href="/">Show Porto</Link>
+            <Link href="/" target="_blank">
+              Show Porto
+            </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>

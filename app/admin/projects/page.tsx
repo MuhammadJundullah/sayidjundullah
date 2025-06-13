@@ -12,6 +12,7 @@ import {
   FilePlus,
   RefreshCwIcon,
 } from "lucide-react";
+import { VscRefresh } from "react-icons/vsc";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -199,7 +200,7 @@ const ManageProjects = () => {
 
       const data = await res.json();
       if (data.success) {
-        alert("Home page revalidated successfully!");
+        showToast("Static Project Data has been revalidating!", "success");
       }
     } catch (err) {
       alert("Failed to revalidate " + err);
@@ -241,22 +242,11 @@ const ManageProjects = () => {
             <span className="w-19">New Project</span>
           </Link>
 
-          {/* Refresh Button */}
-          <button
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors rounded-md hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed hover:cursor-pointer">
-            <RefreshCwIcon
-              className={`w-5 h-5 ${isRefreshing ? "animate-spin" : ""}`}
-            />
-            <span>{isRefreshing ? "Refreshing..." : "Refresh"}</span>
-          </button>
-
           <button
             onClick={handleRevalidate}
             disabled={isRefreshing}
             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors rounded-md hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed hover:cursor-pointer">
-            <RefreshCwIcon
+            <VscRefresh
               className={`w-5 h-5 ${isRevalidating ? "animate-spin" : ""}`}
             />
             <span>{isRevalidating ? "Revalidating..." : "Revalidate"}</span>

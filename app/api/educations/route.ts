@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const educations = await prisma.education.findMany({
+    const educations = await prisma.educations.findMany({
       orderBy: { id: "desc" },
     });
     return new Response(JSON.stringify(educations), {

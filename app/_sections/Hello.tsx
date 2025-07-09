@@ -40,7 +40,7 @@ const Hello = () => {
       <div className="h-screen sm:space-y-10 sm:pt-5 py-5 sm:mt-2 lg:item-center sm:py-30">
         <div
           className={`
-          flex flex-row justify-between fixed sm:text-3xl text-lg font-bold sm:w-6xl w-xs z-1 text-white rounded-4xl px-7 items-center mx-7 sm:py-6 py-3 border border-white transition-all duration-300
+          flex flex-row justify-between fixed sm:text-3xl text-lg font-bold sm:w-6xl w-xs z-1 text-white rounded-4xl px-7 items-center sm:mx-0 mx-7 sm:py-6 py-3 border border-white transition-all duration-300
           ${
             scrolled
               ? "bg-gray-500/50 backdrop-blur-xl shadow-lg blur-3xl opacity-0 hover:opacity-100 hover:blur-none transition duration-500"

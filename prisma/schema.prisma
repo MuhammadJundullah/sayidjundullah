@@ -14,7 +14,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Project {
+model Projects {
   id           Int     @id @default(autoincrement())
   judul        String
   slug         String
@@ -30,7 +30,7 @@ model Project {
   updatedAt    DateTime?  @default(now()) @map("updated_at")
 }
 
-model Certificate {
+model Certificates {
   id        Int      @id @default(autoincrement())
   name      String
   desc      String
@@ -40,7 +40,7 @@ model Certificate {
   updatedAt DateTime? @default(now()) @map("updated_at")
 }
 
-model Education {
+model Educations {
   id     Int    @id @default(autoincrement())
   name   String
   school String
@@ -48,7 +48,7 @@ model Education {
   date   String
 }
 
-model Experience {
+model Experiences {
   id           Int       @id @default(autoincrement())
   company_name String
   position     String
@@ -61,14 +61,14 @@ model Experience {
 
 model Jobdesk {
   id           Int      @id @default(autoincrement())
-  experiences  Experience @relation(fields: [experiences_id], references: [id], onDelete: Cascade)
+  experiences  Experiences @relation(fields: [experiences_id], references: [id], onDelete: Cascade)
   experiences_id Int
   description  String
   createdAt    DateTime? @default(now()) @map("created_at")
   updatedAt    DateTime? @default(now()) @map("updated_at")
 }
 
-model User {
+model Users {
   id            Int      @id @default(autoincrement())
   username      String   @unique
   password      String

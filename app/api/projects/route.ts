@@ -121,9 +121,9 @@ export async function GET(req: NextRequest) {
       whereClause = { category };
     }
 
-    const projectsData = await prisma.project.findMany({
+    const projectsData = await prisma.projects.findMany({
       where: whereClause,
-      
+
       orderBy: { id: "asc" },
     });
 

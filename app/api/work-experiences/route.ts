@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const experiences = await prisma.experience.findMany({
+    const experiences = await prisma.experiences.findMany({
       orderBy: { id: "asc" },
       include: {
         jobdesks: {

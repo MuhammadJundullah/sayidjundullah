@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const certificates = await prisma.certificate.findMany();
+    const certificates = await prisma.certificates.findMany();
     return new Response(JSON.stringify(certificates), {
       status: 200,
     });

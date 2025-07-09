@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${fontSans.variable} ${fontMono.variable} antialiased text-gray-900`}>
+        className={`${fontSans.variable} ${fontMono.variable} antialiased text-gray-900 bg-white`}>
         <div className="min-h-screen flex flex-col mx-auto max-w-6xl">
           <div className="flex-1 flex flex-col items-center justify-center pb-10">
             {children}

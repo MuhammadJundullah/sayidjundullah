@@ -12,7 +12,6 @@ export async function GET() {
       },
     });
 
-    // Format jobdesks as array of descriptions
     const formatted = experiences.map((exp) => ({
       experience_id: exp.id,
       company_name: exp.company_name,

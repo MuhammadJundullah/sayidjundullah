@@ -15,7 +15,7 @@ const About = () => {
             </span>
             <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
           </span>
-          <div className="sm:mx-0 shadow-lg p-10 rounded-3xl border-1">
+          <div className="sm:mx-0 shadow-lg sm:p-10 p-5 rounded-3xl border-1">
             <p className="leading-normal sm:text-3xl text-lg text-black dark:text-gray-300 sm:font-light font-normal">
               I’m a 6th-semester Computer Science student who thrives in
               self-directed learning. While I’ve chosen not to join campus

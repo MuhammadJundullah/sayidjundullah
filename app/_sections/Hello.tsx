@@ -40,7 +40,7 @@ const Hello = () => {
       <div className="h-screen sm:space-y-10 sm:pt-5 py-5 sm:mt-2 lg:item-center sm:py-30">
         <div
           className={`
-          flex flex-row justify-between fixed sm:text-3xl text-2xl font-bold sm:w-6xl w-sm z-1 text-white rounded-4xl px-6 mx-4 py-6 border border-white transition-all duration-300
+          flex flex-row justify-between fixed sm:text-3xl text-lg font-bold sm:w-6xl w-xs z-1 text-white rounded-4xl px-7 items-center mx-7 sm:py-6 py-3 border border-white transition-all duration-300
           ${
             scrolled
               ? "bg-gray-500/50 backdrop-blur-xl shadow-lg blur-3xl opacity-0 hover:opacity-100 hover:blur-none transition duration-500"
@@ -69,7 +69,7 @@ const Hello = () => {
           </div>
         </div>
 
-        <div className="h-full text-center items-center flex flex-col justify-evenly sm:w-6xl sm:pt-30 sm:mt-10">
+        <div className="h-full text-center items-center flex flex-col justify-evenly sm:w-6xl sm:pt-30 pt-20 sm:mt-10">
           <Image
             src="/static-image/ahmad.png"
             alt="Sayid Muhammad Jundullah"
@@ -78,7 +78,7 @@ const Hello = () => {
             className="rounded-xl mx-auto sm:w-70 sm:h-70 object-cover shadow-lg transition-all duration-300 hover:scale-105"
           />
 
-          <h1 className="sm:flex sm:text-4xl text-xl font-semibold text-black mx-auto subpixel-antialiased">
+          <h1 className="sm:flex sm:text-3xl text-sm font-mono text-black mx-auto subpixel-antialiased">
             <BlurText
               text="Hi, I am Sayid Muhammad Jundullah, "
               delay={150}
@@ -90,7 +90,7 @@ const Hello = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 2.5, duration: 0.5 }}
               className="">
-              <span className="px-2 sm:text-4xl text-xl subpixel-antialiased text-gray-700 rounded-lg sm:inline block sm:my-0 my-4">
+              <span className="px-2 sm:text-3xl text-sm subpixel-antialiased text-gray-700 rounded-lg sm:inline block sm:my-0 my-4">
                 Web Application Developer.
               </span>
             </motion.p>

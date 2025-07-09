@@ -26,12 +26,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${fontSans.variable} ${fontMono.variable} antialiased bg-white text-gray-900 `}>
+        className={`${fontSans.variable} ${fontMono.variable} antialiased text-gray-900`}>
         <div className="min-h-screen flex flex-col mx-auto max-w-6xl">
           <div className="flex-1 flex flex-col items-center justify-center pb-10">
             {children}
           </div>
-          <div className="sm:w-full border-t sm:mx-0 mx-5 border-gray-200">
+          <div className="sm:w-full border-t sm:mx-0 mx-5">
             <Footer />
           </div>
         </div>

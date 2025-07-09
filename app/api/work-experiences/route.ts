@@ -1,17 +1,30 @@
 // app/api/work-experiences/route.js
-import pool from "@/lib/db";
+import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const result = await pool.query(`
-      SELECT experiences.id AS experience_id, experiences.company_name, experiences.position, experiences.duration, experiences.type, experiences.created_at, experiences.updated_at,
-       json_agg(json_build_object('description', jobdesks.description)) AS jobdesks
-      FROM experiences
-      LEFT JOIN jobdesks ON experiences.id = jobdesks.experiences_id
-      GROUP BY experiences.id
-      ORDER BY experiences.id ASC
-    `);
-    return new Response(JSON.stringify(result.rows), {
+    const experiences = await prisma.experience.findMany({
+      orderBy: { id: "asc" },
+      include: {
+        jobdesks: {
+          select: { description: true },
+        },
+      },
+    });
+
+    // Format jobdesks as array of descriptions
+    const formatted = experiences.map((exp) => ({
+      experience_id: exp.id,
+      company_name: exp.company_name,
+      position: exp.position,
+      duration: exp.duration,
+      type: exp.type,
+      created_at: exp.createdAt,
+      updated_at: exp.updatedAt,
+      jobdesks: exp.jobdesks.map((jd) => ({ description: jd.description })),
+    }));
+
+    return new Response(JSON.stringify(formatted), {
       status: 200,
     });
   } catch (error) {

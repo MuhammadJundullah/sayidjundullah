@@ -4,6 +4,14 @@ import { NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 import { Readable } from "stream";
 import { getToken } from "next-auth/jwt";
+import prisma from "@/lib/prisma";
+
+function jsonResponse(body: any, status: number) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
+}
 
 if (process.env.CLOUDINARY_URL) {
   cloudinary.config({
@@ -99,64 +107,37 @@ export async function GET(req: NextRequest) {
     const category = searchParams.get("category");
     const status = searchParams.get("status");
 
-    let result;
+    if (status && !["draft", "published", "archived"].includes(status)) {
+      return jsonResponse({ error: "Invalid status value" }, 400);
+    }
 
-    if (slug && status) {
-      result = await pool.query(
-        "SELECT * FROM projects WHERE slug = $1 AND status = $2",
-        [slug, status]
-      );
-    } else if (category && status) {
-      result = await pool.query(
-        "SELECT * FROM projects WHERE categoryslug = $1 AND status = $2",
-        [category, status]
-      );
-    } else if (status) {
-      result = await pool.query("SELECT * FROM projects WHERE status = $1", [
-        status,
-      ]);
+    let whereClause = {};
+
+    if (status) {
+      whereClause = { status };
     } else if (slug) {
-      result = await pool.query("SELECT * FROM projects WHERE slug = $1", [
-        slug,
-      ]);
+      whereClause = { slug };
     } else if (category) {
-      result = await pool.query(
-        "SELECT * FROM projects WHERE categoryslug = $1",
-        [category]
-      );
-    } else if (status) {
-      result = await pool.query(
-        "SELECT judul, slug, category, categoryslug, photos, tech FROM projects WHERE status = $1 ORDER BY judul DESC",
-        [status]
-      );
-    } else {
-      result = await pool.query(
-        `SELECT * FROM projects 
-         ORDER BY CASE 
-           WHEN status = 'published' THEN 1 
-           WHEN status = 'archived' THEN 2 
-           ELSE 3
-         END`
-      );
+      whereClause = { category };
     }
 
-    if (result.rows.length === 0) {
-      return new Response(JSON.stringify({ message: "No data available" }), {
-        status: 404,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    return new Response(JSON.stringify(result.rows), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
+    const projectsData = await prisma.project.findMany({
+      where: whereClause,
+      
+      orderBy: { id: "asc" },
     });
-  } catch (error) {
+
+    if (!projectsData.length) {
+      return jsonResponse({ message: "No projects found" }, 404);
+    }
+
+    return jsonResponse(projectsData, 200);
+  } catch (error: any) {
     console.error("Error fetching projects:", error);
-    return new Response(JSON.stringify({ error: "Something went wrong" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return jsonResponse(
+      { error: "Internal server error", details: error.message },
+      500
+    );
   }
 }
 

@@ -68,15 +68,15 @@ const BlurText: React.FC<BlurTextProps> = ({
   const defaultFrom = useMemo(
     () =>
       direction === "top"
-        ? { filter: "blur(10px)", opacity: 0, y: -50 }
-        : { filter: "blur(10px)", opacity: 0, y: 50 },
+        ? { filter: "blur(20px)", opacity: 0, y: 50 }
+        : { filter: "blur(20px)", opacity: 0, y: 50 },
     [direction]
   );
 
   const defaultTo = useMemo(
     () => [
       {
-        filter: "blur(5px)",
+        filter: "blur(20px)",
         opacity: 0.5,
         y: direction === "top" ? 5 : -5,
       },

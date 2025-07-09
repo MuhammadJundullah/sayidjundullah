@@ -1,40 +1,69 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import pool from "@/lib/db"
+import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { UserType } from "@/lib/type";
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id?: string;
+      username?: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+    };
+  }
+}
 
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "username", type: "username" },
+        username: { label: "username", type: "text" },
         password: { label: "Password", type: "password" },
       },
 
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) {
+          console.error("Username or password missing.");
           return null;
         }
 
         try {
-          const { rows } = await pool.query(
-            `SELECT id, username, password FROM users 
-             WHERE username = $1`,
-            [credentials.username]
-          );
+          const user: UserType | null = await prisma.user.findFirstOrThrow({
+            where: { username: credentials.username },
+            select: {
+              id: true,
+              username: true,
+              password: true,
+            },
+          });
 
-          if (rows.length === 0) return null;
-          const user = rows[0];
+          if (!user) {
+            console.error("User not found.");
+            return null;
+          }
+
+          if (!user.password) {
+            console.error("Password hash is missing for the user.");
+            return null;
+          }
 
           const isValid = await bcrypt.compare(
             credentials.password,
             user.password
           );
 
-          return isValid ? { id: user.id, name: user.username } : null;
+          if (!isValid) {
+            console.error("Invalid password.");
+            return null;
+          }
+
+          return { id: String(user.id), name: user.username };
         } catch (error) {
-          console.error("Database error:", error);
+          console.error("Database error during authorization:", error);
           return null;
         }
       },
@@ -52,13 +81,24 @@ const handler = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.expires = Date.now() + 30 * 60 * 1000;
+        token.username = user.name;
       }
       return token;
     },
+    async session({ session, token }) {
+      if (session.user) {
+        if (token?.id) {
+          session.user.id = token.id as string;
+        }
+        if (token?.username) {
+          session.user.username = token.username as string;
+        }
+      }
+      return session;
+    },
   },
   pages: {
-    signIn: "/admin/projects",
+    signIn: "/login",
     error: "/login",
   },
 });

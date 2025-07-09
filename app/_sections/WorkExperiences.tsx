@@ -43,7 +43,7 @@ export default function WorkExperiences({ data }: WorkExperiencesProps) {
                 <span className="size-3 shrink-0 rounded-full dark:bg-white bg-gray-800"></span>
 
                 <div className="-mt-2">
-                  <h3 className="font-bold mb-3 text-gray-800 dark:text-gray-200 sm:text-3xl text-lg">
+                  <h3 className="font-bold mb-3 text-gray-600 dark:text-gray-200 sm:text-3xl text-lg">
                     {exp.position} at {exp.company_name}
                   </h3>
 

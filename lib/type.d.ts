@@ -1,6 +1,20 @@
+declare global {
+  namespace NodeJS {
+    interface Global {
+      prisma: any;
+    }
+  }
+}
+
+export type UserType = {
+  id: number;
+  username: string;
+  password: string;
+};
+
 export type JobdeskType = {
   description: string;
-}
+};
 
 export type WorkExperienceType = {
   experience_id: string;
@@ -9,7 +23,7 @@ export type WorkExperienceType = {
   duration: string;
   type: string;
   jobdesks: JobdeskType[];
-}
+};
 
 export type ProjectsType = {
   id: string;
@@ -29,8 +43,7 @@ export type CertificatesType = {
   desc: string;
   date: string;
   site: string;
-}
-
+};
 
 export type EducationsType = {
   name: string;

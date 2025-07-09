@@ -25,11 +25,13 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
+    "lib/**.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
     "types.d.ts",
     "app/project/data-analytics/[slug]/page.tsx",
-    "lib/db.js"
-, "app/_components/ScrollLink/ScrollLink.js"  ],
+    "lib/**.js",
+    "app/_components/ScrollLink/ScrollLink.js"
+  ],
   "exclude": ["node_modules"]
 }

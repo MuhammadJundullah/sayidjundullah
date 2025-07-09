@@ -10,13 +10,22 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    ignores: [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/.next/**",
+      "**/*.config.js",
+      "**/lib/**",
+    ],
+  },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
-      "@typescript-eslint/no-explicit-any": "off", // disable error 'any'
+      "@typescript-eslint/no-explicit-any": "off",
       "prefer-const": "off",
       "react-hooks/exhaustive-deps": "off",
-      // tambahkan rule lain jika diperlukan
     },
   },
 ];

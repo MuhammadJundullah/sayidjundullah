@@ -1,12 +1,11 @@
-// app/api/work-experiences/route.js
-import pool from "@/lib/db";
+import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const result = await pool.query(
-      "SELECT * FROM educations ORDER BY id DESC"
-    ); 
-    return new Response(JSON.stringify(result.rows), {
+    const educations = await prisma.education.findMany({
+      orderBy: { id: "desc" },
+    });
+    return new Response(JSON.stringify(educations), {
       status: 200,
     });
   } catch (error) {

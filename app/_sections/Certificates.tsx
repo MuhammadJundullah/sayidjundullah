@@ -1,11 +1,13 @@
+// app/certificates/page.tsx (atau lokasi CertificatesComponent Anda)
 "use client";
 
 import { useState } from "react";
 import * as React from "react";
 import Image from "next/image";
-import dynamic from "next/dynamic";
 import Loading from "@/app/_components/Loading";
 import type { CertificatesType } from "@/lib/type";
+import CustomAnimatedContent from "@/app/_components/AnimatedContent/CustomAnimateContent";
+import ImageModal from "@/app/_components/ImageModal/ImageModal";
 
 interface CertificatesProps {
   data: CertificatesType[];
@@ -13,13 +15,21 @@ interface CertificatesProps {
 
 export default function CertificatesComponent({ data }: CertificatesProps) {
   const [certificates] = useState<CertificatesType[]>(data);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedAlt, setSelectedAlt] = useState<string | null>(null);
 
-  const AnimatedContent = dynamic(
-    () => import("@/app/_components/AnimatedContent/AnimatedContent"),
-    {
-      ssr: false,
-    }
-  );
+  const DEFAULT_CERTIFICATE_WIDTH = 900;
+  const DEFAULT_CERTIFICATE_HEIGHT = 700;
+
+  const openModal = (src: string, alt: string) => {
+    setSelectedImage(src);
+    setSelectedAlt(alt);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+    setSelectedAlt(null);
+  };
 
   return (
     <section id="certificates">
@@ -37,44 +47,63 @@ export default function CertificatesComponent({ data }: CertificatesProps) {
             {certificates.length === 0 ? (
               <Loading />
             ) : (
-              certificates.map((certificate, i) => (
-                <div
-                  key={i}
-                  className="hover:scale-105 transition-all duration-300 ease-in-out">
-                  <AnimatedContent
-                    distance={100}
-                    direction="vertical"
-                    reverse={false}
-                    config={{ tension: 120, friction: 14 }}
-                    initialOpacity={0}
-                    animateOpacity
-                    threshold={0.1}>
-                    <div>
-                      <Image
-                        src={`https://res.cloudinary.com/dislphwb0/image/upload/v1747003789/${certificate.name}`}
-                        // src={`/static-image/Certificate/${certificate.name}`}
-                        alt={certificate.name}
-                        width={345}
-                        height={140}
-                        className="rounded-lg shadow-lg"
-                        style={{ objectFit: "cover" }}
-                      />
-                      <div className="mx-auto mt-4 items-center justify-center text-center mb-7">
-                        <h3 className="font-semibold dark:text-white text-gray-800">
-                          {certificate.desc}
-                        </h3>
-                        <time className="text-gray-500 dark:text-gray-400 font-medium">
-                          {certificate.date}
-                        </time>
+              certificates.map((certificate, i) => {
+                const animationDistance = 50;
+                const animationDelay = i * 0.08;
+                const finalDirection = "vertical";
+                const finalDistance = animationDistance;
+
+                const imageUrl = `https://res.cloudinary.com/dislphwb0/image/upload/v1747003789/${certificate.name}`;
+
+                return (
+                  <div
+                    key={i}
+                    className="hover:scale-105 transition-all duration-300 ease-in-out"
+                    onClick={() => openModal(imageUrl, certificate.name)}>
+                    <CustomAnimatedContent
+                      distance={finalDistance}
+                      direction={finalDirection}
+                      initialOpacity={0}
+                      animateOpacity
+                      threshold={0.1}
+                      delay={animationDelay}>
+                      <div>
+                        <Image
+                          src={imageUrl}
+                          alt={certificate.name}
+                          width={345}
+                          height={140}
+                          className="rounded-lg shadow-lg cursor-pointer"
+                          style={{ objectFit: "cover" }}
+                        />
+                        <div className="mx-auto mt-4 items-center justify-center text-center mb-7">
+                          <h3 className="font-semibold dark:text-white text-gray-800">
+                            {certificate.desc}
+                          </h3>
+                          <time className="text-gray-500 dark:text-gray-400 font-medium">
+                            {certificate.date}
+                          </time>
+                        </div>
                       </div>
-                    </div>
-                  </AnimatedContent>
-                </div>
-              ))
+                    </CustomAnimatedContent>
+                  </div>
+                );
+              })
             )}
           </div>
         </div>
       </div>
+
+      {/* --- RENDER MODAL JIKA selectedImage ADA --- */}
+      {selectedImage && selectedAlt && (
+        <ImageModal
+          src={selectedImage}
+          alt={selectedAlt}
+          onClose={closeModal}
+          originalWidth={DEFAULT_CERTIFICATE_WIDTH} // Teruskan lebar asli
+          originalHeight={DEFAULT_CERTIFICATE_HEIGHT} // Teruskan tinggi asli
+        />
+      )}
     </section>
   );
 }

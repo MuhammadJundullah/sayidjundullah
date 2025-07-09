@@ -1,7 +1,7 @@
 import React from 'react'
 import { Suspense } from "react";
 import Loading from '../_components/Loading';
-import InputForm  from './_components/InputForm'
+import InputForm from './_components/InputForm'
 
 const loginPage = () => {
   return (

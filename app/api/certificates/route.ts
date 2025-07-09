@@ -1,10 +1,9 @@
-// app/api/work-experiences/route.js
-import pool from "@/lib/db";
+import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const result = await pool.query("SELECT * FROM certificates"); 
-    return new Response(JSON.stringify(result.rows), {
+    const certificates = await prisma.certificate.findMany();
+    return new Response(JSON.stringify(certificates), {
       status: 200,
     });
   } catch (error) {

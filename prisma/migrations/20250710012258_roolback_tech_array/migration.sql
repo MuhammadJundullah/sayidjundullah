@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Projects" ALTER COLUMN "tech" DROP NOT NULL,
+ALTER COLUMN "tech" SET DATA TYPE TEXT;

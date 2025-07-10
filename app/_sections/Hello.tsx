@@ -1,12 +1,10 @@
 "use client";
 
-import Link from "next/link";
-import { PiGithubLogoLight } from "react-icons/pi";
 import Image from "next/image";
-import { FaLinkedin } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+// Import komponen HeaderScroll yang baru
+import HeaderScroll from "@/app/_components/HeaderScrool/HeaderScrool"; // Sesuaikan path jika berbeda
 
 const Hello = () => {
   const BlurText = dynamic(
@@ -16,58 +14,11 @@ const Hello = () => {
     }
   );
 
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollThreshold = 50;
-      if (window.scrollY > scrollThreshold) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
   return (
     <section id="hello">
-      <div className="h-screen sm:space-y-10 sm:pt-5 py-5 sm:mt-2 lg:item-center sm:py-30">
-        <div
-          className={`
-          flex flex-row justify-between fixed sm:text-3xl text-lg font-bold shadow-lg sm:w-6xl w-xs z-1 text-gray-500 rounded-4xl px-7 items-center sm:mx-0 mx-7 sm:py-6 py-3 border border-white transition-all duration-300
-          ${
-            scrolled
-              ? "bg-gray-600/70 text-white backdrop-blur-xl shadow-lg blur-3xl opacity-0 hover:opacity-100 hover:blur-none transition duration-500"
-              : "bg-gray-300/70"
-          }
-        `}>
-          <a href="#hello">
-            {" "}
-            <p className="tracking-[.30em]">Sayid&apos;s Portfolio</p>
-          </a>
-          <div className="flex flex-row sm:space-x-10 space-x-4">
-            <Link
-              href={"https://linkedin.com/in/sayidm"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors">
-              <FaLinkedin />
-            </Link>
-            <Link
-              href={"https://github.com/MuhammadJundullah"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-whitetransition-colors">
-              <PiGithubLogoLight />
-            </Link>
-          </div>
-        </div>
+      <div className="flex h-screen sm:space-y-10 sm:pt-5 py-5 sm:mt-2 p-4 lg:item-center sm:py-30">
+        {/* Render komponen HeaderScroll di sini */}
+        <HeaderScroll />
 
         <div className="h-full text-center items-center flex flex-col justify-evenly sm:w-6xl sm:pt-30 pt-20 sm:mt-10">
           <Image
@@ -78,22 +29,14 @@ const Hello = () => {
             className="rounded-xl mx-auto sm:w-70 sm:h-70 object-cover shadow-lg transition-all duration-300 hover:scale-105"
           />
 
-          <h1 className="sm:flex sm:text-4xl text-sm font-light text-black mx-auto subpixel-antialiased">
+          <h1 className="sm:flex font-light text-black subpixel-antialiased mx-5 sm:mx-auto">
             <BlurText
-              text="Hello, I am Sayid Muhammad Jundullah, Web Application Developer."
+              text="Hello, i am Sayid Muhammad Jundullah, Web Application Developer."
               delay={150}
+              className="sm:text-4xl text-center text-3xl font-bold text-gray-800"
               animateBy="words"
               direction="top"
             />
-            {/* <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2.5, duration: 0.5 }}
-              className="">
-              <span className="px-2 sm:text-3xl text-sm subpixel-antialiased text-gray-700 rounded-lg sm:inline block sm:my-0 my-4">
-                Web Application Developer.
-              </span>
-            </motion.p> */}
           </h1>
           <motion.h1
             initial={{ opacity: 0 }}

@@ -5,18 +5,18 @@ import Link from "next/link";
 const About = () => {
   return (
     <section id="about">
-      <div className="flex flex-col max-w-6xl mb-20 sm:mx-auto mx-5 font-thin sm:text-center text-gray-800 dark:text-gray-200">
+      <div className="flex flex-col max-w-6xl mb-20 sm:mx-auto mx-5 font-thin sm:text-center text-gray-800">
         <div className="text-3xl mt-10 mb-20 pb-20">
           <span className="flex items-center sm:my-10 my-5">
             <span className="shrink-0 pe-4">
-              <h1 className="sm:text-6xl text-3xl font-mono font-semibold text-black dark:text-gray-300 sm:mx-0">
+              <h1 className="sm:text-6xl text-3xl font-mono font-semibold text-black  sm:mx-0">
                 About Me
               </h1>
             </span>
             <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
           </span>
-          <div className="sm:mx-0 shadow-lg sm:p-10 p-5 rounded-3xl border-1">
-            <p className="leading-normal sm:text-3xl text-lg text-black dark:text-gray-300 sm:font-light font-normal">
+          <div className="sm:mx-0 shadow-lg sm:p-10 p-5 rounded-3xl border-1 border-gray-200">
+            <p className="leading-normal sm:text-3xl text-lg text-black sm:font-light font-normal">
               I’m a 6th-semester Computer Science student who thrives in
               self-directed learning. While I’ve chosen not to join campus
               organizations, I dedicate my time to mastering backend and

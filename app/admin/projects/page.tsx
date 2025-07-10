@@ -41,7 +41,6 @@ const ManageProjects = () => {
   const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isRevalidating, setRevalidating] = useState(false);
@@ -69,7 +68,7 @@ const ManageProjects = () => {
         setProjects(data);
         setFilteredProjects(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Terjadi kesalahan");
+        showToast(`${err}`, "success");
       } finally {
         setIsLoading(false);
       }
@@ -124,9 +123,9 @@ const ManageProjects = () => {
         handleRefresh();
         showToast("Project has been deleted successfully!", "success");
       }
-    } catch (error) {
+    } catch (err) {
       setIsLoading(false);
-      console.error("Delete error:", error);
+      console.error("Delete error:", err);
     }
   };
 
@@ -155,26 +154,11 @@ const ManageProjects = () => {
       );
 
       showToast(`Project has been ${newStatus} successfully!`, "success");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Gagal memperbarui status");
+    } catch (error) {
+      showToast(` ${error}`, "success");
+      handleRefresh();
     }
   };
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen w-7xl absolute">
-        <div className="text-red-500 text-center p-4">
-          <p>{error}</p>
-          <Button
-            variant="outline"
-            className="mt-4"
-            onClick={() => window.location.reload()}>
-            Coba Lagi
-          </Button>
-        </div>
-      </div>
-    );
-  }
 
   const handleRevalidate = async () => {
     try {

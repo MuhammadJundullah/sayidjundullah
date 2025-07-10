@@ -17,7 +17,7 @@ datasource db {
 model Projects {
   id           Int     @id @default(autoincrement())
   judul        String
-  slug         String
+  slug         String  @unique
   category     String
   categoryslug String
   url          String?

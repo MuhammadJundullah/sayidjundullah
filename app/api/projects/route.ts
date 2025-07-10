@@ -152,36 +152,32 @@ async function streamToBuffer(stream: Readable): Promise<Buffer> {
 export async function PUT(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   if (!token) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   if (!req.body) {
-    return new Response(JSON.stringify({ error: "Request body is required" }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json(
+      { error: "Request body is required" },
+      { status: 400 }
+    );
   }
 
   try {
     const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
-    const slug = searchParams.get("slug");
+    const idParam = searchParams.get("id");
+    const slugParam = searchParams.get("slug");
 
-    if (!id && !slug) {
-      return new Response(
-        JSON.stringify({ error: "ID or slug parameter is required" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        }
+    if (!idParam && !slugParam) {
+      return NextResponse.json(
+        { error: "ID or slug parameter is required" },
+        { status: 400 }
       );
     }
 
     const formData = await req.formData();
-    const allowedFields = [
+    const updateData: Record<string, any> = {};
+
+    const fieldsToProcess = [
       "judul",
       "slug",
       "category",
@@ -192,112 +188,178 @@ export async function PUT(req: NextRequest) {
       "desc",
       "status",
     ];
-    const updateData: Record<string, any> = {};
-    const setClauses: string[] = [];
-    const values: any[] = [];
 
-    // Ambil semua field selain foto
-    allowedFields.forEach((field) => {
+    fieldsToProcess.forEach((field) => {
       const value = formData.get(field);
-      if (value) {
+      // Hanya tambahkan ke updateData jika nilainya tidak null
+      // Jika Anda ingin mengabaikan string kosong, tambahkan `&& value !== ''`
+      if (value !== null) {
         updateData[field] = value;
-        const dbField = field === "desc" ? `"desc"` : field; // khusus "desc"
-        setClauses.push(`${dbField} = $${setClauses.length + 1}`);
-        values.push(value);
       }
     });
 
-    // Jika ada file foto baru, upload ke Cloudinary dan hapus yang lama
-    const newPhotoFile = formData.get("photo") as File | null;
-    if (newPhotoFile && newPhotoFile.size > 0) {
-      // Ambil foto lama
-      const oldPhotoQuery = id
-        ? await pool.query("SELECT photo FROM projects WHERE id = $1", [id])
-        : await pool.query("SELECT photo FROM projects WHERE slug = $1", [
-            slug,
-          ]);
-
-      const oldPhotoUrl = oldPhotoQuery.rows[0]?.photo;
-      if (oldPhotoUrl) {
-        const match = oldPhotoUrl.match(/\/v\d+\/(.+)\.\w+$/);
-        const publicId = match ? match[1] : null;
-        if (publicId) {
-          try {
-            await cloudinary.uploader.destroy(publicId);
-          } catch (err) {
-            console.error("Gagal hapus foto lama:", err);
-          }
-        }
-      }
-
-      // Upload foto baru
-      const buffer = await streamToBuffer(newPhotoFile.stream() as any);
-      const uploadResult = await new Promise<any>((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          { folder: "portfolio" },
-          (err, result) => {
-            if (err) reject(err);
-            else resolve(result);
-          }
-        );
-        Readable.from(buffer).pipe(uploadStream);
-      });
-
-      const photoUrl = uploadResult.secure_url;
-      updateData.photo = photoUrl;
-      setClauses.push(`photo = $${setClauses.length + 1}`);
-      values.push(photoUrl);
-    }
-
-    if (setClauses.length === 0) {
-      return new Response(
-        JSON.stringify({ error: "No valid fields to update" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        }
+    // Validasi status (jika ada di updateData)
+    if (
+      updateData.status &&
+      !["published", "archived"].includes(updateData.status.toString())
+    ) {
+      return NextResponse.json(
+        { error: "Invalid status value" },
+        { status: 400 }
       );
     }
 
-    const setClause = setClauses.join(", ");
-    let query = `UPDATE projects SET ${setClause} WHERE `;
+    // Jika ada file foto baru, upload ke Cloudinary dan hapus yang lama
+    const newPhotoFile = formData.get("photo") as File | null;
+    // Asumsi flag untuk menghapus foto secara eksplisit, misalnya dari client:
+    // formData.append("deletePhoto", "true");
+    const deletePhotoExplicitly = formData.get("deletePhoto") === "true";
 
-    if (id) {
-      query += `id = $${values.length + 1}`;
-      values.push(id);
-    } else {
-      query += `slug = $${values.length + 1}`;
-      values.push(slug);
-    }
-
-    query += " RETURNING *";
-    const result = await pool.query(query, values);
-
-    if (result.rows.length === 0) {
-      return new Response(JSON.stringify({ message: "Data not found" }), {
-        status: 404,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    return new Response(
-      JSON.stringify({ message: "Data berhasil diperbarui", status: "ok" }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
+    // Transaksi Prisma untuk memastikan atomisitas operasi DB dan Cloudinary
+    const updatedProject = await prisma.$transaction(async (tx) => {
+      let currentProject;
+      // Temukan proyek berdasarkan ID atau slug
+      if (idParam) {
+        // Jika ID adalah INT:
+        const projectId = parseInt(idParam);
+        if (isNaN(projectId)) {
+          throw new Error("Invalid project ID format.");
+        }
+        currentProject = await tx.projects.findUnique({
+          where: { id: projectId },
+        });
+      } else if (slugParam) {
+        currentProject = await tx.projects.findUnique({
+          where: { slug: slugParam },
+        });
       }
+
+      if (!currentProject) {
+        throw new Error("Project not found");
+      }
+
+      let finalPhotoUrl: string | null = currentProject.photo; // Default: pertahankan foto yang ada
+
+      // Logika upload foto baru dan penghapusan foto lama
+      if (newPhotoFile && newPhotoFile.size > 0) {
+        // Upload foto baru
+        const buffer = await streamToBuffer(newPhotoFile.stream() as any);
+        const uploadResult = await new Promise<any>((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            { folder: "portfolio" }, // Folder di Cloudinary
+            (err, result) => {
+              if (err) reject(err);
+              else resolve(result);
+            }
+          );
+          Readable.from(buffer).pipe(uploadStream);
+        });
+        finalPhotoUrl = uploadResult.secure_url; // Setel URL foto baru
+
+        // Hapus foto lama jika ada dan berhasil diupload yang baru
+        if (currentProject.photo) {
+          try {
+            const match = currentProject.photo.match(/\/v\d+\/(.+)\.\w+$/);
+            const publicId = match ? match[1] : null;
+            if (publicId) {
+              await cloudinary.uploader.destroy(publicId);
+            }
+          } catch (err) {
+            console.error("Failed to delete old photo from Cloudinary:", err);
+            // Anda bisa memilih untuk melempar error di sini jika penghapusan foto lama kritis
+            // atau cukup log dan lanjutkan jika upload foto baru lebih penting.
+          }
+        }
+      } else if (deletePhotoExplicitly) {
+        // Jika ada instruksi eksplisit untuk menghapus foto
+        if (currentProject.photo) {
+          try {
+            const match = currentProject.photo.match(/\/v\d+\/(.+)\.\w+$/);
+            const publicId = match ? match[1] : null;
+            if (publicId) {
+              await cloudinary.uploader.destroy(publicId);
+            }
+          } catch (err) {
+            console.error(
+              "Failed to delete photo explicitly from Cloudinary:",
+              err
+            );
+          }
+        }
+        finalPhotoUrl = null; // Setel foto ke null di database
+      }
+      // Jika tidak ada `newPhotoFile` dan tidak ada `deletePhotoExplicitly`, `finalPhotoUrl` akan tetap sama dengan `currentProject.photo`
+
+      // Tambahkan `photo` ke data update hanya jika `finalPhotoUrl` berbeda dari `currentProject.photo`
+      if (finalPhotoUrl !== currentProject.photo) {
+        updateData.photo = finalPhotoUrl;
+      }
+
+      // Jika tidak ada perubahan yang diminta, lempar error untuk menghasilkan respons 400
+      if (Object.keys(updateData).length === 0) {
+        throw new Error("No valid fields to update or no changes detected.");
+      }
+
+      // Perbarui proyek di database
+      const updatedProjectResult = await tx.projects.update({
+        where: {
+          id: currentProject.id, // Gunakan ID proyek yang ditemukan
+        },
+        data: updateData,
+        select: {
+          // Pilih semua kolom yang relevan untuk dikembalikan
+          id: true,
+          judul: true,
+          slug: true,
+          category: true,
+          categoryslug: true,
+          url: true,
+          tech: true, // `tech` akan dikembalikan sebagai string
+          site: true,
+          desc: true,
+          status: true,
+          photo: true,
+        },
+      });
+
+      return updatedProjectResult; // Mengembalikan hasil dari transaksi
+    });
+
+    // Respons sukses
+    return NextResponse.json(
+      {
+        message: "Data berhasil diperbarui",
+        status: "ok",
+        data: updatedProject,
+      },
+      { status: 200 }
     );
   } catch (err) {
     console.error("Error updating project:", err);
-    return new Response(
-      JSON.stringify({
-        error: "Gagal memperbarui data",
-        detail: err instanceof Error ? err.message : String(err),
-      }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
+
+    // Penanganan error dari Prisma (misal: P2025 untuk not found, atau lainnya)
+    if (err instanceof Error) {
+      if (
+        (err as any).code === "P2025" ||
+        err.message === "Project not found"
+      ) {
+        // Prisma not found atau pesan kustom
+        return NextResponse.json({ error: "Data not found" }, { status: 404 });
       }
+      if (err.message === "No valid fields to update or no changes detected.") {
+        return NextResponse.json({ error: err.message }, { status: 400 });
+      }
+      return NextResponse.json(
+        { error: "Gagal memperbarui data", detail: err.message },
+        { status: 500 }
+      );
+    }
+    return NextResponse.json(
+      {
+        error: "Gagal memperbarui data",
+        detail: "Terjadi kesalahan server yang tidak diketahui.",
+      },
+      { status: 500 }
     );
   }
 }
@@ -307,55 +369,80 @@ export async function PATCH(request: NextRequest) {
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
+
+  // 1. Autentikasi: Pastikan pengguna terotorisasi
   if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const { searchParams } = new URL(request.url);
-    const projectId = searchParams.get("statuschange");
+    const projectIdParam = searchParams.get("statuschange");
 
-    if (!projectId || isNaN(Number(projectId))) {
+    // 2. Validasi Project ID dari Search Params
+    // Sesuaikan tipe data 'projectId' dengan yang Anda gunakan di schema.prisma
+    // Jika ID Anda INT:
+    const projectId = parseInt(projectIdParam || ""); // Gunakan '' jika null
+    if (!projectIdParam || isNaN(projectId)) {
       return NextResponse.json(
-        { error: "Invalid project ID" },
+        { error: "Invalid project ID format. Must be a number." },
         { status: 400 }
       );
     }
+    // Jika ID Anda UUID (String):
+    // const projectId = projectIdParam;
+    // if (!projectId) {
+    //   return NextResponse.json({ error: "Project ID is required." }, { status: 400 });
+    // }
 
     const { status } = await request.json();
+
+    // 3. Validasi Status: Pastikan status yang diberikan valid
     if (!["published", "archived"].includes(status)) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
 
-    const client = await pool.connect();
-    try {
-      await client.query("BEGIN");
+    // 4. Perbarui status proyek menggunakan Prisma
+    // Prisma secara otomatis menangani transaksi untuk operasi tunggal seperti ini.
+    const updatedProject = await prisma.projects.update({
+      where: {
+        id: projectId, // Pastikan 'id' di schema.prisma Anda cocok dengan tipe 'projectId'
+      },
+      data: {
+        status: status, // Pastikan 'status' di model Project Anda berjenis String atau Enum
+      },
+      select: {
+        // Memilih kolom yang ingin dikembalikan, mirip 'RETURNING' di SQL
+        id: true,
+        judul: true,
+        status: true,
+      },
+    });
 
-      const { rows } = await client.query(
-        `UPDATE projects 
-         SET status = $1 
-         WHERE id = $2 
-         RETURNING id, judul, status`,
-        [status, projectId]
-      );
-
-      await client.query("COMMIT");
-
-      return rows[0]
-        ? NextResponse.json({
-            success: true,
-            data: rows[0],
-            message: "Status updated successfully",
-          })
-        : NextResponse.json({ error: "Project not found" }, { status: 404 });
-    } finally {
-      await client.query("ROLLBACK").catch(() => {});
-      client.release();
-    }
+    // 5. Kirim respons sukses jika proyek ditemukan dan diperbarui
+    return NextResponse.json({
+      success: true,
+      data: updatedProject,
+      message: "Status updated successfully",
+    });
   } catch (error) {
+    // 6. Penanganan error
     console.error("Status update error:", error);
+
+    // PrismaClientKnownRequestError adalah error umum yang dilempar oleh Prisma
+    // Misalnya, jika record dengan ID yang diberikan tidak ditemukan (P2025)
+    if (error instanceof Error) {
+      // Jika ID tidak ditemukan, Prisma melempar error dengan kode 'P2025'
+      if ((error as any).code === "P2025") {
+        return NextResponse.json(
+          { error: "Project not found" },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Server error" },
+      { error: "An unexpected server error occurred." },
       { status: 500 }
     );
   }

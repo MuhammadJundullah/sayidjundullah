@@ -17,7 +17,6 @@ const Hello = () => {
   return (
     <section id="hello">
       <div className="flex h-screen sm:space-y-10 sm:pt-5 py-5 sm:mt-2 p-4 lg:item-center sm:py-30">
-        {/* Render komponen HeaderScroll di sini */}
         <HeaderScroll />
 
         <div className="h-full text-center items-center flex flex-col justify-evenly sm:w-6xl sm:pt-30 pt-20 sm:mt-10">
@@ -29,7 +28,7 @@ const Hello = () => {
             className="rounded-xl mx-auto sm:w-70 sm:h-70 object-cover shadow-lg transition-all duration-300 hover:scale-105"
           />
 
-          <h1 className="sm:flex font-light text-black subpixel-antialiased mx-5 sm:mx-auto">
+          <h1 className="sm:flex font-light text-black subpixel-antialiased  sm:mx-auto">
             <BlurText
               text="Hello, i am Sayid Muhammad Jundullah, Web Application Developer."
               delay={150}

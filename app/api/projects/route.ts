@@ -1,26 +1,48 @@
-import pool from "@/lib/db";
-import { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
-import { Readable } from "stream";
+// app/api/projects/route.ts
+
+import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import prisma from "@/lib/prisma";
+import { PrismaClient, Prisma } from "@prisma/client"; // Import Prisma untuk error handling
+import { v2 as cloudinary } from "cloudinary"; // Import cloudinary (asumsi sudah dikonfigurasi)
+import { Readable } from "stream"; // Diperlukan untuk streamToBuffer
 
-function jsonResponse(body: any, status: number) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { "Content-Type": "application/json" },
-  });
-}
+// Inisialisasi Prisma Client (disarankan Singleton pattern di Next.js)
+// Ini untuk mencegah masalah hot-reloading di development
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
+const prisma = globalForPrisma.prisma || new PrismaClient();
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
+// Konfigurasi Cloudinary
+// Asumsi CLOUDINARY_URL sudah diatur di .env
 if (process.env.CLOUDINARY_URL) {
   cloudinary.config({
     secure: true,
   });
 } else {
-  throw new Error("CLOUDINARY_URL environment variable is required");
+  // Ini akan melempar error saat aplikasi dimulai jika env var tidak ada
+  // Lebih baik dihandle dengan graceful shutdown atau pesan jelas
+  console.error("CLOUDINARY_URL environment variable is required");
+  // throw new Error("CLOUDINARY_URL environment variable is required");
 }
 
+// Helper function untuk mengkonversi stream ke buffer
+async function streamToBuffer(stream: Readable): Promise<Buffer> {
+  const chunks: Uint8Array[] = [];
+  for await (const chunk of stream) {
+    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks);
+}
+
+// Helper function untuk respons JSON (opsional, bisa diganti NextResponse.json)
+// function jsonResponse(body: any, status: number) {
+//   return new Response(JSON.stringify(body), {
+//     status,
+//     headers: { "Content-Type": "application/json" },
+//   });
+// }
+
+// --- POST /api/projects (Membuat Project Baru) ---
 export async function POST(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   if (!token) {
@@ -32,15 +54,15 @@ export async function POST(req: NextRequest) {
 
     const judul = formData.get("judul")?.toString() || "";
     const category = formData.get("category")?.toString() || "";
-    const desc = formData.get("desc")?.toString() || "";
-    const status = formData.get("status")?.toString() || "";
-    const url = formData.get("url")?.toString() || "";
-    const tech = formData.get("tech")?.toString() || "";
-    const site = formData.get("site")?.toString() || "";
+    const desc = formData.get("desc")?.toString() || null; // Nullable
+    const status = formData.get("status")?.toString() || null; // Nullable
+    const url = formData.get("url")?.toString() || null; // Nullable
+    const tech = formData.get("tech")?.toString() || null; // Nullable
+    const site = formData.get("site")?.toString() || null; // Nullable
 
-    const photo = formData.get("photo");
+    const photo = formData.get("photo"); // File | string | null
 
-    if (!judul || !category) {
+    if (!judul.trim() || !category.trim()) {
       return NextResponse.json(
         { error: "Field 'judul' dan 'category' wajib diisi" },
         { status: 400 }
@@ -49,13 +71,13 @@ export async function POST(req: NextRequest) {
 
     let photoUrl: string | null = null;
 
-    if (photo && photo instanceof File) {
+    if (photo instanceof File && photo.size > 0) {
       const bytes = await photo.arrayBuffer();
       const buffer = Buffer.from(bytes);
 
-      const uploadResult = await new Promise((resolve, reject) => {
+      const uploadResult = await new Promise<any>((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
-          { folder: "projects" },
+          { folder: "projects" }, // Sesuaikan folder Cloudinary
           (error, result) => {
             if (error) reject(error);
             else resolve(result);
@@ -64,97 +86,145 @@ export async function POST(req: NextRequest) {
         stream.end(buffer);
       });
 
-      photoUrl = (uploadResult as any).secure_url;
+      photoUrl = (uploadResult as any).secure_url || null;
     }
 
     const slug = judul.toLowerCase().replace(/\s+/g, "-");
     const categoryslug = category.toLowerCase().replace(/\s+/g, "-");
 
-    await pool.query(
-      `INSERT INTO projects 
-      (judul, slug, category, categoryslug, url, tech, site, status, "desc", photo) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-      [
-        judul,
-        slug,
-        category,
-        categoryslug,
-        url,
-        tech,
-        site,
-        status,
-        desc,
-        photoUrl,
-      ]
-    );
+    const newProject = await prisma.projects.create({
+      data: {
+        judul: judul,
+        slug: slug, // Pastikan field 'slug' di Prisma model Anda memiliki `@unique`
+        category: category,
+        categoryslug: categoryslug,
+        url: url,
+        tech: tech,
+        site: site,
+        status: status,
+        desc: desc, // Sesuaikan dengan nama field di Prisma schema Anda (misal: 'description_field')
+        photo: photoUrl,
+      },
+    });
 
     return NextResponse.json(
-      { message: "Project berhasil dibuat" },
+      { message: "Project berhasil dibuat", project: newProject },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error("Error creating project:", error);
+
+    let errorMessage =
+      "Terjadi kesalahan yang tidak diketahui saat membuat proyek.";
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        const target =
+          (error.meta?.target as string[] | undefined)?.join(", ") ||
+          "field(s)";
+        errorMessage = `Gagal membuat proyek: nilai ${target} sudah ada. Harap gunakan nilai yang unik.`;
+        if (target.includes("slug")) {
+          errorMessage = "Judul proyek sudah ada. Harap gunakan judul lain.";
+        }
+      } else {
+        errorMessage = `Kesalahan database (${error.code}): ${error.message}`;
+      }
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === "string") {
+      errorMessage = error;
+    }
+
     return NextResponse.json(
-      { error: `Error creating project: ${error.message}` },
+      { error: `Error creating project: ${errorMessage}` },
       { status: 500 }
     );
   }
 }
 
+// --- GET /api/projects (Mendapatkan Daftar/Detail Project) ---
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const slug = searchParams.get("slug");
     const category = searchParams.get("category");
     const status = searchParams.get("status");
+    const idParam = searchParams.get("id"); // Tambahkan parameter ID untuk GET by ID
 
+    // Validasi status jika ada
     if (status && !["draft", "published", "archived"].includes(status)) {
-      return jsonResponse({ error: "Invalid status value" }, 400);
+      return NextResponse.json(
+        { error: "Invalid status value" },
+        { status: 400 }
+      );
     }
 
-    let whereClause = {};
+    let whereClause: Prisma.ProjectsWhereInput = {}; // Tipe aman untuk where clause Prisma
 
-    if (status) {
-      whereClause = { status };
+    // Logika pencarian: ID > Slug > Category > Status
+    if (idParam) {
+      const projectId = parseInt(idParam);
+      if (isNaN(projectId)) {
+        return NextResponse.json(
+          { error: "Invalid project ID format. Must be a number." },
+          { status: 400 }
+        );
+      }
+      whereClause = { id: projectId };
     } else if (slug) {
       whereClause = { slug };
     } else if (category) {
       whereClause = { category };
+    } else if (status) {
+      // Status adalah filter umum, bukan untuk detail spesifik
+      whereClause = { status };
     }
 
     const projectsData = await prisma.projects.findMany({
-    where: whereClause,
+      where: whereClause,
       orderBy: [
         {
-          status: {
-            sort: 'desc',
-          },
+          // Order by status (desc) dan createdAt (desc) sebagai fallback
+          status: "desc",
+        },
+        {
+          createdAt: "desc",
         },
       ],
     });
 
-
     if (!projectsData.length) {
-      return jsonResponse({ message: "No projects found" }, 404);
+      // Jika mencari spesifik (id/slug) dan tidak ditemukan, kembalikan 404
+      if (idParam || slug) {
+        return NextResponse.json(
+          { message: "Project not found" },
+          { status: 404 }
+        );
+      }
+      // Jika mencari daftar dan tidak ada, bisa 200 dengan array kosong atau 404
+      return NextResponse.json(
+        { message: "No projects found" },
+        { status: 404 }
+      ); // Atau status 200 dengan []
     }
 
-    return jsonResponse(projectsData, 200);
-  } catch (error: any) {
+    return NextResponse.json(projectsData, { status: 200 });
+  } catch (error: unknown) {
     console.error("Error fetching projects:", error);
-    return jsonResponse(
-      { error: "Internal server error", details: error.message },
-      500
+    let errorMessage = "Internal server error.";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === "string") {
+      errorMessage = error;
+    }
+    return NextResponse.json(
+      { error: "Internal server error", detail: errorMessage },
+      { status: 500 }
     );
   }
 }
 
-async function streamToBuffer(stream: Readable): Promise<Buffer> {
-  const chunks: Uint8Array[] = [];
-  for await (const chunk of stream) {
-    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
-  }
-  return Buffer.concat(chunks);
-}
-
+// --- PUT /api/projects (Memperbarui Project) ---
 export async function PUT(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   if (!token) {
@@ -175,39 +245,38 @@ export async function PUT(req: NextRequest) {
 
     if (!idParam && !slugParam) {
       return NextResponse.json(
-        { error: "ID or slug parameter is required" },
+        { error: "ID atau slug parameter diperlukan untuk update" },
         { status: 400 }
       );
     }
 
     const formData = await req.formData();
-    const updateData: Record<string, any> = {};
+    const updateData: Prisma.ProjectsUpdateInput = {}; // Gunakan tipe Prisma untuk update data
 
+    // Ambil field dari formData dan tambahkan ke updateData jika ada
     const fieldsToProcess = [
       "judul",
-      "slug",
       "category",
-      "categoryslug",
       "url",
       "tech",
       "site",
-      "desc",
+      "desc", // Sesuaikan dengan nama field di Prisma model Anda
       "status",
     ];
 
     fieldsToProcess.forEach((field) => {
       const value = formData.get(field);
-      // Hanya tambahkan ke updateData jika nilainya tidak null
-      // Jika Anda ingin mengabaikan string kosong, tambahkan `&& value !== ''`
       if (value !== null) {
-        updateData[field] = value;
+        // Hanya tambahkan jika nilainya tidak null
+        // Konversi ke string jika bukan File
+        updateData[field] = value.toString();
       }
     });
 
     // Validasi status (jika ada di updateData)
     if (
       updateData.status &&
-      !["published", "archived"].includes(updateData.status.toString())
+      !["published", "archived", "draft"].includes(updateData.status.toString()) // Tambahkan 'draft' jika relevan
     ) {
       return NextResponse.json(
         { error: "Invalid status value" },
@@ -215,18 +284,29 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    // Jika ada file foto baru, upload ke Cloudinary dan hapus yang lama
+    // Jika judul diubah, update juga slug-nya
+    if (updateData.judul) {
+      updateData.slug = updateData.judul
+        .toString()
+        .toLowerCase()
+        .replace(/\s+/g, "-");
+    }
+    // Jika category diubah, update juga categoryslug-nya
+    if (updateData.category) {
+      updateData.categoryslug = updateData.category
+        .toString()
+        .toLowerCase()
+        .replace(/\s+/g, "-");
+    }
+
     const newPhotoFile = formData.get("photo") as File | null;
-    // Asumsi flag untuk menghapus foto secara eksplisit, misalnya dari client:
-    // formData.append("deletePhoto", "true");
-    const deletePhotoExplicitly = formData.get("deletePhoto") === "true";
+    const deletePhotoExplicitly = formData.get("deletePhoto") === "true"; // Dari frontend untuk hapus foto
 
     // Transaksi Prisma untuk memastikan atomisitas operasi DB dan Cloudinary
     const updatedProject = await prisma.$transaction(async (tx) => {
       let currentProject;
       // Temukan proyek berdasarkan ID atau slug
       if (idParam) {
-        // Jika ID adalah INT:
         const projectId = parseInt(idParam);
         if (isNaN(projectId)) {
           throw new Error("Invalid project ID format.");
@@ -248,32 +328,31 @@ export async function PUT(req: NextRequest) {
 
       // Logika upload foto baru dan penghapusan foto lama
       if (newPhotoFile && newPhotoFile.size > 0) {
-        // Upload foto baru
-        const buffer = await streamToBuffer(newPhotoFile.stream() as any);
+        const buffer = await streamToBuffer(newPhotoFile.stream() as any); // streamToBuffer butuh Readable
         const uploadResult = await new Promise<any>((resolve, reject) => {
           const uploadStream = cloudinary.uploader.upload_stream(
-            { folder: "portfolio" }, // Folder di Cloudinary
+            { folder: "projects" }, // Sesuaikan folder Cloudinary
             (err, result) => {
               if (err) reject(err);
               else resolve(result);
             }
           );
+          // Pipe buffer ke stream Cloudinary
           Readable.from(buffer).pipe(uploadStream);
         });
-        finalPhotoUrl = uploadResult.secure_url; // Setel URL foto baru
+        finalPhotoUrl = uploadResult.secure_url;
 
-        // Hapus foto lama jika ada dan berhasil diupload yang baru
         if (currentProject.photo) {
-          try {
-            const match = currentProject.photo.match(/\/v\d+\/(.+)\.\w+$/);
-            const publicId = match ? match[1] : null;
-            if (publicId) {
+          const match = currentProject.photo.match(/\/v\d+\/(.+)\.\w+$/);
+          const publicId = match ? match[1] : null;
+
+          if (publicId) {
+            try {
               await cloudinary.uploader.destroy(publicId);
+            } catch (err) {
+              console.error("Gagal hapus foto dari Cloudinary:", err);
+              // Lanjut proses hapus meskipun gagal hapus foto
             }
-          } catch (err) {
-            console.error("Failed to delete old photo from Cloudinary:", err);
-            // Anda bisa memilih untuk melempar error di sini jika penghapusan foto lama kritis
-            // atau cukup log dan lanjutkan jika upload foto baru lebih penting.
           }
         }
       } else if (deletePhotoExplicitly) {
@@ -297,7 +376,12 @@ export async function PUT(req: NextRequest) {
       // Jika tidak ada `newPhotoFile` dan tidak ada `deletePhotoExplicitly`, `finalPhotoUrl` akan tetap sama dengan `currentProject.photo`
 
       // Tambahkan `photo` ke data update hanya jika `finalPhotoUrl` berbeda dari `currentProject.photo`
-      if (finalPhotoUrl !== currentProject.photo) {
+      // atau jika ada foto baru/dihapus secara eksplisit
+      if (
+        finalPhotoUrl !== currentProject.photo ||
+        (newPhotoFile && newPhotoFile.size > 0) ||
+        deletePhotoExplicitly
+      ) {
         updateData.photo = finalPhotoUrl;
       }
 
@@ -320,11 +404,13 @@ export async function PUT(req: NextRequest) {
           category: true,
           categoryslug: true,
           url: true,
-          tech: true, // `tech` akan dikembalikan sebagai string
+          tech: true,
           site: true,
           desc: true,
           status: true,
           photo: true,
+          createdAt: true,
+          updatedAt: true,
         },
       });
 
@@ -340,120 +426,126 @@ export async function PUT(req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (err) {
-    console.error("Error updating project:", err);
+  } catch (error: unknown) {
+    // Gunakan unknown
+    console.error("Error updating project:", error);
 
-    // Penanganan error dari Prisma (misal: P2025 untuk not found, atau lainnya)
-    if (err instanceof Error) {
+    let errorMessage = "Gagal memperbarui data.";
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2025") {
+        // Record not found
+        errorMessage = "Proyek tidak ditemukan.";
+        return NextResponse.json({ error: errorMessage }, { status: 404 });
+      }
+      if (error.code === "P2002") {
+        // Unique constraint violation (e.g., slug)
+        const target =
+          (error.meta?.target as string[] | undefined)?.join(", ") ||
+          "field(s)";
+        errorMessage = `Gagal memperbarui proyek: nilai ${target} sudah ada. Harap gunakan nilai yang unik.`;
+      } else {
+        errorMessage = `Kesalahan database (${error.code}): ${error.message}`;
+      }
+    } else if (error instanceof Error) {
+      if (error.message === "Project not found") {
+        return NextResponse.json(
+          { error: "Proyek tidak ditemukan" },
+          { status: 404 }
+        );
+      }
       if (
-        (err as any).code === "P2025" ||
-        err.message === "Project not found"
+        error.message === "No valid fields to update or no changes detected."
       ) {
-        // Prisma not found atau pesan kustom
-        return NextResponse.json({ error: "Data not found" }, { status: 404 });
+        return NextResponse.json({ error: error.message }, { status: 400 });
       }
-      if (err.message === "No valid fields to update or no changes detected.") {
-        return NextResponse.json({ error: err.message }, { status: 400 });
-      }
-      return NextResponse.json(
-        { error: "Gagal memperbarui data", detail: err.message },
-        { status: 500 }
-      );
+      errorMessage = error.message;
+    } else if (typeof error === "string") {
+      errorMessage = error;
     }
     return NextResponse.json(
-      {
-        error: "Gagal memperbarui data",
-        detail: "Terjadi kesalahan server yang tidak diketahui.",
-      },
+      { error: `Gagal memperbarui data: ${errorMessage}` },
       { status: 500 }
     );
   }
 }
 
+// --- PATCH /api/projects (Mengubah Status Project) ---
 export async function PATCH(request: NextRequest) {
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  // 1. Autentikasi: Pastikan pengguna terotorisasi
   if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const { searchParams } = new URL(request.url);
-    const projectIdParam = searchParams.get("statuschange");
+    const projectIdParam = searchParams.get("statuschange"); // Parameter ID untuk update status
 
-    // 2. Validasi Project ID dari Search Params
-    // Sesuaikan tipe data 'projectId' dengan yang Anda gunakan di schema.prisma
-    // Jika ID Anda INT:
-    const projectId = parseInt(projectIdParam || ""); // Gunakan '' jika null
+    const projectId = parseInt(projectIdParam || "");
     if (!projectIdParam || isNaN(projectId)) {
       return NextResponse.json(
         { error: "Invalid project ID format. Must be a number." },
         { status: 400 }
       );
     }
-    // Jika ID Anda UUID (String):
-    // const projectId = projectIdParam;
-    // if (!projectId) {
-    //   return NextResponse.json({ error: "Project ID is required." }, { status: 400 });
-    // }
 
     const { status } = await request.json();
 
-    // 3. Validasi Status: Pastikan status yang diberikan valid
-    if (!["published", "archived"].includes(status)) {
+    // Validasi Status: Pastikan status yang diberikan valid
+    if (!["published", "archived", "draft"].includes(status)) {
+      // Tambahkan 'draft' jika valid
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
 
-    // 4. Perbarui status proyek menggunakan Prisma
-    // Prisma secara otomatis menangani transaksi untuk operasi tunggal seperti ini.
     const updatedProject = await prisma.projects.update({
       where: {
-        id: projectId, // Pastikan 'id' di schema.prisma Anda cocok dengan tipe 'projectId'
+        id: projectId,
       },
       data: {
-        status: status, // Pastikan 'status' di model Project Anda berjenis String atau Enum
+        status: status,
       },
       select: {
-        // Memilih kolom yang ingin dikembalikan, mirip 'RETURNING' di SQL
         id: true,
         judul: true,
         status: true,
+        updatedAt: true, // Sertakan updatedAt untuk konfirmasi perubahan
       },
     });
 
-    // 5. Kirim respons sukses jika proyek ditemukan dan diperbarui
     return NextResponse.json({
       success: true,
       data: updatedProject,
       message: "Status updated successfully",
     });
-  } catch (error) {
-    // 6. Penanganan error
+  } catch (error: unknown) {
+    // Gunakan unknown
     console.error("Status update error:", error);
 
-    // PrismaClientKnownRequestError adalah error umum yang dilempar oleh Prisma
-    // Misalnya, jika record dengan ID yang diberikan tidak ditemukan (P2025)
-    if (error instanceof Error) {
-      // Jika ID tidak ditemukan, Prisma melempar error dengan kode 'P2025'
-      if ((error as any).code === "P2025") {
-        return NextResponse.json(
-          { error: "Project not found" },
-          { status: 404 }
-        );
+    let errorMessage = "An unexpected server error occurred.";
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2025") {
+        // Record not found
+        errorMessage = "Proyek tidak ditemukan.";
+        return NextResponse.json({ error: errorMessage }, { status: 404 });
+      } else {
+        errorMessage = `Kesalahan database (${error.code}): ${error.message}`;
       }
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === "string") {
+      errorMessage = error;
     }
     return NextResponse.json(
-      { error: "An unexpected server error occurred." },
+      { error: `Gagal memperbarui status: ${errorMessage}` },
       { status: 500 }
     );
   }
 }
 
+// --- DELETE /api/projects (Menghapus Project) ---
 export async function DELETE(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   if (!token) {
@@ -463,31 +555,43 @@ export async function DELETE(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const slug = searchParams.get("slug");
+    const idParam = searchParams.get("id"); // Tambahkan parameter ID untuk DELETE by ID
 
-    if (!slug) {
-      return new Response(
-        JSON.stringify({ error: "Slug parameter is required" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        }
+    if (!slug && !idParam) {
+      return NextResponse.json(
+        { error: "Slug atau ID parameter diperlukan untuk penghapusan" },
+        { status: 400 }
       );
     }
 
-    // 1. Ambil data project (termasuk URL foto)
-    const projectQuery = await pool.query(
-      "SELECT photo FROM projects WHERE slug = $1",
-      [slug]
-    );
-
-    if (projectQuery.rows.length === 0) {
-      return new Response(JSON.stringify({ message: "Project not found" }), {
-        status: 404,
-        headers: { "Content-Type": "application/json" },
-      });
+    let whereClause: Prisma.ProjectsWhereUniqueInput = {};
+    if (idParam) {
+      const projectId = parseInt(idParam);
+      if (isNaN(projectId)) {
+        return NextResponse.json(
+          { error: "Invalid project ID format." },
+          { status: 400 }
+        );
+      }
+      whereClause = { id: projectId };
+    } else if (slug) {
+      whereClause = { slug: slug };
     }
 
-    const photoUrl = projectQuery.rows[0]?.photo;
+    // 1. Ambil data project (termasuk URL foto) sebelum dihapus
+    const projectToDelete = await prisma.projects.findUnique({
+      where: whereClause,
+      select: { photo: true, id: true, slug: true, judul: true }, // Ambil juga ID/slug/judul untuk respons
+    });
+
+    if (!projectToDelete) {
+      return NextResponse.json(
+        { message: "Project not found" },
+        { status: 404 }
+      );
+    }
+
+    const photoUrl = projectToDelete.photo;
 
     // 2. Hapus foto dari Cloudinary jika ada
     if (photoUrl) {
@@ -504,43 +608,41 @@ export async function DELETE(req: NextRequest) {
       }
     }
 
-    // 3. Hapus data dari database
-    const deleteQuery = await pool.query(
-      "DELETE FROM projects WHERE slug = $1 RETURNING *",
-      [slug]
-    );
+    // 3. Hapus data dari database menggunakan Prisma
+    const deletedProject = await prisma.projects.delete({
+      where: {
+        id: projectToDelete.id, // Gunakan ID yang sudah ditemukan
+      },
+    });
 
-    if (deleteQuery.rows.length === 0) {
-      return new Response(
-        JSON.stringify({ message: "Failed to delete project" }),
-        {
-          status: 500,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    return new Response(
-      JSON.stringify({
+    return NextResponse.json(
+      {
         message: "Project berhasil dihapus",
-        deletedProject: deleteQuery.rows[0],
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }
+        deletedProject: deletedProject,
+      },
+      { status: 200 }
     );
-  } catch (err) {
-    console.error("Error deleting project:", err);
-    return new Response(
-      JSON.stringify({
-        error: "Gagal menghapus project",
-        detail: err instanceof Error ? err.message : String(err),
-      }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
+  } catch (error: unknown) {
+    // Gunakan unknown
+    console.error("Error deleting project:", error);
+
+    let errorMessage = "Gagal menghapus project.";
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2025") {
+        // Record not found (misal, sudah dihapus)
+        errorMessage = "Proyek tidak ditemukan atau sudah dihapus.";
+        return NextResponse.json({ error: errorMessage }, { status: 404 });
+      } else {
+        errorMessage = `Kesalahan database (${error.code}): ${error.message}`;
       }
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === "string") {
+      errorMessage = error;
+    }
+    return NextResponse.json(
+      { error: `Gagal menghapus project: ${errorMessage}` },
+      { status: 500 }
     );
   }
 }

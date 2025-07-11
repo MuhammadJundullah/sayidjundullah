@@ -3,8 +3,7 @@
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-// Import komponen HeaderScroll yang baru
-import HeaderScroll from "@/app/_components/HeaderScrool/HeaderScrool"; // Sesuaikan path jika berbeda
+import HeaderScroll from "@/app/_components/HeaderScrool/HeaderScrool";
 
 const Hello = () => {
   const BlurText = dynamic(
@@ -13,6 +12,12 @@ const Hello = () => {
       ssr: false,
     }
   );
+
+  // Animation variants for better organization
+  const textVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   return (
     <section id="hello">
@@ -25,10 +30,10 @@ const Hello = () => {
             alt="Sayid Muhammad Jundullah"
             width={200}
             height={200}
-            className="rounded-xl mx-auto sm:w-70 sm:h-70 object-cover shadow-lg transition-all duration-300 hover:scale-105"
+            className="rounded-xl sm:rounded-full mx-auto sm:w-70 sm:h-70 object-cover shadow-lg transition-all duration-300 hover:scale-105"
           />
 
-          <h1 className="sm:flex font-light text-black subpixel-antialiased  sm:mx-auto">
+          <h1 className="sm:flex font-light text-black subpixel-antialiased sm:mx-auto">
             <BlurText
               text="Hello, i am Sayid Muhammad Jundullah, Web Application Developer."
               delay={150}
@@ -37,15 +42,14 @@ const Hello = () => {
               direction="top"
             />
           </h1>
-          <motion.h1
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 4 }}
-            className="sm:text-xl text-md font-light text-gray-600 dark:text-gray-400 mt-4">
-            <p className="transition-colors">
-              Scroll down to discover more about my work and experience !
-            </p>
-          </motion.h1>
+          <motion.p
+            variants={textVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: 4, duration: 1, ease: "easeOut" }}
+            className="max-w-2xl text-center text-base font-light text-gray-600 dark:text-gray-400 sm:text-lg lg:text-xl">
+            Scroll down to discover more about my work and experience!
+          </motion.p>
         </div>
       </div>
     </section>

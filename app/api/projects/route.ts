@@ -122,10 +122,16 @@ export async function GET(req: NextRequest) {
     }
 
     const projectsData = await prisma.projects.findMany({
-      where: whereClause,
-
-      orderBy: { id: "asc" },
+    where: whereClause,
+      orderBy: [
+        {
+          status: {
+            sort: 'desc',
+          },
+        },
+      ],
     });
+
 
     if (!projectsData.length) {
       return jsonResponse({ message: "No projects found" }, 404);

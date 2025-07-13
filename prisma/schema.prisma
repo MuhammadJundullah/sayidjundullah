@@ -36,6 +36,8 @@ model Certificates {
   desc      String
   date      String
   site      String
+  photo     String?
+  status    String?      
   createdAt DateTime? @default(now()) @map("created_at")
   updatedAt DateTime? @default(now()) @map("updated_at")
 }

@@ -18,15 +18,15 @@ export default function ProjectsComponent({ data }: ProjectsProps) {
 
   return (
     <section id="projects">
-      <div className="py-40 flex flex-col sm:mx-auto mx-5 sm:mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0] max-w-6xl">
+      <div className="py-40 flex flex-col sm:mx-auto mx-5 sm:mb-20 font-thin text-center text-[#0f172a] max-w-6xl">
         <span className="flex items-center">
           <span className="shrink-0 pe-4">
             {" "}
-            <h1 className="sm:text-5xl text-2xl font-mono font-semibold dark:text-white text-gray-800">
+            <h1 className="sm:text-5xl text-2xl font-mono font-semibold text-gray-800">
               My Projects Experience
             </h1>
           </span>
-          <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
+          <span className="h-px flex-1 bg-gray-300"></span>
         </span>
         <div className="sm:my-20 my-8">
           <div className="flex flex-wrap justify-center gap-8">
@@ -51,24 +51,22 @@ export default function ProjectsComponent({ data }: ProjectsProps) {
                         threshold={0.1}
                         delay={animationDelay}>
                         <div className="h-full font-medium">
-                          <div className="w-80 border-1 dark:bg-gray-800 rounded-md p-2">
+                          <div className="w-80 border-1 rounded-md p-2">
                             <Image
-                              src={project.photo}
-                              alt={project.photo}
+                              src={project.photo || ""}
+                              alt={project.photo || ""}
                               height={200}
                               width={320}
                               className="rounded-md"
                               style={{ objectFit: "cover" }}
                             />
                             <div className="py-3">
-                              <p className="text-gray-700 dark:text-gray-200">
-                                {project.judul}
-                              </p>
+                              <p className="text-gray-700 ">{project.judul}</p>
                               <span className="block w-full my-2 border-gray-300"></span>
-                              <p className="text-gray-700 dark:text-gray-300 font-light">
+                              <p className="text-gray-700  font-light">
                                 {project.tech}
                               </p>
-                              <p className="text-gray-500 dark:text-gray-400 text-sm items-center text-center justify-center pt-2 flex flex-row">
+                              <p className="text-gray-500 text-sm items-center text-center justify-center pt-2 flex flex-row">
                                 <FaArrowUpRightFromSquare></FaArrowUpRightFromSquare>
                               </p>
                             </div>

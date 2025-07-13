@@ -32,17 +32,22 @@ export type ProjectsType = {
   category: string;
   categoryslug: string;
   url: string;
-  photo: string;
+  photo: string | null;
   tech: string;
   site: string;
   desc: string;
 };
 
 export type CertificatesType = {
+  id: string;
   name: string;
   desc: string;
+  photo: string;
+  status: "published" | "archived";
   date: string;
   site: string;
+  created_at: string;
+  updated_at: string;
 };
 
 export type EducationsType = {

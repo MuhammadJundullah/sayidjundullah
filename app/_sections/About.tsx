@@ -40,7 +40,7 @@ const About = () => {
                 </span>
                 <span className="text-xl h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
               </span>
-              <p className="leading-normal text-black dark:text-gray-300 sm:text-3xl text-lg sm:font-light font-normal hover:cursor-pointer ">
+              <p className="leading-normal text-black sm:text-3xl text-lg sm:font-light font-normal hover:cursor-pointer ">
                 I specialize in building responsive websites using modern
                 technologies like React.js, Next.js, and Laravel, with
                 experience spanning from backend development to data pipeline
@@ -60,7 +60,7 @@ const About = () => {
                   href="mailto:sayidmuhammad15@gmail.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-900 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+                  className="text-gray-900 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
                   Feel free to reach out via email
                 </Link>{" "}
                 or{" "}
@@ -68,7 +68,7 @@ const About = () => {
                   href="https://api.whatsapp.com/send/?phone=%2B6283853291755&text&type=phone_number&app_absent=0"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-900 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+                  className="text-gray-900 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
                   WhatsApp
                 </Link>
                 . Let’s connect and create something great together!

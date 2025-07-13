@@ -42,8 +42,8 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
               </h2>
               <div className="my-10 flex justify-center items-center">
                 <Image
-                  src={item.photo}
-                  alt={item.judul}
+                  src={item.photo || ""}
+                  alt={item.judul || ""}
                   width={800}
                   height={600}
                   className="rounded-lg border-2 border-gray-300 shadow-lg"

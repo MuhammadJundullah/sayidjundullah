@@ -6,11 +6,11 @@ const Footer = () => {
       <footer>
         <div className="flex justify-between items-center md:mx-auto mx-5 max-w-6xl sm:space-y-3 sm:py-5 py-3">
           <div>
-            <p className="text-sm text-gray-400 dark:text-gray-500 py-2">
+            <p className="text-sm text-gray-400 py-2">
               Last updated on June 13, 2025
             </p>
             <div>
-              <p className="sm:text-xl text-3xs text-gray-900 dark:text-white ">
+              <p className="sm:text-xl text-3xs text-gray-900">
                 Sayid J. &copy; {new Date().getFullYear()}
               </p>
             </div>
@@ -21,7 +21,7 @@ const Footer = () => {
                 href="https://www.instagram.com/saed.m_"
                 rel="noreferrer"
                 target="_blank"
-                className="text-gray-900 dark:text-white transition hover:opacity-75">
+                className="text-gray-900 transition hover:opacity-75">
                 <span className="sr-only">Instagram</span>
 
                 <svg
@@ -43,7 +43,7 @@ const Footer = () => {
                 href="https://x.com/MuhammadJndllh"
                 rel="noreferrer"
                 target="_blank"
-                className="text-gray-900 dark:text-white transition hover:opacity-75">
+                className="text-gray-900 transition hover:opacity-75">
                 <span className="sr-only">Twitter</span>
 
                 <svg

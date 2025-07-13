@@ -31,7 +31,8 @@ interface Project {
   tech: string;
   site: string;
   desc: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
   status: "published" | "archived";
 }
 
@@ -270,14 +271,11 @@ const ManageProjects = () => {
                   <div className="text-sm">
                     <p className="text-gray-500">Terakhir diperbarui:</p>
                     <p>
-                      {new Date(project.updated_at).toLocaleDateString(
-                        "id-ID",
-                        {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        }
-                      )}
+                      {new Date(project.updatedAt).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
                     </p>
                   </div>
                 </div>
@@ -295,7 +293,7 @@ const ManageProjects = () => {
                 <Link href={`/admin/projects/edit/${project.slug}`}>
                   <Button
                     variant="outline"
-                    className="flex items-center gap-2 hover:cursor-pointer border-gray-300">
+                    className="flex items-center gap-2 hover:cursor-pointer border-gray-300 ">
                     <SquarePen size={16} />
                     Edit
                   </Button>

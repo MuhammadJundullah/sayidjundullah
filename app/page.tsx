@@ -30,7 +30,7 @@ export default async function Home(): Promise<React.JSX.Element> {
         next: { tags: ["projects"], revalidate: revalidate },
       }).then((res) => res.json() as Promise<ProjectsType[]>),
       fetch(`${baseUrl}/api/certificates`, {
-        next: { revalidate: revalidate },
+        next: { tags: ["certificates"], revalidate: revalidate },
       }).then((res) => res.json() as Promise<CertificatesType[]>),
       fetch(`${baseUrl}/api/educations`, {
         next: { revalidate: revalidate },

@@ -1,4 +1,3 @@
-// app/certificates/page.tsx (atau lokasi CertificatesComponent Anda)
 "use client";
 
 import { useState } from "react";
@@ -33,14 +32,14 @@ export default function CertificatesComponent({ data }: CertificatesProps) {
 
   return (
     <section id="certificates">
-      <div className="sm:py-40 flex flex-col max-w-6xl sm:mx-auto mx-5 mb-20 font-thin text-center text-[#0f172a] dark:text-[#e2e8f0]">
+      <div className="sm:py-40 flex flex-col max-w-6xl sm:mx-auto mx-5 mb-20 font-thin text-center text-[#0f172a]">
         <span className="text-2xl flex items-center">
           <span className="shrink-0 pe-4 ">
-            <h1 className="sm:text-5xl font-mono font-semibold dark:text-white text-gray-800">
+            <h1 className="sm:text-5xl font-mono font-semibold text-gray-800">
               My Certifications
             </h1>
           </span>
-          <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
+          <span className="h-px flex-1 bg-gray-300 "></span>
         </span>
         <div className="my-20">
           <div className="flex flex-wrap justify-center gap-5">
@@ -77,10 +76,10 @@ export default function CertificatesComponent({ data }: CertificatesProps) {
                           style={{ objectFit: "cover" }}
                         />
                         <div className="mx-auto mt-4 items-center justify-center text-center mb-7">
-                          <h3 className="font-semibold dark:text-white text-gray-800">
+                          <h3 className="font-semibold text-gray-800">
                             {certificate.desc}
                           </h3>
-                          <time className="text-gray-500 dark:text-gray-400 font-medium">
+                          <time className="text-gray-500 font-medium">
                             {certificate.date}
                           </time>
                         </div>

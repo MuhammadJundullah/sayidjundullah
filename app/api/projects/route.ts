@@ -5,6 +5,7 @@ import { getToken } from "next-auth/jwt";
 import { PrismaClient, Prisma } from "@prisma/client"; // Import Prisma untuk error handling
 import { v2 as cloudinary } from "cloudinary"; // Import cloudinary (asumsi sudah dikonfigurasi)
 import { Readable } from "stream"; // Diperlukan untuk streamToBuffer
+import { any } from "zod";
 
 // Inisialisasi Prisma Client (disarankan Singleton pattern di Next.js)
 // Ini untuk mencegah masalah hot-reloading di development
@@ -77,7 +78,7 @@ export async function POST(req: NextRequest) {
 
       const uploadResult = await new Promise<any>((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
-          { folder: "projects" }, // Sesuaikan folder Cloudinary
+          { folder: "/portofolio/projects" },
           (error, result) => {
             if (error) reject(error);
             else resolve(result);
@@ -95,14 +96,14 @@ export async function POST(req: NextRequest) {
     const newProject = await prisma.projects.create({
       data: {
         judul: judul,
-        slug: slug, // Pastikan field 'slug' di Prisma model Anda memiliki `@unique`
+        slug: slug,
         category: category,
         categoryslug: categoryslug,
         url: url,
         tech: tech,
         site: site,
         status: status,
-        desc: desc, // Sesuaikan dengan nama field di Prisma schema Anda (misal: 'description_field')
+        desc: desc,
         photo: photoUrl,
       },
     });
@@ -184,7 +185,6 @@ export async function GET(req: NextRequest) {
       where: whereClause,
       orderBy: [
         {
-          // Order by status (desc) dan createdAt (desc) sebagai fallback
           status: "desc",
         },
         {
@@ -194,14 +194,13 @@ export async function GET(req: NextRequest) {
     });
 
     if (!projectsData.length) {
-      // Jika mencari spesifik (id/slug) dan tidak ditemukan, kembalikan 404
       if (idParam || slug) {
         return NextResponse.json(
           { message: "Project not found" },
           { status: 404 }
         );
       }
-      // Jika mencari daftar dan tidak ada, bisa 200 dengan array kosong atau 404
+
       return NextResponse.json(
         { message: "No projects found" },
         { status: 404 }
@@ -251,61 +250,51 @@ export async function PUT(req: NextRequest) {
     }
 
     const formData = await req.formData();
-    const updateData: Prisma.ProjectsUpdateInput = {}; // Gunakan tipe Prisma untuk update data
+    const updateData: Prisma.ProjectsUpdateInput = {};
 
-    // Ambil field dari formData dan tambahkan ke updateData jika ada
-    const fieldsToProcess = [
+    const fieldsToProcess: (keyof Prisma.ProjectsUpdateInput)[] = [
       "judul",
       "category",
       "url",
       "tech",
       "site",
-      "desc", // Sesuaikan dengan nama field di Prisma model Anda
+      "desc",
       "status",
     ];
 
     fieldsToProcess.forEach((field) => {
       const value = formData.get(field);
       if (value !== null) {
-        // Hanya tambahkan jika nilainya tidak null
-        // Konversi ke string jika bukan File
         updateData[field] = value.toString();
       }
     });
 
-    // Validasi status (jika ada di updateData)
     if (
       updateData.status &&
-      !["published", "archived", "draft"].includes(updateData.status.toString()) // Tambahkan 'draft' jika relevan
+      typeof updateData.status === "string" &&
+      !["published", "archived", "draft"].includes(updateData.status)
     ) {
       return NextResponse.json(
-        { error: "Invalid status value" },
+        { error: "Nilai status tidak valid" },
         { status: 400 }
       );
     }
 
-    // Jika judul diubah, update juga slug-nya
-    if (updateData.judul) {
-      updateData.slug = updateData.judul
-        .toString()
-        .toLowerCase()
-        .replace(/\s+/g, "-");
+    if (updateData.judul && typeof updateData.judul === "string") {
+      updateData.slug = updateData.judul.toLowerCase().replace(/\s+/g, "-");
     }
-    // Jika category diubah, update juga categoryslug-nya
-    if (updateData.category) {
+
+    if (updateData.category && typeof updateData.category === "string") {
       updateData.categoryslug = updateData.category
-        .toString()
         .toLowerCase()
         .replace(/\s+/g, "-");
     }
 
     const newPhotoFile = formData.get("photo") as File | null;
-    const deletePhotoExplicitly = formData.get("deletePhoto") === "true"; // Dari frontend untuk hapus foto
+    const deletePhotoExplicitly = formData.get("deletePhoto") === "true";
 
-    // Transaksi Prisma untuk memastikan atomisitas operasi DB dan Cloudinary
     const updatedProject = await prisma.$transaction(async (tx) => {
       let currentProject;
-      // Temukan proyek berdasarkan ID atau slug
       if (idParam) {
         const projectId = parseInt(idParam);
         if (isNaN(projectId)) {
@@ -324,20 +313,18 @@ export async function PUT(req: NextRequest) {
         throw new Error("Project not found");
       }
 
-      let finalPhotoUrl: string | null = currentProject.photo; // Default: pertahankan foto yang ada
+      let finalPhotoUrl: string | null = currentProject.photo;
 
-      // Logika upload foto baru dan penghapusan foto lama
       if (newPhotoFile && newPhotoFile.size > 0) {
-        const buffer = await streamToBuffer(newPhotoFile.stream() as any); // streamToBuffer butuh Readable
+        const buffer = await streamToBuffer(newPhotoFile.stream() as any);
         const uploadResult = await new Promise<any>((resolve, reject) => {
           const uploadStream = cloudinary.uploader.upload_stream(
-            { folder: "projects" }, // Sesuaikan folder Cloudinary
+            { folder: "/portofolio/projects" },
             (err, result) => {
               if (err) reject(err);
               else resolve(result);
             }
           );
-          // Pipe buffer ke stream Cloudinary
           Readable.from(buffer).pipe(uploadStream);
         });
         finalPhotoUrl = uploadResult.secure_url;
@@ -351,12 +338,10 @@ export async function PUT(req: NextRequest) {
               await cloudinary.uploader.destroy(publicId);
             } catch (err) {
               console.error("Gagal hapus foto dari Cloudinary:", err);
-              // Lanjut proses hapus meskipun gagal hapus foto
             }
           }
         }
       } else if (deletePhotoExplicitly) {
-        // Jika ada instruksi eksplisit untuk menghapus foto
         if (currentProject.photo) {
           try {
             const match = currentProject.photo.match(/\/v\d+\/(.+)\.\w+$/);
@@ -371,12 +356,9 @@ export async function PUT(req: NextRequest) {
             );
           }
         }
-        finalPhotoUrl = null; // Setel foto ke null di database
+        finalPhotoUrl = null;
       }
-      // Jika tidak ada `newPhotoFile` dan tidak ada `deletePhotoExplicitly`, `finalPhotoUrl` akan tetap sama dengan `currentProject.photo`
 
-      // Tambahkan `photo` ke data update hanya jika `finalPhotoUrl` berbeda dari `currentProject.photo`
-      // atau jika ada foto baru/dihapus secara eksplisit
       if (
         finalPhotoUrl !== currentProject.photo ||
         (newPhotoFile && newPhotoFile.size > 0) ||
@@ -385,19 +367,16 @@ export async function PUT(req: NextRequest) {
         updateData.photo = finalPhotoUrl;
       }
 
-      // Jika tidak ada perubahan yang diminta, lempar error untuk menghasilkan respons 400
       if (Object.keys(updateData).length === 0) {
         throw new Error("No valid fields to update or no changes detected.");
       }
 
-      // Perbarui proyek di database
       const updatedProjectResult = await tx.projects.update({
         where: {
-          id: currentProject.id, // Gunakan ID proyek yang ditemukan
+          id: currentProject.id,
         },
         data: updateData,
         select: {
-          // Pilih semua kolom yang relevan untuk dikembalikan
           id: true,
           judul: true,
           slug: true,
@@ -414,10 +393,9 @@ export async function PUT(req: NextRequest) {
         },
       });
 
-      return updatedProjectResult; // Mengembalikan hasil dari transaksi
+      return updatedProjectResult;
     });
 
-    // Respons sukses
     return NextResponse.json(
       {
         message: "Data berhasil diperbarui",
@@ -427,18 +405,15 @@ export async function PUT(req: NextRequest) {
       { status: 200 }
     );
   } catch (error: unknown) {
-    // Gunakan unknown
     console.error("Error updating project:", error);
 
     let errorMessage = "Gagal memperbarui data.";
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2025") {
-        // Record not found
         errorMessage = "Proyek tidak ditemukan.";
         return NextResponse.json({ error: errorMessage }, { status: 404 });
       }
       if (error.code === "P2002") {
-        // Unique constraint violation (e.g., slug)
         const target =
           (error.meta?.target as string[] | undefined)?.join(", ") ||
           "field(s)";
@@ -564,7 +539,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    let whereClause: Prisma.ProjectsWhereUniqueInput = {};
+    let whereClause: Prisma.ProjectsWhereUniqueInput | any = any;
     if (idParam) {
       const projectId = parseInt(idParam);
       if (isNaN(projectId)) {

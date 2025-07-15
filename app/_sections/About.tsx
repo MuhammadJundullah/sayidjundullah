@@ -13,7 +13,7 @@ const About = () => {
                 About Me
               </h1>
             </span>
-            <span className="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
+            <span className="h-px flex-1 bg-gray-300"></span>
           </span>
           <div className="sm:mx-0 shadow-lg sm:p-10 p-5 rounded-3xl border-1 border-gray-200">
             <p className="leading-normal sm:text-3xl text-lg text-black sm:font-light font-normal">
@@ -34,11 +34,11 @@ const About = () => {
             <div className="sm:my-20 text-xl">
               <span className="flex items-center my-5 max-w-xl mx-auto">
                 <span className="shrink-0 pe-4">
-                  <h1 className="sm:text-5xl text-2xl font-mono font-semibold dark:text-gray-30 text-black rounded-xl px-7 py-2">
+                  <h1 className="sm:text-5xl text-2xl font-mono font-semibold text-black rounded-xl px-7 py-2">
                     What i do
                   </h1>
                 </span>
-                <span className="text-xl h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
+                <span className="text-xl h-px flex-1 bg-gray-300"></span>
               </span>
               <p className="leading-normal text-black sm:text-3xl text-lg sm:font-light font-normal hover:cursor-pointer ">
                 I specialize in building responsive websites using modern
@@ -60,7 +60,7 @@ const About = () => {
                   href="mailto:sayidmuhammad15@gmail.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-900 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+                  className="text-gray-900 hover:text-blue-500 transition-colors">
                   Feel free to reach out via email
                 </Link>{" "}
                 or{" "}
@@ -68,7 +68,7 @@ const About = () => {
                   href="https://api.whatsapp.com/send/?phone=%2B6283853291755&text&type=phone_number&app_absent=0"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-900 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+                  className="text-gray-900 hover:text-blue-500 transition-colors">
                   WhatsApp
                 </Link>
                 . Let’s connect and create something great together!

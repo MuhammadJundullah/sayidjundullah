@@ -13,7 +13,6 @@ const Hello = () => {
     }
   );
 
-  // Animation variants for better organization
   const textVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0 },
@@ -30,14 +29,14 @@ const Hello = () => {
             alt="Sayid Muhammad Jundullah"
             width={200}
             height={200}
-            className="rounded-xl sm:rounded-full mx-auto sm:w-70 sm:h-70 object-cover shadow-lg transition-all duration-300 hover:scale-105"
+            className="rounded-lg sm:rounded-full mx-auto sm:w-70 sm:h-70 object-cover shadow-lg transition-all duration-300 hover:scale-105"
           />
 
-          <h1 className="sm:flex font-light text-black subpixel-antialiased sm:mx-auto">
+          <h1 className="sm:shadow-none shadow-2xl sm:flex bg-gray-700 sm:bg-white font-light text-white sm:text-black subpixel-antialiased sm:mx-auto py-5 sm:py-0 sm:px-0 px-5 rounded-xl transition-all duration-300 hover:scale-105">
             <BlurText
-              text="Hello, i am Sayid Muhammad Jundullah, Web Application Developer."
+              text="Hello 👋, i am Sayid Muhammad Jundullah, Web Application Developer."
               delay={150}
-              className="sm:text-4xl text-center text-3xl font-bold text-gray-800"
+              className="sm:text-4xl text-center text-2xl font-bold"
               animateBy="words"
               direction="top"
             />
@@ -47,7 +46,7 @@ const Hello = () => {
             initial="hidden"
             animate="visible"
             transition={{ delay: 4, duration: 1, ease: "easeOut" }}
-            className="max-w-2xl text-center text-base font-light text-gray-600 dark:text-gray-400 sm:text-lg lg:text-xl">
+            className="max-w-2xl text-start text-base font-light text-gray-600 sm:text-lg lg:text-xl">
             Scroll down to discover more about my work and experience!
           </motion.p>
         </div>

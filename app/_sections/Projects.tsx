@@ -51,7 +51,7 @@ export default function ProjectsComponent({ data }: ProjectsProps) {
                         threshold={0.1}
                         delay={animationDelay}>
                         <div className="h-full font-medium">
-                          <div className="w-80 border-1 rounded-md p-2">
+                          <div className="w-80 border border-gray-300 shadow-xs rounded-md p-2">
                             <Image
                               src={project.photo || ""}
                               alt={project.photo || ""}

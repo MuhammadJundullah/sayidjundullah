@@ -104,7 +104,7 @@ export default function AddCertificate() {
     <div className="sm:mx-auto sm:w-6xl flex flex-col justify-center text-black">
       <Link
         href="/admin/certificates"
-        className="flex items-center gap-3 dark:hover:text-white hover:text-black text-gray-400 my-5">
+        className="flex items-center gap-3 hover:text-black text-gray-400 my-5">
         <FaArrowLeft />
         <span>Kembali</span>
       </Link>

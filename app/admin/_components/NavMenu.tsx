@@ -134,6 +134,14 @@ export default function NavMenu() {
             aria-label="close sidebar"
             className="drawer-overlay"></label>
           <ul className="menu bg-white min-h-full w-80 p-4 space-y-2">
+            <li>
+              <Link
+                href="/"
+                target="_blank"
+                className="font-bold hover:text-primary transition-colors">
+                Show Porto &raquo;
+              </Link>
+            </li>
             <li className="font-bold text-lg mb-2">Manage</li>
             <li>
               <Link

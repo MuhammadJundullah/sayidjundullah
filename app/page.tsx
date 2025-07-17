@@ -12,6 +12,7 @@ import WorkExperiences from "@/app/_sections/WorkExperiences";
 import ProjectsComponent from "@/app/_sections/Projects";
 import Certificates from "@/app/_sections/Certificates";
 import Education from "@/app/_sections/Education";
+import TechStack from "@/app/_sections/TechStack";
 
 export const revalidate = 86400;
 
@@ -41,6 +42,7 @@ export default async function Home(): Promise<React.JSX.Element> {
     <>
       <Hello />
       <About />
+      <TechStack />
       <WorkExperiences data={workExperiences} />
       <ProjectsComponent data={projects} />
       <Certificates data={certificates} />

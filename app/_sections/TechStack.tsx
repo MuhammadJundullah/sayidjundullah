@@ -5,9 +5,21 @@ import { motion } from "framer-motion"; // Untuk animasi logo
 
 // Data logo statis
 const staticLogos = [
-  { id: "1", name: "React", logoUrl: "/static-image/TechStack/reactjs.webp" },
-  { id: "2", name: "Next.js", logoUrl: "/static-image/TechStack/nextjs.png" },
-  { id: "3", name: "Node.js", logoUrl: "/static-image/TechStack/nodejs.png" },
+  {
+    id: "1",
+    name: "React",
+    logoUrl: "/static-image/TechStack/reactjs.webp",
+  },
+  {
+    id: "2",
+    name: "Next.js",
+    logoUrl: "/static-image/TechStack/nextjs.png",
+  },
+  {
+    id: "3",
+    name: "Node.js",
+    logoUrl: "/static-image/TechStack/nodejs.png",
+  },
   {
     id: "4",
     name: "TypeScript",
@@ -18,7 +30,11 @@ const staticLogos = [
     name: "Tailwind CSS",
     logoUrl: "/static-image/TechStack/tailwind.png",
   },
-  { id: "6", name: "Prisma", logoUrl: "/static-image/TechStack/prisma.png" },
+  {
+    id: "6",
+    name: "Prisma",
+    logoUrl: "/static-image/TechStack/prisma.png",
+  },
   {
     id: "7",
     name: "PostgreSQL",
@@ -29,13 +45,35 @@ const staticLogos = [
     name: "Github",
     logoUrl: "/static-image/TechStack/logogithub.png",
   },
-  { id: "9", name: "Laravel", logoUrl: "/static-image/TechStack/laravel.png" },
-  { id: "10", name: "Docker", logoUrl: "/static-image/TechStack/docker.webp" },
-  { id: "11", name: "MySQL", logoUrl: "/static-image/TechStack/mysql.png" },
+  {
+    id: "9",
+    name: "Laravel",
+    logoUrl: "/static-image/TechStack/laravel.png",
+  },
+  {
+    id: "10",
+    name: "Docker",
+    logoUrl: "/static-image/TechStack/docker.webp",
+  },
+  {
+    id: "11",
+    name: "MySQL",
+    logoUrl: "/static-image/TechStack/mysql.png",
+  },
   {
     id: "12",
     name: "Nest.js",
     logoUrl: "/static-image/TechStack/nestjs.png",
+  },
+  {
+    id: "13",
+    name: "Vue.js",
+    logoUrl: "/static-image/TechStack/vuejs.webp",
+  },
+  {
+    id: "14",
+    name: "Django",
+    logoUrl: "/static-image/TechStack/django.png",
   },
   // Tambahkan lebih banyak logo sesuai kebutuhan Anda
 ];
@@ -54,7 +92,7 @@ const TechStack = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1, // Animasi setiap logo secara berurutan
+        staggerChildren: 0.1,
       },
     },
   };
@@ -76,7 +114,6 @@ const TechStack = () => {
         <div className="text-center sm:text-left mb-16">
           <div className="flex items-center my-10">
             <span className="flex-1 h-px bg-gray-300 sm:hidden"></span>{" "}
-            {/* Garis hanya di mobile */}
             <h1 className="text-4xl sm:text-6xl font-mono font-light text-black px-4">
               TechStack
             </h1>
@@ -84,7 +121,6 @@ const TechStack = () => {
           </div>
 
           <div className="shadow-lg p-5 sm:p-10 rounded-3xl border border-gray-200 bg-white">
-            {/* Langsung render logo dari staticLogos */}
             <motion.div
               className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-6 sm:gap-8 justify-items-center"
               variants={containerVariants}
@@ -93,12 +129,12 @@ const TechStack = () => {
               {staticLogos.map((logo) => (
                 <motion.div
                   key={logo.id}
-                  className="flex flex-col items-center p-3 sm:p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105 group"
+                  className="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105 group"
                   variants={itemVariants}>
                   <Image
                     src={logo.logoUrl}
                     alt={logo.name}
-                    width={64} // Ukuran logo default
+                    width={64}
                     height={64}
                     className="object-contain mb-2 sm:mb-3 group-hover:brightness-110"
                   />

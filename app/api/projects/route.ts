@@ -166,7 +166,7 @@ export async function GET(req: NextRequest) {
             status: "desc",
           },
           {
-            createdAt: "desc",
+            judul: "asc",
           },
         ],
         select: {

@@ -74,13 +74,17 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
                   </p>
                   <p className="py-2">
                     <strong>Source code:</strong>{" "}
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 underline">
-                      Github Repository
-                    </a>
+                    {item.url == "#" || null ? (
+                      "Not Available"
+                    ) : (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 underline">
+                        {item.url}
+                      </a>
+                    )}
                   </p>
                 </div>
               </div>

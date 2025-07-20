@@ -37,7 +37,7 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
           </div>
           {data.map((item) => (
             <div key={item.id} className="mb-8">
-              <h2 className="sm:text-5xl text-3xl font-semibold my-4">
+              <h2 className="sm:text-5xnpm run devl text-3xl font-semibold my-4">
                 {item.judul}
               </h2>
               <div className="my-10 flex justify-center items-center">

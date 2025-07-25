@@ -15,6 +15,18 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "res.cloudinary.com",
       },
+      {
+        protocol: "https",
+        hostname: "app.powerbi.com",
+      },
+      {
+        protocol: "https",
+        hostname: "lookerstudio.google.com",
+      },
+      {
+        protocol: "https",
+        hostname: "public.tableau.com",
+      },
     ],
   },
 };

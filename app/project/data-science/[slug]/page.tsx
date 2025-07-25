@@ -1,26 +1,33 @@
-"use client";
-
 import React from "react";
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchDataFromAPI } from "@/lib/actions";
 import Loading from "@/app/_components/Loading";
 import { FaArrowLeft } from "react-icons/fa6";
-import { ProjectsType } from "@/lib/type";
-import { use } from "react";
+import { ProjectsType, ApiResponse } from "@/lib/type";
+import { notFound } from "next/navigation";
 
-export default function Page({ params }: { params: Promise<{ slug: string }> }) {
-  const slug = use(params);
-  const [data, setData] = useState<ProjectsType[] | null>(null);
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await fetchDataFromAPI(slug.slug);
-      setData(result);
-    };
+  const data: ApiResponse = await fetchDataFromAPI(slug);
 
-    fetchData();
-  }, [slug]);
+  if (
+    !data ||
+    (typeof data === "object" &&
+      "message" in data &&
+      data.message === "Project not found") ||
+    (Array.isArray(data) && data.length === 0)
+  ) {
+    notFound();
+  }
+
+  if (!Array.isArray(data)) {
+    notFound();
+  }
 
   return (
     <div className="sm:mx-auto mx-5 max-w-6xl flex flex-col justify-center min-h-screen">
@@ -74,4 +81,36 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
       )}
     </div>
   );
+}
+
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const resolvedParams = await params;
+  const { slug } = resolvedParams;
+
+  const data: ProjectsType[] | null = await fetchDataFromAPI(slug);
+
+  if (!data || data.length === 0) {
+    return {
+      title: "Project Not Found",
+      description: "The requested project could not be found.",
+    };
+  }
+
+  const item = data[0];
+
+  return {
+    title: `${item.judul} - My Portfolio Project`,
+    description: item.desc.replace(/<[^>]*>/g, "").substring(0, 160) + "...",
+    openGraph: {
+      title: `${item.judul} - My Portfolio Project`,
+      description: item.desc.replace(/<[^>]*>/g, "").substring(0, 160) + "...",
+      images: item.photo ? [{ url: item.photo }] : [],
+    },
+  };
 }

@@ -38,6 +38,8 @@ export type ProjectsType = {
   desc: string;
 };
 
+export type ApiResponse = ProjectsType[] | { message: string } | null;
+
 export type CertificatesType = {
   id: string;
   name: string;

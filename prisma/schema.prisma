@@ -15,11 +15,9 @@ datasource db {
 }
 
 model Projects {
-  id           Int     @id @default(autoincrement())
+  id           String  @id @unique @default(uuid())
   judul        String
-  slug         String  @unique
   category     String
-  categoryslug String
   url          String?
   photo        String?
   tech         String?

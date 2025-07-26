@@ -3,17 +3,15 @@ import Link from "next/link";
 import { fetchDataFromAPI } from "@/lib/actions";
 import Loading from "@/app/_components/Loading";
 import { FaArrowLeft } from "react-icons/fa6";
-import { ProjectsType, ApiResponse } from "@/lib/type";
+// import { ProjectsType, ApiResponse } from "@/lib/type";
 import { notFound } from "next/navigation";
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
-  const data: ApiResponse = await fetchDataFromAPI(slug);
+  const res = await fetchDataFromAPI(id);
+
+  const data = res.data;
 
   if (
     !data ||
@@ -48,7 +46,7 @@ export default async function Page({
               </h2>
               <div className="flex flex-col md:flex-row mt-4 gap-5">
                 <p
-                  className="my-4"
+                  className="my-4 "
                   dangerouslySetInnerHTML={{ __html: item.desc }}
                 />
                 <div className="w-full">
@@ -59,7 +57,7 @@ export default async function Page({
                     <strong>Tech Stack:</strong> {item.tech}
                   </p>
                   <p className="py-2">
-                    <strong>Source code:</strong>
+                    <strong>Source code:</strong>{" "}
                     <a
                       href={item.url}
                       target="_blank"
@@ -88,12 +86,12 @@ import type { Metadata } from "next";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const resolvedParams = await params;
-  const { slug } = resolvedParams;
+  const { id } = resolvedParams;
 
-  const data: ProjectsType[] | null = await fetchDataFromAPI(slug);
+  const data = await fetchDataFromAPI(id);
 
   if (!data || data.length === 0) {
     return {
@@ -102,7 +100,7 @@ export async function generateMetadata({
     };
   }
 
-  const item = data[0];
+  const item = data.data[0];
 
   return {
     title: `${item.judul} - My Portfolio Project`,

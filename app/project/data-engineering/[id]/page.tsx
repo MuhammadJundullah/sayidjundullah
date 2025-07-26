@@ -4,17 +4,15 @@ import { fetchDataFromAPI } from "@/lib/actions";
 import Loading from "@/app/_components/Loading";
 import Image from "next/image";
 import { FaArrowLeft } from "react-icons/fa6";
-import { ProjectsType, ApiResponse } from "@/lib/type";
+// import { ProjectsType, ApiResponse } from "@/lib/type";
 import { notFound } from "next/navigation";
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
-  const data: ApiResponse = await fetchDataFromAPI(slug);
+  const res = await fetchDataFromAPI(id);
+
+  const data = res.data;
 
   if (
     !data ||
@@ -95,12 +93,12 @@ import type { Metadata } from "next";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const resolvedParams = await params;
-  const { slug } = resolvedParams;
+  const { id } = resolvedParams;
 
-  const data: ProjectsType[] | null = await fetchDataFromAPI(slug);
+  const data = await fetchDataFromAPI(id);
 
   if (!data || data.length === 0) {
     return {
@@ -109,7 +107,7 @@ export async function generateMetadata({
     };
   }
 
-  const item = data[0];
+  const item = data.data[0];
 
   return {
     title: `${item.judul} - My Portfolio Project`,

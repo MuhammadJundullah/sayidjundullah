@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import React from "react";
 import type {
   WorkExperienceType,
-  ProjectsType,
+  // ProjectsType,
   CertificatesType,
   EducationsType,
 } from "@/lib/type";
@@ -29,7 +29,7 @@ export default async function Home(): Promise<React.JSX.Element> {
       }).then((res) => res.json() as Promise<WorkExperienceType[]>),
       fetch(`${baseUrl}/api/projects?status=published`, {
         next: { tags: ["projects"], revalidate: revalidate },
-      }).then((res) => res.json() as Promise<ProjectsType[]>),
+      }).then((res) => res.json()),
       fetch(`${baseUrl}/api/certificates`, {
         next: { tags: ["certificates"], revalidate: revalidate },
       }).then((res) => res.json() as Promise<CertificatesType[]>),
@@ -44,7 +44,7 @@ export default async function Home(): Promise<React.JSX.Element> {
       <About />
       <TechStack />
       <WorkExperiences data={workExperiences} />
-      <ProjectsComponent data={projects} />
+      <ProjectsComponent data={projects.data} />
       <Certificates data={certificates} />
       <Education data={educations} />
     </>

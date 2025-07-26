@@ -38,9 +38,9 @@ export default function ProjectsComponent({ data }: ProjectsProps) {
               return (
                 <div key={i}>
                   <Link
-                    href={
-                      "project/" + project.categoryslug + "/" + project.slug
-                    }
+                    href={`/project/${project.category
+                      .toLowerCase()
+                      .replace(/\s+/g, "-")}/${project.id}`}
                     className="flex flex-row items-center space-x-2 pt-2">
                     <div className="flex hover:scale-105 transition-all duration-300">
                       <CustomAnimatedContent

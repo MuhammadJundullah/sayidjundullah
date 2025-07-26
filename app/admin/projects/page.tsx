@@ -7,7 +7,6 @@ import Loading from "@/app/_components/Loading";
 import StatusDropdown from "../_components/StatusDropdown";
 import { SquarePen, Delete, Search, FilePlus } from "lucide-react";
 import { VscRefresh } from "react-icons/vsc";
-
 import { Input } from "@/components/ui/input";
 import {
   Card,
@@ -66,8 +65,8 @@ const ManageProjects = () => {
         const response = await fetch("/api/projects");
         if (!response.ok) throw new Error("Gagal memuat data proyek");
         const data = await response.json();
-        setProjects(data);
-        setFilteredProjects(data);
+        setProjects(data.data);
+        setFilteredProjects(data.data);
       } catch (err) {
         showToast(`${err}`, "success");
       } finally {
@@ -104,18 +103,18 @@ const ManageProjects = () => {
     setIsLoading(true);
     const response = await fetch("/api/projects");
     const data = await response.json();
-    setProjects(data);
+    setProjects(data.data);
     setIsLoading(false);
     setIsRefreshing(false);
   };
 
   // handle delete project
-  const handleDelete = async (slug: string) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Yakin ingin menghapus project ini?")) return;
 
     try {
       setIsLoading(true);
-      const response = await fetch(`/api/projects?slug=${slug}`, {
+      const response = await fetch(`/api/projects?id=${id}`, {
         method: "DELETE",
       });
 
@@ -132,11 +131,11 @@ const ManageProjects = () => {
 
   // handle update status only
   const handleStatusUpdate = async (
-    projectId: string,
+    id: string,
     newStatus: "published" | "archived"
   ) => {
     try {
-      const response = await fetch(`/api/projects?statuschange=${projectId}`, {
+      const response = await fetch(`/api/projects?id=${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -150,7 +149,7 @@ const ManageProjects = () => {
 
       setProjects((prevProjects) =>
         prevProjects.map((project) =>
-          project.id === projectId ? { ...project, status: newStatus } : project
+          project.id === id ? { ...project, status: newStatus } : project
         )
       );
 
@@ -285,12 +284,12 @@ const ManageProjects = () => {
                 <Button
                   variant="ghost2"
                   className="flex items-center gap-2 hover:cursor-pointer text-red-500"
-                  onClick={() => handleDelete(project.slug)}>
+                  onClick={() => handleDelete(project.id)}>
                   <Delete size={16} />
                   Hapus
                 </Button>
 
-                <Link href={`/admin/projects/edit/${project.slug}`}>
+                <Link href={`/admin/projects/edit/${project.id}`}>
                   <Button
                     variant="outline"
                     className="flex items-center gap-2 hover:cursor-pointer border-gray-300 ">

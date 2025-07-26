@@ -1,20 +1,22 @@
-// app/portofolio/[slug]/page.tsx
+// app/portofolio/[id]/page.tsx
 import React from "react";
 import Link from "next/link";
 import { fetchDataFromAPI } from "@/lib/actions";
 import Image from "next/image";
 import { FaArrowLeft } from "react-icons/fa6";
-import { ProjectsType, ApiResponse } from "@/lib/type";
+import { ProjectsType } from "@/lib/type";
 import { notFound } from "next/navigation";
 
 export default async function Page({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ id: string }>;
 }) {
-  const { slug } = await params;
+  const { id } = await params;
 
-  const data: ApiResponse = await fetchDataFromAPI(slug);
+  const res = await fetchDataFromAPI(id);
+
+  const data: ProjectsType[] = res.data;
 
   if (
     !data ||
@@ -107,12 +109,12 @@ import type { Metadata } from "next";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const resolvedParams = await params;
-  const { slug } = resolvedParams;
+  const { id } = resolvedParams;
 
-  const data: ProjectsType[] | null = await fetchDataFromAPI(slug);
+  const data = await fetchDataFromAPI(id);
 
   if (!data || data.length === 0) {
     return {
@@ -121,7 +123,7 @@ export async function generateMetadata({
     };
   }
 
-  const item = data[0];
+  const item = data.data[0];
 
   return {
     title: `${item.judul} - My Portfolio Project`,

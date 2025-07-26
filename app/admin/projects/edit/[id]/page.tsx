@@ -30,12 +30,12 @@ interface Project {
 export default function EditProject({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ id: string }>;
 }) {
   const { toast, showToast } = useToast();
   const [project, setProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { slug } = use(params);
+  const { id } = use(params);
   const router = useRouter();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -43,8 +43,8 @@ export default function EditProject({
     const handleKeyDown = (e: KeyboardEvent) => {
       // Shortcut: Cmd+S (Mac) atau Ctrl+S (Windows)
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") {
-        e.preventDefault(); // Hindari save halaman browser
-        buttonRef.current?.click(); // Trigger tombol Simpan
+        e.preventDefault(); 
+        buttonRef.current?.click();
       }
     };
 
@@ -56,12 +56,13 @@ export default function EditProject({
     const fetchProject = async () => {
       try {
         setIsLoading(true);
-        const res = await fetch(`/api/projects?slug=${slug}`);
+        const res = await fetch(`/api/projects?id=${id}`);
 
         if (!res.ok) throw new Error("Failed to fetch project");
 
-        const data: Project[] = await res.json();
-        setProject(data[0]);
+        const data = await res.json();
+
+        setProject(data.data[0]);
       } catch (error) {
         console.error("Error fetching project:", error);
         router.push("/error");
@@ -70,10 +71,10 @@ export default function EditProject({
       }
     };
 
-    if (slug) {
+    if (id) {
       fetchProject();
     }
-  }, [slug, router]);
+  }, [id, router]);
 
   if (isLoading) {
     return (
@@ -129,7 +130,7 @@ export default function EditProject({
         formData.append("photo", project.photo);
       }
 
-      const res = await fetch(`/api/projects?slug=${project.slug}`, {
+      const res = await fetch(`/api/projects?id=${id}`, {
         method: "PUT",
         body: formData,
       });

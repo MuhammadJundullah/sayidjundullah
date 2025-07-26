@@ -29,7 +29,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "types.d.ts",
-    "app/project/data-analytics/[slug]/page.tsx",
+    "app/project/data-analytics/[id]/page.tsx",
     "lib/**.js",
     "app/_components/ScrollLink/ScrollLink.js"
   ],

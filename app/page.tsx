@@ -2,7 +2,6 @@ import { headers } from "next/headers";
 import React from "react";
 import type {
   WorkExperienceType,
-  // ProjectsType,
   CertificatesType,
   EducationsType,
 } from "@/lib/type";

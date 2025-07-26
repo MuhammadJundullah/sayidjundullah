@@ -58,7 +58,7 @@
           redirect: false,
           username: data.username,
           password: data.password,
-          callbackUrl: "/admin/projects",
+          callbackUrl: `/admin/projects`,
         });
 
         if (result?.error) {

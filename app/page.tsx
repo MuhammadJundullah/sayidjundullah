@@ -1,8 +1,6 @@
-import { headers } from "next/headers";
 import React from "react";
 import type {
   WorkExperienceType,
-  // ProjectsType,
   CertificatesType,
   EducationsType,
 } from "@/lib/type";
@@ -17,9 +15,7 @@ import TechStack from "@/app/_sections/TechStack";
 export const revalidate = 86400;
 
 export default async function Home(): Promise<React.JSX.Element> {
-  const headersList = headers();
-  const host = (await headersList).get("host");
-  const baseUrl = `http://${host}`;
+  const baseUrl = process.env.BASE_URL;
 
   // Fetch all data in parallel with proper typingcl
   const [workExperiences, projects, certificates, educations] =

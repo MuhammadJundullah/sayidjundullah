@@ -31,8 +31,8 @@ export default function ProjectsComponent({ data }: ProjectsProps) {
         <div className="sm:my-20 my-8">
           <div className="flex flex-wrap justify-center gap-8">
             {projects.map((project, i) => {
-              const animationDistance = 50;
-              const animationDelay = i * 0.08;
+              const animationDistance = 80;
+              const animationDelay = i * 0.01;
               const finalDirection = "vertical";
               const finalDistance = animationDistance;
               return (

@@ -3,7 +3,6 @@ import Link from "next/link";
 import { fetchDataFromAPI } from "@/lib/actions";
 import Loading from "@/app/_components/Loading";
 import { FaArrowLeft } from "react-icons/fa6";
-// import { ProjectsType, ApiResponse } from "@/lib/type";
 import { notFound } from "next/navigation";
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {

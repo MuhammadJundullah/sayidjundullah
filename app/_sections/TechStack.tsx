@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion"; // Untuk animasi logo
+import { motion } from "framer-motion";
 
 // Data logo statis
 const staticLogos = [
@@ -75,18 +75,9 @@ const staticLogos = [
     name: "Django",
     logoUrl: "/static-image/TechStack/django.png",
   },
-  // Tambahkan lebih banyak logo sesuai kebutuhan Anda
 ];
 
 const TechStack = () => {
-  // Tidak perlu state untuk loading/error/data dari API lagi
-  // const [logos, setLogos] = useState<TechLogo[]>([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState<string | null>(null);
-
-  // Tidak perlu useEffect untuk fetching data lagi
-  // useEffect(() => { ... }, []);
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {

@@ -62,7 +62,7 @@ const ManageProjects = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/projects");
+        const response = await fetch(`/api/projects`);
         if (!response.ok) throw new Error("Gagal memuat data proyek");
         const data = await response.json();
         setProjects(data.data);

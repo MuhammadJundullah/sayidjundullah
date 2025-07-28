@@ -1,4 +1,3 @@
-// app/projects/page.tsx (atau lokasi ProjectsComponent Anda)
 "use client";
 
 import { useState } from "react";

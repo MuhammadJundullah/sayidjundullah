@@ -62,7 +62,9 @@ const ManageProjects = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/projects");
+        const response = await fetch(
+          "https://sayidjundullah-production.up.railway.app/api/projects"
+        );
         if (!response.ok) throw new Error("Gagal memuat data proyek");
         const data = await response.json();
         setProjects(data.data);
@@ -101,7 +103,9 @@ const ManageProjects = () => {
   const handleRefresh = async () => {
     setIsRefreshing(true);
     setIsLoading(true);
-    const response = await fetch("/api/projects");
+    const response = await fetch(
+      "https://sayidjundullah-production.up.railway.app/api/projects"
+    );
     const data = await response.json();
     setProjects(data.data);
     setIsLoading(false);
@@ -114,9 +118,12 @@ const ManageProjects = () => {
 
     try {
       setIsLoading(true);
-      const response = await fetch(`/api/projects?id=${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `https://sayidjundullah-production.up.railway.app/api/projects?id=${id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (response.ok) {
         setIsLoading(false);
@@ -135,13 +142,16 @@ const ManageProjects = () => {
     newStatus: "published" | "archived"
   ) => {
     try {
-      const response = await fetch(`/api/projects?id=${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
+      const response = await fetch(
+        `https://sayidjundullah-production.up.railway.app/api/projects?id=${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Gagal memperbarui status");
@@ -163,17 +173,20 @@ const ManageProjects = () => {
   const handleRevalidate = async () => {
     try {
       setRevalidating(true);
-      const res = await fetch("/api/revalidate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_REVALIDATE_SECRET}`,
-        },
-        body: JSON.stringify({
-          paths: ["/"],
-          tags: ["projects"],
-        }),
-      });
+      const res = await fetch(
+        "https://sayidjundullah-production.up.railway.app/api/revalidate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_REVALIDATE_SECRET}`,
+          },
+          body: JSON.stringify({
+            paths: ["/"],
+            tags: ["projects"],
+          }),
+        }
+      );
       setRevalidating(false);
 
       const data = await res.json();

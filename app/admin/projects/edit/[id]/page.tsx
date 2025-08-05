@@ -187,6 +187,7 @@ export default function EditProject({
                 <option value="Data Science">Data Science</option>
                 <option value="Data Engineering">Data Engineering</option>
                 <option value="Web Development">Web Development</option>
+                <option value="Mobile Development">Mobile Development</option>
               </select>
             </div>
           </div>

@@ -32,7 +32,7 @@ const handler = NextAuth({
         }
 
         try {
-          const user: UserType | null = await prisma.users.findFirstOrThrow({
+          const user: UserType | null = await prisma.users.findUnique({
             where: { username: credentials.username },
             select: {
               id: true,

@@ -65,20 +65,20 @@ export default async function Page({
               dangerouslySetInnerHTML={{ __html: item.desc }}
             />
             <div className="w-full">
-              <p className="py-2">
-                <strong>Site: </strong>
-                {item.site == "#" || null ? (
-                  "Not Available"
-                ) : (
-                  <a
-                    href={item.site}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 underline">
-                    {item.site}
-                  </a>
-                )}
-              </p>
+              {/*<p className="py-2">*/}
+              {/*  <strong>Site: </strong>*/}
+              {/*  {item.site == "#" || null ? (*/}
+              {/*    "Not Available"*/}
+              {/*  ) : (*/}
+              {/*    <a*/}
+              {/*      href={item.site}*/}
+              {/*      target="_blank"*/}
+              {/*      rel="noopener noreferrer"*/}
+              {/*      className="text-blue-500 underline">*/}
+              {/*      {item.site}*/}
+              {/*    </a>*/}
+              {/*  )}*/}
+              {/*</p>*/}
               <p className="py-2">
                 <strong>Tech Stack:</strong> {item.tech}
               </p>

@@ -28,12 +28,11 @@ export default function ProjectsComponent({ data }: ProjectsProps) {
           <span className="h-px flex-1 bg-gray-300"></span>
         </span>
         <div className="sm:my-20 my-8">
-          <div className="flex flex-wrap justify-center gap-8">
+          <div className="flex flex-wrap justify-center gap-8 h-[400px]">
             {projects.map((project, i) => {
               const animationDistance = 80;
               const animationDelay = i * 0.01;
               const finalDirection = "vertical";
-              const finalDistance = animationDistance;
               return (
                 <div key={i}>
                   <Link
@@ -43,7 +42,7 @@ export default function ProjectsComponent({ data }: ProjectsProps) {
                     className="flex flex-row items-center space-x-2 pt-2">
                     <div className="flex hover:scale-105 transition-all duration-300">
                       <CustomAnimatedContent
-                        distance={finalDistance}
+                        distance={animationDistance}
                         direction={finalDirection}
                         initialOpacity={0}
                         animateOpacity
@@ -57,7 +56,7 @@ export default function ProjectsComponent({ data }: ProjectsProps) {
                               height={200}
                               width={320}
                               className="rounded-md"
-                              style={{ objectFit: "cover" }}
+                              objectFit="cover"
                             />
                             <div className="py-3">
                               <p className="text-gray-700 ">{project.judul}</p>

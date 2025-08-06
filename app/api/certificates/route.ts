@@ -20,19 +20,28 @@ if (process.env.CLOUDINARY_URL) {
 export async function GET() {
   try {
     const certificates = await prisma.certificates.findMany();
-    return new Response(JSON.stringify(certificates), {
-      status: 200,
-    });
+    return NextResponse.json(
+        {
+          message: "Certificates fetched successfully.",
+          success: true,
+          data: certificates
+        },
+        {status: 200}
+    )
   } catch (error) {
-    console.error(error);
-    return new Response(JSON.stringify({ error: "Something went wrong" }), {
-      status: 500,
-    });
+    return NextResponse.json(
+        {
+          message: `Error fetching data certifications: ${error}`,
+          success: false
+        },
+        {status: 500}
+    )
   }
 }
 
 export async function POST(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
   if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

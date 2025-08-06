@@ -58,3 +58,8 @@ export type EducationsType = {
   major: string;
   date: string;
 };
+
+export type TechStackType = {
+  name: string;
+  image: string;
+};

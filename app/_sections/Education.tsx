@@ -36,8 +36,8 @@ export default function Educations({ data }: EducationsProps) {
                     <div className="sm:mt-10 pb-20">
                       <h3 className="font-bold mb-6 flex items-center gap-6 sm:-mt-16 -mt-5 text-gray-700">
                         <Image
-                          src={`/static-image/Education/${education.name}`}
-                          alt={education.name}
+                          src={education.name}
+                          alt={education.school}
                           width={90}
                           height={90}
                           className="rounded-full"

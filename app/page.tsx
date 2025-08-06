@@ -28,10 +28,10 @@ export default async function Home(): Promise<React.JSX.Element> {
       }).then((res) => res.json()),
       fetch(`${baseUrl}/api/certificates`, {
         next: { tags: ["certificates"], revalidate: revalidate },
-      }).then((res) => res.json() as Promise<CertificatesType[]>),
+      }).then((res) => res.json()),
       fetch(`${baseUrl}/api/educations`, {
         next: { revalidate: revalidate },
-      }).then((res) => res.json() as Promise<EducationsType[]>),
+      }).then((res) => res.json()),
     ]);
 
   return (
@@ -41,8 +41,8 @@ export default async function Home(): Promise<React.JSX.Element> {
       <TechStack />
       <WorkExperiences data={workExperiences} />
       <ProjectsComponent data={projects.data} />
-      <Certificates data={certificates} />
-      <Education data={educations} />
+      <Certificates data={certificates.data} />
+      <Education data={educations.data} />
     </>
   );
 }

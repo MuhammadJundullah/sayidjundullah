@@ -36,8 +36,8 @@ export default async function Home(): Promise<React.JSX.Element> {
       <TechStack />
       <WorkExperiences data={workExperiences.data} />
       <ProjectsComponent data={projects.data} />
-      <Certificates data={certificates} />
-      <Education data={educations} />
+      <Certificates data={certificates.data} />
+      <Education data={educations.data} />
     </>
   );
 }

@@ -1,8 +1,6 @@
 import React from "react";
 import type {
   WorkExperienceType,
-  CertificatesType,
-  EducationsType,
 } from "@/lib/type";
 import Hello from "@/app/_sections/Hello";
 import About from "@/app/_sections/About";

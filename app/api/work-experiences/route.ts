@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import {NextResponse} from "next/server";
 
 export async function GET() {
   try {
@@ -22,13 +23,23 @@ export async function GET() {
       jobdesks: exp.jobdesks.map((jd) => ({ description: jd.description })),
     }));
 
-    return new Response(JSON.stringify(formatted), {
-      status: 200,
-    });
+    return NextResponse.json(
+        {
+          message: "Work experiences fetched successfully.",
+          success: true,
+          data: formatted
+        },
+        {status: 200}
+    )
   } catch (error) {
-    console.error(error);
-    return new Response(JSON.stringify({ error: "Something went wrong" }), {
-      status: 500,
-    });
+    return NextResponse.json(
+        {
+          message: `Failed fetching work experiences : ${error} `,
+          success: false
+        },
+        {
+          status: 500
+        }
+    )
   }
 }

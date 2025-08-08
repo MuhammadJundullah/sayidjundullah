@@ -1,43 +1,49 @@
+// import React from "react";
+//
+// const ManageTechstacks = () => {
+//   return (
+//     <div className="flex items-center justify-center min-h-screen w-screen">
+//       <span>Manage TechStacks Page On Development.</span>
+//     </div>
+//   );
+// };
+//
+// export default ManageTechstacks;
+
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Loading from "@/app/_components/Loading";
-import StatusDropdown from "../_components/StatusDropdown";
 import { SquarePen, Delete, Search, FilePlus } from "lucide-react";
 import Image from "next/image";
 import { VscRefresh } from "react-icons/vsc";
-
 import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
+  CardDescription,
   CardFooter,
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Toast } from "@/app/login/_components/Toast";
 
-interface Certificate {
+interface Techstack {
   id: string;
   name: string;
-  desc: string;
-  date: string;
-  site: string;
-  photo: string;
+  description: string;
+  image: string;
   createdAt: string;
   updatedAt: string;
-  status: "published" | "archived";
 }
 
-const ManageCertificates = () => {
+const ManageTechstacks = () => {
   const { toast, showToast } = useToast();
-  const [Certificates, setCertificates] = useState<Certificate[]>([]);
-  const [filteredCertificates, setFilteredCertificates] = useState<
-    Certificate[]
-  >([]);
+  const [Techstacks, setTechstacks] = useState<Techstack[]>([]);
+  const [filteredTechstacks, setFilteredTechstacks] = useState<Techstack[]>([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -59,11 +65,11 @@ const ManageCertificates = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/certificates");
-        if (!response.ok) throw new Error("Gagal memuat data sertifikat");
+        const response = await fetch("/api/techstacks");
+        if (!response.ok) throw new Error("Gagal memuat data techstack");
         const data = await response.json();
-        setCertificates(data.data);
-        setFilteredCertificates(data.data);
+        setTechstacks(data.data);
+        setFilteredTechstacks(data.data);
       } catch (err) {
         showToast(`${err}`, "success");
       } finally {
@@ -76,12 +82,12 @@ const ManageCertificates = () => {
 
   const handleSearch = useCallback(
     (keyword: string) => {
-      const filtered = Certificates.filter((certificate) =>
-        certificate.name.toLowerCase().includes(keyword.toLowerCase())
+      const filtered = Techstacks.filter((techstack) =>
+        techstack.name.toLowerCase().includes(keyword.toLowerCase())
       );
-      setFilteredCertificates(filtered);
+      setFilteredTechstacks(filtered);
     },
-    [Certificates]
+    [Techstacks]
   );
 
   useEffect(() => {
@@ -95,65 +101,30 @@ const ManageCertificates = () => {
   const handleRefresh = async () => {
     setIsRefreshing(true);
     setIsLoading(true);
-    const response = await fetch("/api/certificates");
+    const response = await fetch("/api/techstacks");
     const data = await response.json();
-    setCertificates(data.data);
+    setTechstacks(data.data);
     setIsLoading(false);
     setIsRefreshing(false);
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Yakin ingin menghapus sertifikat ini?")) return;
+    if (!confirm("Yakin ingin menghapus techstack ini?")) return;
 
     try {
       setIsLoading(true);
-      const response = await fetch(`/api/certificates?id=${id}`, {
+      const response = await fetch(`/api/techstacks?id=${id}`, {
         method: "DELETE",
       });
 
       if (response.ok) {
         setIsLoading(false);
         handleRefresh();
-        showToast("Certificates has been deleted successfully!", "success");
+        showToast("Techstacks has been deleted successfully!", "success");
       }
     } catch (err) {
       setIsLoading(false);
       console.error("Delete error:", err);
-    }
-  };
-
-  const handleStatusUpdate = async (
-    certificateId: string,
-    newStatus: "published" | "archived"
-  ) => {
-    try {
-      const response = await fetch(
-        `/api/certificates?statuschange=${certificateId}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ status: newStatus }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Gagal memperbarui status");
-      }
-
-      setCertificates((prevCertificates) =>
-        prevCertificates.map((certificate) =>
-          certificate.id === certificateId
-            ? { ...certificate, status: newStatus }
-            : certificate
-        )
-      );
-
-      showToast(`Certificate has been ${newStatus} successfully!`, "success");
-    } catch (error) {
-      showToast(` ${error}`, "success");
-      handleRefresh();
     }
   };
 
@@ -168,14 +139,14 @@ const ManageCertificates = () => {
         },
         body: JSON.stringify({
           paths: ["/"],
-          tags: ["certificates"],
+          tags: ["techstacks"],
         }),
       });
       setRevalidating(false);
 
       const data = await res.json();
       if (data.success) {
-        showToast("Static Certificate Data has been revalidating!", "success");
+        showToast("Static Techstack Data has been revalidating!", "success");
       }
     } catch (err) {
       alert("Failed to revalidate " + err);
@@ -185,9 +156,9 @@ const ManageCertificates = () => {
   return (
     <div className="mx-auto sm:px-4 max-w-6xl">
       <div className="sm:my-10">
-        <h1 className="text-3xl font-bold">Manage Certificates</h1>
+        <h1 className="text-3xl font-bold">Manage Techstacks</h1>
         <p className="text-gray-500 font-medium">
-          Kelola sertifikat kamu dengan rapi dan profesional.
+          Kelola techstack kamu dengan rapi dan profesional.
         </p>
       </div>
 
@@ -208,12 +179,11 @@ const ManageCertificates = () => {
         <div className="border-b border-gray-300 lg:w-7xl sm:block md:block lg:block hidden" />
 
         <div className="flex items-center gap-4 p-2 bg-white rounded-lg shadow-sm justify-around">
-          {/* New Certificate Button */}
           <Link
-            href="/admin/certificates/add"
+            href="/admin/techstacks/add"
             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors rounded-md hover:bg-gray-100 hover:text-gray-900 hover:cursor-pointer">
             <FilePlus />
-            <span className="w-19">New Certificate</span>
+            <span className="w-19">New Techstack</span>
           </Link>
 
           <button
@@ -232,50 +202,41 @@ const ManageCertificates = () => {
         <div className="flex items-center justify-center h-screen">
           <Loading />
         </div>
-      ) : filteredCertificates.length === 0 ? (
+      ) : filteredTechstacks.length === 0 ? (
         <div className="text-center py-20 ">
-          <p className="text-gray-500">
-            {searchKeyword
-              ? "Tidak ada sertifikat yang cocok."
-              : "Tidak ada sertifikat ditemukan"}
-          </p>
+          <div className="py-10">
+            <p className="text-gray-500 py-20">
+              {searchKeyword
+                ? "Tidak ada Techstack yang cocok."
+                : "Belum ada Techstack."}
+            </p>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-          {filteredCertificates.map((certificate) => (
-            <Card key={certificate.id} className="h-full flex flex-col">
+          {filteredTechstacks.map((techstack) => (
+            <Card key={techstack.id} className="h-full flex flex-col">
               <CardHeader>
-                <CardTitle className="text-center">
-                  {certificate.desc}
-                </CardTitle>
-                {/* <CardDescription className="">
-                  {certificate.name}
-                </CardDescription> */}
+                <CardTitle>{techstack.name}</CardTitle>
+                <CardDescription className="">
+                  {techstack.description}
+                </CardDescription>
               </CardHeader>
 
               <Image
-                src={certificate.photo}
-                alt={certificate.name}
-                width={500}
-                height={300}
-                className="w-full h-48 object-cover rounded-t-lg"
+                src={techstack.image}
+                alt={techstack.name}
+                width={200}
+                height={100}
+                className="rounded-lg p-2 mx-auto"
               />
+
               <CardContent className="flex-grow">
                 <div className="space-y-4">
-                  <div className="flex items-center justify-start gap-3 pb-5">
-                    <span className="text-sm text-gray-500">Status:</span>
-                    <StatusDropdown
-                      currentStatus={certificate.status}
-                      onStatusChange={(newStatus) =>
-                        handleStatusUpdate(certificate.id, newStatus)
-                      }
-                    />
-                  </div>
-
                   <div className="text-sm">
                     <p className="text-gray-500">Terakhir diperbarui:</p>
                     <p>
-                      {new Date(certificate.updatedAt).toLocaleDateString(
+                      {new Date(techstack.updatedAt).toLocaleDateString(
                         "id-ID",
                         {
                           day: "numeric",
@@ -292,12 +253,12 @@ const ManageCertificates = () => {
                 <Button
                   variant="ghost2"
                   className="flex items-center gap-2 hover:cursor-pointer text-red-500"
-                  onClick={() => handleDelete(certificate.id)}>
+                  onClick={() => handleDelete(techstack.id)}>
                   <Delete size={16} />
                   Hapus
                 </Button>
 
-                {/* <Link href={`/admin/certificates/edit/${certificate.id}`}> */}
+                {/* <Link href={`/admin/techstacks/edit/${techstack.id}`}> */}
                 <Button
                   variant="outline"
                   className="flex items-center gap-2 border-gray-300">
@@ -315,4 +276,4 @@ const ManageCertificates = () => {
   );
 };
 
-export default ManageCertificates;
+export default ManageTechstacks;

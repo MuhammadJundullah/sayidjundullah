@@ -1,6 +1,5 @@
-// import prisma from "@/lib/prisma";
 import { v2 as cloudinary } from "cloudinary";
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { z } from "zod";
@@ -17,17 +16,49 @@ if (process.env.CLOUDINARY_URL) {
   console.error("CLOUDINARY_URL environment variable is required");
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const certificates = await prisma.certificates.findMany();
-    return NextResponse.json(
-        {
-          message: "Certificates fetched successfully.",
-          success: true,
-          data: certificates
-        },
-        {status: 200}
-    )
+    const searchParams = req.nextUrl.searchParams;
+    const status = searchParams.get("status");
+
+    if (status){
+      const certificates = await prisma.certificates.findMany({
+        where: {status: status},
+        orderBy: [
+          {
+            status: "desc"
+          },
+        ],
+      });
+
+      return NextResponse.json(
+          {
+            message: "Certificates fetched successfully",
+            success: true,
+            data: certificates
+          }, {status: 200}
+      )
+
+    } else {
+      const certificates = await prisma.certificates.findMany({
+        orderBy: [
+          {
+            status: "desc"
+          },
+        ],
+
+      });
+
+      return NextResponse.json(
+          {
+            message: "Certificates fetched successfully.",
+            success: true,
+            data: certificates
+          },
+          {status: 200}
+      )
+    }
+
   } catch (error) {
     return NextResponse.json(
         {
@@ -43,7 +74,7 @@ export async function POST(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (!token) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -95,7 +126,7 @@ export async function POST(req: NextRequest) {
         stream.end(buffer);
       });
 
-      photoUrl = (uploadResult as any).secure_url || null;
+      photoUrl = (uploadResult as any).secure_url || "default";
     }
 
     const newCertificate = await prisma.certificates.create({
@@ -110,54 +141,36 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(
-      { message: "Certificate berhasil dibuat", certificate: newCertificate },
-      { status: 201 }
+      {
+        message: "Certificate created successfully.",
+        certificate: newCertificate
+      }, { status: 201 }
     );
-  } catch (error: unknown) {
-    console.error("Error creating certificate:", error);
-
-    let errorMessage =
-      "Terjadi kesalahan yang tidak diketahui saat membuat sertifikat.";
-
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        const target =
-          (error.meta?.target as string[] | undefined)?.join(", ") ||
-          "field(s)";
-        errorMessage = `Gagal membuat sertifikat: nilai ${target} sudah ada. Harap gunakan nilai yang unik.`;
-        if (target.includes("slug")) {
-          errorMessage =
-            "Judul sertifikat sudah ada. Harap gunakan judul lain.";
-        }
-      } else {
-        errorMessage = `Kesalahan database (${error.code}): ${error.message}`;
-      }
-    } else if (error instanceof Error) {
-      errorMessage = error.message;
-    } else if (typeof error === "string") {
-      errorMessage = error;
-    }
+  } catch (error) {
 
     return NextResponse.json(
-      { error: `Error creating certificate: ${errorMessage}` },
+      { error: `Error creating certificate: ${error}` },
       { status: 500 }
     );
+
   }
 }
 
 export async function DELETE(req: NextRequest) {
+
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
   if (!token) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const { searchParams } = new URL(req.url);
-    const idParam = searchParams.get("id");
+    const seacrhParams = req.nextUrl.searchParams;
+    const idParam = seacrhParams.get("id");
 
     if (!idParam) {
       return NextResponse.json(
-        { error: "Parameter ID diperlukan untuk penghapusan." },
+        { error: "Need ID." },
         { status: 400 }
       );
     }
@@ -165,7 +178,7 @@ export async function DELETE(req: NextRequest) {
     const certificateId = parseInt(idParam);
     if (isNaN(certificateId)) {
       return NextResponse.json(
-        { error: "Format ID certificate tidak valid." },
+        { error: "Invalid ID." },
         { status: 400 }
       );
     }
@@ -182,7 +195,7 @@ export async function DELETE(req: NextRequest) {
 
     if (!certificateToDelete) {
       return NextResponse.json(
-        { message: "Certificate tidak ditemukan." },
+        { message: "Certificate not found." },
         { status: 404 }
       );
     }
@@ -210,37 +223,38 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json(
       {
-        message: "Certificate berhasil dihapus.",
-        deletedCertificate: deletedCertificate,
-      },
-      { status: 200 }
+        message: "Certificate deleted successfully.",
+        success: true,
+        data: deletedCertificate,
+      }, { status: 200 }
     );
-  } catch (error: unknown) {
-    console.error("Error menghapus certificate:", error);
-
-    let errorMessage = "Gagal menghapus certificate.";
-    let statusCode = 500;
-
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2025") {
-        errorMessage = "Certificate tidak ditemukan atau sudah dihapus.";
-        statusCode = 404;
-      } else {
-        errorMessage = `Kesalahan database (${error.code}): ${error.message}`;
-      }
-    } else if (error instanceof Error) {
-      errorMessage = error.message;
-    } else if (typeof error === "string") {
-      errorMessage = error;
-    }
+  } catch (error) {
 
     return NextResponse.json(
-      { error: `Gagal menghapus certificate: ${errorMessage}` },
-      { status: statusCode }
+      { error: `Failed deleted certificate: ${error}` },
+      { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
+
   }
 }
+
+export async function PUT(req: NextRequest) {
+  const token = await getToken({req, secret: process.env.NEXTAUTH_SECRET})
+
+  if (!token) {
+    return NextResponse.json({message: "Unauthorized."}, {status: 401})
+  }
+
+}
+
+export async function PATCH(req: NextRequest) {
+  const token = await getToken({req, secret: process.env.NEXTAUTH_SECRET})
+
+  if (!token) {
+    return NextResponse.json({message: "Unauthorized."}, {status: 401})
+  }
+
+}
+
 
 

@@ -34,13 +34,14 @@ export default function NavMenu() {
               <ul className="grid w-[300px] gap-4">
                 <li>
                   <NavigationMenuLink asChild>
-                    <Link href="/admin/projects">
-                      <div className="font-medium">Your Projects</div>
+                    <Link href="/admin/techstacks">
+                      <div className="font-medium">Your Tech Stacks</div>
                       <div className="text-muted-foreground">
-                        Browse all components in the library.
+                        Manage your tech stack.
                       </div>
                     </Link>
                   </NavigationMenuLink>
+
                   <NavigationMenuLink asChild>
                     <Link href="/admin/work-experiences">
                       <div className="font-medium">Your Work Experiences</div>
@@ -49,6 +50,16 @@ export default function NavMenu() {
                       </div>
                     </Link>
                   </NavigationMenuLink>
+
+                  <NavigationMenuLink asChild>
+                    <Link href="/admin/projects">
+                      <div className="font-medium">Your Projects</div>
+                      <div className="text-muted-foreground">
+                        Browse all components in the library.
+                      </div>
+                    </Link>
+                  </NavigationMenuLink>
+
                   <NavigationMenuLink asChild>
                     <Link href="/admin/certificates">
                       <div className="font-medium">Your Certificates</div>

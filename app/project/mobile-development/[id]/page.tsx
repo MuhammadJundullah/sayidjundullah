@@ -56,7 +56,7 @@ export default async function Page({
               alt={item.judul || ""}
               width={800}
               height={600}
-              className="rounded-lg border-2 border-gray-300 shadow-lg"
+              className="rounded-lg"
             />
           </div>
           <div className="sm:flex flex-col sm:flex-row mt-4 sm:gap-5">

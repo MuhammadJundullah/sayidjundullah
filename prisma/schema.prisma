@@ -15,7 +15,7 @@ datasource db {
 }
 
 model Projects {
-  id           String  @id @unique @default(uuid())
+  id           String     @id @unique @default(uuid())
   judul        String
   category     String
   url          String?
@@ -29,7 +29,7 @@ model Projects {
 }
 
 model Certificates {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
   desc      String
   date      String
@@ -41,7 +41,7 @@ model Certificates {
 }
 
 model Educations {
-  id     Int    @id @default(autoincrement())
+  id     Int      @id @default(autoincrement())
   name   String
   school String
   major  String
@@ -60,17 +60,17 @@ model Experiences {
 }
 
 model Jobdesk {
-  id           Int      @id @default(autoincrement())
-  experiences  Experiences @relation(fields: [experiences_id], references: [id], onDelete: Cascade)
+  id           Int          @id @default(autoincrement())
+  experiences  Experiences  @relation(fields: [experiences_id], references: [id], onDelete: Cascade)
   experiences_id Int
   description  String
-  createdAt    DateTime? @default(now()) @map("created_at")
-  updatedAt    DateTime? @default(now()) @map("updated_at")
+  createdAt    DateTime?    @default(now()) @map("created_at")
+  updatedAt    DateTime?    @default(now()) @map("updated_at")
 }
 
 model Users {
-  id            Int      @id @default(autoincrement())
-  username      String   @unique
+  id            Int       @id @default(autoincrement())
+  username      String    @unique
   password      String
   createdAt     DateTime? @default(now()) @map("created_at")
   updatedAt     DateTime? @default(now()) @map("updated_at")
@@ -80,6 +80,7 @@ model TechStack {
   id            Int       @id @default(autoincrement())
   name          String   
   image         String
+  description   String?
   createdAt     DateTime? @default(now()) @map("created_at")
   updatedAt     DateTime? @default(now()) @map("updated_at")
 }

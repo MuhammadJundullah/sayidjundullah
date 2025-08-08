@@ -114,12 +114,11 @@ export async function POST(req: NextRequest) {
 // --- GET /api/projects ---
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
+    const searchParams = req.nextUrl.searchParams;
     const id = searchParams.get("id");
     const category = searchParams.get("category");
     const status = searchParams.get("status");
 
-    // 1. Validasi Input Status
     if (status && !["draft", "published", "archived"].includes(status)) {
       return NextResponse.json(
         {
@@ -133,7 +132,6 @@ export async function GET(req: NextRequest) {
     let whereClause: Prisma.ProjectsWhereInput = {};
     let selectClause: Prisma.ProjectsSelect | undefined = undefined;
 
-    // uuid v4 validation
     function isValidUUID(uuid: string): boolean {
       const uuidRegex =
         /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -207,7 +205,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// --- PUT /api/projects/:id ---
+// --- PUT /api/projects?id=:id ---
 export async function PUT(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
@@ -223,8 +221,8 @@ export async function PUT(req: NextRequest) {
   }
 
   try {
-    const { searchParams } = new URL(req.url);
-    const idParam = searchParams.get("id");
+    const seacrhParams = req.nextUrl.searchParams;
+    const idParam = seacrhParams.get("id");
 
     if (!idParam) {
       return NextResponse.json(
@@ -376,19 +374,21 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-// --- PATCH /api/projects/:id ---
+// --- PATCH /api/projects?id=:id ---
 export async function PATCH(req: NextRequest) {
+
   const token = await getToken({
     req: req,
     secret: process.env.NEXTAUTH_SECRET,
   });
+
   if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
+    const seacrhParams = req.nextUrl.searchParams;
+    const id = seacrhParams.get("id");
 
     if (!id || !isValidUUID(id)) {
       return NextResponse.json(
@@ -436,17 +436,17 @@ export async function PATCH(req: NextRequest) {
   }
 }
 
-// --- DELETE /api/projects/:id ---
+// --- DELETE /api/projects?id=:id ---
 export async function DELETE(req: NextRequest) {
-  // const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  //
-  // if (!token) {
-  //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  // }
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   try {
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
+    const seacrhParams = req.nextUrl.searchParams;
+    const id = seacrhParams.get("id");
 
     if (!id) {
       return NextResponse.json(

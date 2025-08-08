@@ -2,82 +2,16 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { TechStackType } from "@/lib/type";
+import { useState } from "react";
 
-// Data logo statis
-const staticLogos = [
-  {
-    id: "1",
-    name: "React",
-    logoUrl: "/static-image/TechStack/reactjs.webp",
-  },
-  {
-    id: "2",
-    name: "Next.js",
-    logoUrl: "/static-image/TechStack/nextjs.png",
-  },
-  {
-    id: "3",
-    name: "Node.js",
-    logoUrl: "/static-image/TechStack/nodejs.png",
-  },
-  {
-    id: "4",
-    name: "TypeScript",
-    logoUrl: "/static-image/TechStack/typescript.png",
-  },
-  {
-    id: "5",
-    name: "Tailwind CSS",
-    logoUrl: "/static-image/TechStack/tailwind.png",
-  },
-  {
-    id: "6",
-    name: "Prisma",
-    logoUrl: "/static-image/TechStack/prisma.png",
-  },
-  {
-    id: "7",
-    name: "PostgreSQL",
-    logoUrl: "/static-image/TechStack/postgre.png",
-  },
-  {
-    id: "8",
-    name: "Github",
-    logoUrl: "/static-image/TechStack/logogithub.png",
-  },
-  {
-    id: "9",
-    name: "Laravel",
-    logoUrl: "/static-image/TechStack/laravel.png",
-  },
-  {
-    id: "10",
-    name: "Docker",
-    logoUrl: "/static-image/TechStack/docker.webp",
-  },
-  {
-    id: "11",
-    name: "MySQL",
-    logoUrl: "/static-image/TechStack/mysql.png",
-  },
-  {
-    id: "12",
-    name: "Nest.js",
-    logoUrl: "/static-image/TechStack/nestjs.png",
-  },
-  {
-    id: "13",
-    name: "Vue.js",
-    logoUrl: "/static-image/TechStack/vuejs.webp",
-  },
-  {
-    id: "14",
-    name: "Django",
-    logoUrl: "/static-image/TechStack/django.png",
-  },
-];
+interface techStackProps {
+  data: TechStackType[];
+}
 
-const TechStack = () => {
+export default function TechStack({ data }: techStackProps) {
+  const [techStack] = useState<TechStackType[]>(data);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -117,20 +51,20 @@ const TechStack = () => {
               variants={containerVariants}
               initial="hidden"
               animate="visible">
-              {staticLogos.map((logo) => (
+              {techStack.map((data) => (
                 <motion.div
-                  key={logo.id}
+                  key={data.id}
                   className="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105 group"
                   variants={itemVariants}>
                   <Image
-                    src={logo.logoUrl}
-                    alt={logo.name}
+                    src={data.image}
+                    alt={data.name}
                     width={64}
                     height={64}
                     className="object-contain mb-2 sm:mb-3 group-hover:brightness-110"
                   />
                   <p className="text-sm sm:text-base font-medium text-gray-700 group-hover:text-blue-600 transition-colors">
-                    {logo.name}
+                    {data.name}
                   </p>
                 </motion.div>
               ))}
@@ -141,5 +75,3 @@ const TechStack = () => {
     </section>
   );
 };
-
-export default TechStack;

@@ -30,7 +30,6 @@ export default function ProjectsComponent({ data }: ProjectsProps) {
         <div className="sm:my-20 my-8">
           <div className="flex flex-wrap justify-center gap-8">
             {projects.map((project, i) => {
-              // const animationDistance = 80;
               const animationDelay = i * 0.01;
               const finalDirection = "vertical";
               const finalDistance = 80;
@@ -50,14 +49,13 @@ export default function ProjectsComponent({ data }: ProjectsProps) {
                         threshold={0.1}
                         delay={animationDelay}>
                         <div className="h-full font-medium">
-                          <div className="w-80 border border-gray-300 shadow-xs rounded-md p-2">
+                          <div className="w-80 h-92 border border-gray-300 shadow-xs rounded-md p-2 align">
                             <Image
                               src={project.photo || ""}
                               alt={project.photo || ""}
                               height={200}
                               width={320}
-                              className="rounded-md"
-                              style={{ objectFit: "cover" }}
+                              className="w-full h-48 object-cover rounded-t-lg"
                             />
                             <div className="py-3">
                               <p className="text-gray-700 ">{project.judul}</p>
@@ -65,10 +63,10 @@ export default function ProjectsComponent({ data }: ProjectsProps) {
                               <p className="text-gray-700  font-light">
                                 {project.tech}
                               </p>
-                              <p className="text-gray-500 text-sm items-center text-center justify-center pt-2 flex flex-row">
+                            </div>
+                              <p className="text-gray-500 text-sm items-end justify-center pt-2 flex flex-row">
                                 <FaArrowUpRightFromSquare></FaArrowUpRightFromSquare>
                               </p>
-                            </div>
                           </div>
                         </div>
                       </CustomAnimatedContent>

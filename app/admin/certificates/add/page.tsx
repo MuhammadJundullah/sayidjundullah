@@ -120,7 +120,7 @@ export default function AddCertificate() {
               <Label htmlFor="judul">Nama Sertifikat</Label>
               <Input
                 type="text"
-                name="judul"
+                name="name"
                 value={certificate.name}
                 onChange={handleChange}
                 placeholder="Udemy Certification"
@@ -132,7 +132,7 @@ export default function AddCertificate() {
               <Label htmlFor="url">Deskripsi</Label>
               <Input
                 type="text"
-                name="url"
+                name="desc"
                 value={certificate.desc}
                 onChange={handleChange}
                 placeholder="Learning Data Science, Machine Learning, AI on Telkom University"
@@ -156,7 +156,7 @@ export default function AddCertificate() {
               <Label htmlFor="tech">Tanggal diperoleh sertifikat</Label>
               <Input
                 type="date"
-                name="tech"
+                name="date"
                 value={certificate.date}
                 onChange={handleChange}
                 required
@@ -185,9 +185,7 @@ export default function AddCertificate() {
                 onChange={handleChange}
                 className="select bg-gray-100 rounded-2xl px-3 py-2"
                 required>
-                <option value="" disabled>
-                  Pilih status
-                </option>
+                <option value="">Pilih status</option>
                 <option value="published">Published</option>
                 <option value="archived">Archived</option>
               </select>
@@ -197,7 +195,6 @@ export default function AddCertificate() {
           <div className="flex gap-3 items-center">
             <Button
               type="submit"
-              disabled={true}
               ref={submitRef}
               className="mt-5 my-10 text-white bg-black hover:cursor-pointer">
               Add Certificate

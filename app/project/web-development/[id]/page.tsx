@@ -1,4 +1,3 @@
-// app/portofolio/[id]/page.tsx
 import React from "react";
 import Link from "next/link";
 import { fetchDataFromAPI } from "@/lib/actions";
@@ -11,7 +10,8 @@ export default async function Page({
   params,
 }: {
   params: Promise<{ id: string }>;
-}) {
+  }) {
+  
   const { id } = await params;
 
   const res = await fetchDataFromAPI(id);

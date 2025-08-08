@@ -6,7 +6,7 @@ import React from "react";
 import Hello from "@/app/_sections/Hello";
 import About from "@/app/_sections/About";
 import WorkExperiences from "@/app/_sections/WorkExperiences";
-import ProjectsComponent from "@/app/_sections/Projects";
+import Projects from "@/app/_sections/Projects";
 import Certificates from "@/app/_sections/Certificates";
 import Education from "@/app/_sections/Education";
 import TechStack from "@/app/_sections/TechStack";
@@ -40,9 +40,9 @@ export default async function Home(): Promise<React.JSX.Element> {
     <>
       <Hello />
       <About />
-      <TechStack data={techStacks.data} />
       <WorkExperiences data={workExperiences.data} />
-      <ProjectsComponent data={projects.data} />
+      <Projects data={projects.data} techstack={techStacks.data} />
+      <TechStack data={techStacks.data} />
       <Certificates data={certificates.data} />
       <Education data={educations.data} />
     </>

@@ -83,18 +83,40 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const techStack = await prisma.techStack.findMany();
+    const searchParams = req.nextUrl.searchParams;
+    const filter = searchParams.get("filter");
 
-    return NextResponse.json(
-      {
-        message: "TechStack fetched successfully.",
-        success: true,
-        data: techStack,
-      },
-      { status: 200 }
-    );
+    if (filter) {
+      const selectClause = filter;
+
+      const techStack = await prisma.techStack.findMany({
+        select: { [selectClause]: true },
+      });
+
+      return NextResponse.json(
+        {
+          message: "TechStack fetched successfully.",
+          success: true,
+          data: techStack,
+        },
+        { status: 200 }
+      );
+    }
+
+    if (!filter) {
+      const techStack = await prisma.techStack.findMany();
+
+      return NextResponse.json(
+        {
+          message: "TechStack fetched successfully.",
+          success: true,
+          data: techStack,
+        },
+        { status: 200 }
+      );
+    }
   } catch (error) {
     console.log(error);
     return NextResponse.json(

@@ -1,9 +1,9 @@
 export const fetchDataFromAPI = async (id: string) => {
-  const response = await fetch(
-    `${process.env.BASE_URL}/api/projects?id=${id}`
-  );
-  if (!response.ok) {
-    return response.json();
+  const res = await fetch(`${process.env.BASE_URL}/api/projects?id=${id}`, {
+    next: { revalidate: 86400 },
+  });
+  if (!res.ok) {
+    return res.json();
   }
-  return response.json();
+  return res.json();
 };

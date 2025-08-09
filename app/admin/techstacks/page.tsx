@@ -1,15 +1,3 @@
-// import React from "react";
-//
-// const ManageTechstacks = () => {
-//   return (
-//     <div className="flex items-center justify-center min-h-screen w-screen">
-//       <span>Manage TechStacks Page On Development.</span>
-//     </div>
-//   );
-// };
-//
-// export default ManageTechstacks;
-
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
@@ -22,7 +10,6 @@ import { VscRefresh } from "react-icons/vsc";
 import { Input } from "@/components/ui/input";
 import {
   Card,
-  CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
@@ -216,38 +203,20 @@ const ManageTechstacks = () => {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
           {filteredTechstacks.map((techstack) => (
             <Card key={techstack.id} className="h-full flex flex-col">
+              <Image
+                src={techstack.image}
+                alt={techstack.name}
+                width={100}
+                height={50}
+                className="rounded-lg p-2 mx-auto"
+              />
+
               <CardHeader>
                 <CardTitle>{techstack.name}</CardTitle>
                 <CardDescription className="">
                   {techstack.description}
                 </CardDescription>
               </CardHeader>
-
-              <Image
-                src={techstack.image}
-                alt={techstack.name}
-                width={200}
-                height={100}
-                className="rounded-lg p-2 mx-auto"
-              />
-
-              <CardContent className="flex-grow">
-                <div className="space-y-4">
-                  <div className="text-sm">
-                    <p className="text-gray-500">Terakhir diperbarui:</p>
-                    <p>
-                      {new Date(techstack.updatedAt).toLocaleDateString(
-                        "id-ID",
-                        {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        }
-                      )}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
 
               <CardFooter className="flex justify-center gap-2">
                 <Button
@@ -258,14 +227,14 @@ const ManageTechstacks = () => {
                   Hapus
                 </Button>
 
-                {/* <Link href={`/admin/techstacks/edit/${techstack.id}`}> */}
-                <Button
-                  variant="outline"
-                  className="flex items-center gap-2 border-gray-300">
-                  <SquarePen size={16} />
-                  Edit
-                </Button>
-                {/* </Link> */}
+                <Link href={`/admin/techstacks/edit/${techstack.id}`}>
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2 border-gray-300 hover:cursor-pointer">
+                    <SquarePen size={16} />
+                    Edit
+                  </Button>
+                </Link>
               </CardFooter>
             </Card>
           ))}

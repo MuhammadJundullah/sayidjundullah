@@ -30,7 +30,7 @@ export default function Projects({ data, techstack }: Props) {
 
   return (
     <section id="projects">
-      <div className="py-20 flex flex-col sm:mx-auto mx-5 font-thin text-center text-[#0f172a] w-6xl">
+      <div className="py-20 flex flex-col sm:mx-auto mx-5 font-thin text-center text-[#0f172a] sm:w-6xl">
         <span className="flex items-center">
           <span className="shrink-0 pe-4">
             <h1 className="sm:text-5xl text-2xl font-mono font-semibold text-gray-800">

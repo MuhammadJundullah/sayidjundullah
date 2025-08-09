@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (!token) {
-    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+    // return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
   try {
@@ -87,6 +87,27 @@ export async function GET(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
     const filter = searchParams.get("filter");
+    const strId = searchParams.get("id");
+
+    if (strId) {
+      const id = parseInt(strId, 10);
+
+      let whereClause: Prisma.TechStackWhereInput = {};
+
+      whereClause = { id };
+      const techStack = await prisma.techStack.findMany({
+        where: whereClause,
+      });
+
+      return NextResponse.json(
+        {
+          message: "TechStack fetched successfully.",
+          success: true,
+          data: techStack,
+        },
+        { status: 200 }
+      );
+    }
 
     if (filter) {
       const selectClause = filter;
@@ -105,18 +126,16 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    if (!filter) {
-      const techStack = await prisma.techStack.findMany();
+    const techStack = await prisma.techStack.findMany();
 
-      return NextResponse.json(
-        {
-          message: "TechStack fetched successfully.",
-          success: true,
-          data: techStack,
-        },
-        { status: 200 }
-      );
-    }
+    return NextResponse.json(
+      {
+        message: "TechStack fetched successfully.",
+        success: true,
+        data: techStack,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.log(error);
     return NextResponse.json(
@@ -217,9 +236,15 @@ export async function PUT(req: NextRequest) {
     }
 
     const formData = await req.formData();
+
+    console.log(formData);
+
     const updateData: Prisma.TechStackUpdateInput = {};
 
-    const fieldsToProcess: (keyof Prisma.TechStackUpdateInput)[] = ["name"];
+    const fieldsToProcess: (keyof Prisma.TechStackUpdateInput)[] = [
+      "name",
+      "description",
+    ];
 
     fieldsToProcess.forEach((field) => {
       const value = formData.get(field);
@@ -231,7 +256,6 @@ export async function PUT(req: NextRequest) {
     const newImageFile = formData.get("image") as File | null;
     const deletePhotoExplicitly = formData.get("deleteImage") === "true";
 
-    // MENCARI PROYEK TERLEBIH DAHULU SEBELUM TRANSAKSI
     const currentProject = await prisma.techStack.findUnique({
       where: { id: id },
     });
@@ -289,6 +313,8 @@ export async function PUT(req: NextRequest) {
         throw new Error("No valid fields to update or no changes detected.");
       }
 
+      console.log(updateData);
+
       return tx.techStack.update({
         where: {
           id: currentProject.id,
@@ -297,6 +323,7 @@ export async function PUT(req: NextRequest) {
         select: {
           id: true,
           name: true,
+          description: true,
           image: true,
           createdAt: true,
           updatedAt: true,

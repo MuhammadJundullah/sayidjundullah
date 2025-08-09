@@ -16,18 +16,21 @@ export default function CertificatesComponent({ data }: CertificatesProps) {
   const [certificates] = useState<CertificatesType[]>(data);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedAlt, setSelectedAlt] = useState<string | null>(null);
+  const [selectedSite, setSelectedSite] = useState<string | null>(null);
 
   const DEFAULT_CERTIFICATE_WIDTH = 900;
   const DEFAULT_CERTIFICATE_HEIGHT = 700;
 
-  const openModal = (src: string, alt: string) => {
+  const openModal = (src: string, alt: string, site: string) => {
     setSelectedImage(src);
     setSelectedAlt(alt);
+    setSelectedSite(site);
   };
 
   const closeModal = () => {
     setSelectedImage(null);
     setSelectedAlt(null);
+    setSelectedSite(null);
   };
 
   return (
@@ -58,7 +61,9 @@ export default function CertificatesComponent({ data }: CertificatesProps) {
                   <div
                     key={i}
                     className="hover:scale-105 transition-all duration-300 ease-in-out"
-                    onClick={() => openModal(imageUrl, certificate.name)}>
+                    onClick={() =>
+                      openModal(imageUrl, certificate.name, certificate.site)
+                    }>
                     <CustomAnimatedContent
                       distance={finalDistance}
                       direction={finalDirection}
@@ -93,14 +98,14 @@ export default function CertificatesComponent({ data }: CertificatesProps) {
         </div>
       </div>
 
-      {/* --- RENDER MODAL JIKA selectedImage ADA --- */}
       {selectedImage && selectedAlt && (
         <ImageModal
           src={selectedImage}
           alt={selectedAlt}
+          site={selectedSite}
           onClose={closeModal}
-          originalWidth={DEFAULT_CERTIFICATE_WIDTH} // Teruskan lebar asli
-          originalHeight={DEFAULT_CERTIFICATE_HEIGHT} // Teruskan tinggi asli
+          originalWidth={DEFAULT_CERTIFICATE_WIDTH}
+          originalHeight={DEFAULT_CERTIFICATE_HEIGHT}
         />
       )}
     </section>

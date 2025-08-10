@@ -31,14 +31,14 @@ export default function TechStack({ data }: techStackProps) {
             <span className="flex-1 h-px bg-gray-300"></span>
           </div>
 
-          <div className="shadow-lg rounded-3xl border border-gray-200 bg-white dark:bg-gray-500 p-5 sm:p-8">
+          <div className="shadow-lg rounded-3xl border border-gray-200 bg-white dark:bg-gray-700 p-5 sm:p-8">
             <div className="flex flex-wrap -mx-2">
               {techStack.map((data) => (
                 <div key={data.id} className="w-full sm:w-1/2 p-2">
                   <div className="border border-gray-200 rounded-lg">
                     <button
                       onClick={() => handleToggle(data.id)}
-                      className="flex justify-between items-center w-full py-4 text-left transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg px-4">
+                      className="flex justify-between items-center w-full py-4 text-left transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-lg px-4">
                       <div className="flex items-center space-x-4">
                         <Image
                           src={data.image}

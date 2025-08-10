@@ -35,14 +35,14 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           <div className="flex justify-between items-center py-4">
             <Link
               href="/#projects"
-              className="flex hover:text-black text-gray-400">
+              className="flex hover:text-black dark:hover:text-gray-300 text-gray-400 dark:text-white">
               <FaArrowLeft className="mt-1" />
               <span className="ml-2">Back to Projects</span>
             </Link>
           </div>
           {data.map((item) => (
             <div key={item.id} className="mb-8">
-              <h2 className="sm:text-5xl text-3xl font-semibold my-4">
+              <h2 className="sm:text-5xl text-3xl font-semibold my-4 dark:text-white">
                 {item.judul}
               </h2>
               <div className="my-10 flex justify-center items-center">
@@ -54,7 +54,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                   className="rounded-lg border-2 border-gray-300 shadow-lg"
                 />
               </div>
-              <div className="flex flex-col md:flex-row mt-4 gap-5">
+              <div className="flex flex-col md:flex-row mt-4 gap-5 dark:text-white">
                 <p
                   className="my-4"
                   dangerouslySetInnerHTML={{ __html: item.desc }}
@@ -72,7 +72,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 underline">
+                      className="text-blue-500 underline dark:text-white">
                       Github Repository
                     </a>
                   </p>

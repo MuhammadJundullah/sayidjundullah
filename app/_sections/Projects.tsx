@@ -33,7 +33,7 @@ export default function Projects({ data, techstack }: Props) {
       <div className="py-20 flex flex-col sm:mx-auto mx-5 font-thin text-center text-[#0f172a] sm:w-6xl">
         <span className="flex items-center">
           <span className="shrink-0 pe-4">
-            <h1 className="sm:text-5xl text-2xl font-mono font-semibold text-gray-800">
+            <h1 className="sm:text-5xl text-2xl font-mono font-semibold text-gray-800 dark:text-white">
               My Projects Experience
             </h1>
           </span>
@@ -45,15 +45,15 @@ export default function Projects({ data, techstack }: Props) {
             <select
               value={selectedTech}
               onChange={(e) => setSelectedTech(e.target.value)}
-              className="appearance-none w-full p-3 text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 cursor-pointer hover:border-gray-400">
-              <option value="">Filter by Tech Stack</option>
+              className="appearance-none w-full p-3 text-sm text-gray-700 font-bold dark:text-black bg-white dark:bg-gray-300 border border-gray-300 rounded-md shadow-sm pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 cursor-pointer hover:border-gray-400">
+              <option value="">Show all</option>
               {techStacks.map((techstack, index) => (
                 <option key={index} value={techstack.name}>
                   {techstack.name}
                 </option>
               ))}
             </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-black">
               <svg
                 className="fill-current h-4 w-4"
                 xmlns="http://www.w3.org/2000/svg"
@@ -63,6 +63,9 @@ export default function Projects({ data, techstack }: Props) {
             </div>
           </div>
         </div>
+        <p className="py-1 text-sm text-gray-700 dark:text-white font-bold">
+          filter by techstacks
+        </p>
 
         <div className="sm:my-20 my-8">
           <div className="flex flex-wrap justify-center gap-8">
@@ -95,13 +98,15 @@ export default function Projects({ data, techstack }: Props) {
                               className="w-full h-48 object-cover rounded-t-lg"
                             />
                             <div className="py-3">
-                              <p className="text-gray-700 ">{project.judul}</p>
+                              <p className="text-gray-700 dark:text-white">
+                                {project.judul}
+                              </p>
                               <span className="block w-full my-2 border-gray-300"></span>
-                              <p className="text-gray-700  font-light">
+                              <p className="text-gray-700 dark:text-white font-light">
                                 {project.tech}
                               </p>
                             </div>
-                            <p className="text-gray-500 text-sm items-end justify-center pt-2 flex flex-row">
+                            <p className="text-gray-500 dark:text-white text-sm items-end justify-center pt-2 flex flex-row">
                               <FaArrowUpRightFromSquare></FaArrowUpRightFromSquare>
                             </p>
                           </div>

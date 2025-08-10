@@ -229,8 +229,12 @@ const ManageCertificates = () => {
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center h-screen">
-          <Loading />
+        <div className="text-center py-20 my-20">
+          <div className="text-center py-10">
+            <div className="flex items-center justify-center ">
+              <Loading />
+            </div>
+          </div>
         </div>
       ) : filteredCertificates.length === 0 ? (
         <div className="text-center py-20 ">

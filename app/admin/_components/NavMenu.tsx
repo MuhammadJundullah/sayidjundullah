@@ -156,6 +156,13 @@ export default function NavMenu() {
             <li className="font-bold text-lg mb-2">Manage</li>
             <li>
               <Link
+                href="/admin/techstacks"
+                className="font-medium hover:text-primary transition-colors">
+                Your TechStacks
+              </Link>
+            </li>
+            <li>
+              <Link
                 href="/admin/projects"
                 className="font-medium hover:text-primary transition-colors">
                 Your Projects

@@ -4,14 +4,13 @@ import { fetchDataFromAPI } from "@/lib/actions";
 import Image from "next/image";
 import { FaArrowLeft } from "react-icons/fa6";
 import { ProjectsType } from "@/lib/type";
-import { notFound} from "next/navigation";
+import { notFound } from "next/navigation";
 
 export default async function Page({
   params,
 }: {
   params: Promise<{ id: string }>;
-  }) {
-  
+}) {
   const { id } = await params;
 
   const res = await fetchDataFromAPI(id);
@@ -25,11 +24,11 @@ export default async function Page({
       data.message === "Project not found") ||
     (Array.isArray(data) && data.length === 0)
   ) {
-    notFound()
+    notFound();
   }
 
   if (!Array.isArray(data)) {
-    notFound()
+    notFound();
   }
 
   const item = data[0];

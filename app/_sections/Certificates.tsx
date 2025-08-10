@@ -35,10 +35,10 @@ export default function CertificatesComponent({ data }: CertificatesProps) {
 
   return (
     <section id="certificates">
-      <div className="sm:py-40 flex flex-col max-w-6xl sm:mx-auto mx-5 mb-20 font-thin text-center text-[#0f172a]">
+      <div className="sm:py-40 flex flex-col max-w-6xl sm:mx-auto mx-5 mb-20 font-thin text-center">
         <span className="text-2xl flex items-center">
           <span className="shrink-0 pe-4 ">
-            <h1 className="sm:text-5xl font-mono font-semibold text-gray-800">
+            <h1 className="sm:text-5xl font-mono font-semibold text-gray-800 dark:text-white">
               My Certifications
             </h1>
           </span>
@@ -81,10 +81,10 @@ export default function CertificatesComponent({ data }: CertificatesProps) {
                           style={{ objectFit: "cover" }}
                         />
                         <div className="mx-auto mt-4 items-center justify-center text-center mb-7">
-                          <h3 className="font-semibold text-gray-800">
+                          <h3 className="font-semibold text-gray-800 dark:text-white">
                             {certificate.desc}
                           </h3>
-                          <time className="text-gray-500 font-medium">
+                          <time className="text-gray-500 font-medium dark:text-white">
                             {certificate.date}
                           </time>
                         </div>

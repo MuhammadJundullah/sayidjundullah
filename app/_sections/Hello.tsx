@@ -29,10 +29,10 @@ const Hello = () => {
             alt="Sayid Muhammad Jundullah"
             width={200}
             height={200}
-            className="rounded-lg sm:rounded-full mx-auto sm:w-70 sm:h-70 object-cover shadow-lg transition-all duration-300 hover:scale-105"
+            className="rounded-lg sm:rounded-full mx-auto sm:w-70 sm:h-70 object-cover shadow-lg transition-all duration-300 hover:scale-105 bg-white dark:border"
           />
 
-          <h1 className="sm:shadow-none shadow-2xl sm:flex bg-gray-700 sm:bg-white font-light text-white sm:text-black subpixel-antialiased sm:mx-auto py-5 sm:py-0 sm:px-0 px-5 rounded-xl transition-all duration-300 hover:scale-105">
+          <h1 className="sm:shadow-none shadow-2xl sm:flex bg-gray-700 sm:bg-white dark:bg-gray-700  font-light dark:text-white sm:text-black subpixel-antialiased sm:mx-auto py-5 sm:py-0 sm:px-0 px-5 rounded-xl transition-all duration-300 hover:scale-105">
             <BlurText
               text="Hello 👋, i am Sayid Muhammad Jundullah, Web Application Developer."
               delay={150}
@@ -46,8 +46,8 @@ const Hello = () => {
             initial="hidden"
             animate="visible"
             transition={{ delay: 4, duration: 1, ease: "easeOut" }}
-            className="max-w-2xl text-start text-base font-light text-gray-600 sm:text-lg lg:text-xl">
-            Scroll down to discover more about my work and experience!
+            className="max-w-2xl text-start text-base font-light text-gray-600 dark:text-white sm:text-lg lg:text-xl">
+            Scroll down to discover more about me!
           </motion.p>
         </div>
       </div>

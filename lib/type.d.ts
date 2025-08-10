@@ -35,6 +35,7 @@ export type ProjectsType = {
   photo: string | null;
   tech: string;
   site: string;
+  data: string[];
   desc: string;
 };
 

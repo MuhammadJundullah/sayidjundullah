@@ -62,9 +62,10 @@ const ManageProjects = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/projects`);
+        const response = await fetch("/api/projects");
         if (!response.ok) throw new Error("Gagal memuat data proyek");
         const data = await response.json();
+        console.log(data);
         setProjects(data.data);
         setFilteredProjects(data.data);
       } catch (err) {
@@ -233,16 +234,22 @@ const ManageProjects = () => {
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center h-screen">
-          <Loading />
+        <div className="text-center py-20 my-20">
+          <div className="text-center py-10">
+            <div className="flex items-center justify-center ">
+              <Loading />
+            </div>
+          </div>
         </div>
       ) : filteredProjects.length === 0 ? (
-        <div className="text-center py-20 ">
-          <p className="text-gray-500">
-            {searchKeyword
-              ? "Tidak ada proyek yang cocok."
-              : "Tidak ada proyek ditemukan"}
-          </p>
+        <div className="text-center py-20 my-20">
+          <div className="text-center py-10">
+            <p className="text-gray-500">
+              {searchKeyword
+                ? "Tidak ada proyek yang cocok."
+                : "Anda belum membuat proyek apapun."}
+            </p>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">

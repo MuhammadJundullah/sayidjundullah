@@ -4,14 +4,13 @@ import { fetchDataFromAPI } from "@/lib/actions";
 import Image from "next/image";
 import { FaArrowLeft } from "react-icons/fa6";
 import { ProjectsType } from "@/lib/type";
-import { notFound} from "next/navigation";
+import { notFound } from "next/navigation";
 
 export default async function Page({
   params,
 }: {
   params: Promise<{ id: string }>;
-  }) {
-  
+}) {
   const { id } = await params;
 
   const res = await fetchDataFromAPI(id);
@@ -25,11 +24,11 @@ export default async function Page({
       data.message === "Project not found") ||
     (Array.isArray(data) && data.length === 0)
   ) {
-    notFound()
+    notFound();
   }
 
   if (!Array.isArray(data)) {
-    notFound()
+    notFound();
   }
 
   const item = data[0];
@@ -40,14 +39,14 @@ export default async function Page({
         <div className="flex justify-between items-center py-4">
           <Link
             href="/#projects"
-            className="flex hover:text-black text-gray-400">
+            className="flex hover:text-black dark:hover:text-gray-300 text-gray-400 dark:text-white">
             <FaArrowLeft className="mt-1" />
             <span className="ml-2">Back to Projects</span>
           </Link>
         </div>
         {/* Render hanya satu item karena ini halaman detail */}
         <div key={item.id} className="mb-8">
-          <h2 className="sm:text-5xl text-3xl font-semibold my-4">
+          <h2 className="sm:text-5xl text-3xl font-semibold my-4 dark:text-white">
             {item.judul}
           </h2>
           <div className="my-10 flex justify-center items-center">
@@ -59,7 +58,7 @@ export default async function Page({
               className="rounded-lg border-2 border-gray-300 shadow-lg"
             />
           </div>
-          <div className="sm:flex flex-col sm:flex-row mt-4 sm:gap-5">
+          <div className="sm:flex flex-col sm:flex-row mt-4 sm:gap-5 dark:text-white">
             <p
               className="my-4"
               dangerouslySetInnerHTML={{ __html: item.desc }}
@@ -74,12 +73,12 @@ export default async function Page({
                     href={item.site}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-500 underline">
+                    className="text-blue-500 underline dark:text-white">
                     {item.site}
                   </a>
                 )}
               </p>
-              <p className="py-2">
+              <p className="py-2 ">
                 <strong>Tech Stack:</strong> {item.tech}
               </p>
               <p className="py-2">
@@ -91,7 +90,7 @@ export default async function Page({
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-500 underline">
+                    className="text-blue-500 underline dark:text-white">
                     Github Repository
                   </a>
                 )}

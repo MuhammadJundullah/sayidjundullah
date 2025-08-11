@@ -66,3 +66,9 @@ export type TechStackType = {
   image: string;
   description: string;
 };
+
+export type aboutType = {
+  id: string;
+  about: string;
+  what_i_do: string;
+};

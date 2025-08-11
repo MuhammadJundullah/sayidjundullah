@@ -93,7 +93,7 @@ export default function NavMenu() {
               <ul className="grid w-[200px] gap-4">
                 <li>
                   <NavigationMenuLink asChild>
-                    <Link href="#">About</Link>
+                    <Link href="/admin/about">About</Link>
                   </NavigationMenuLink>
                   <NavigationMenuLink asChild>
                     <Link href="#">Blog</Link>
@@ -199,7 +199,7 @@ export default function NavMenu() {
             <li className="font-bold text-lg mt-6 mb-2">Features</li>
             <li>
               <Link
-                href="#"
+                href="/admin/about"
                 className="font-medium hover:text-primary transition-colors">
                 About
               </Link>

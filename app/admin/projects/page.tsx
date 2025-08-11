@@ -189,8 +189,8 @@ const ManageProjects = () => {
   return (
     <div className="mx-auto sm:px-4 max-w-6xl">
       <div className="sm:my-10">
-        <h1 className="text-3xl font-bold">Manage Projects</h1>
-        <p className="text-gray-500 font-medium">
+        <h1 className="text-3xl font-bold dark:text-white">Manage Projects</h1>
+        <p className="text-gray-500 font-medium dark:text-white">
           Kelola proyek kamu dengan rapi dan profesional dengan mengarsipkan
           proyek yang tidak relevan.
         </p>
@@ -198,12 +198,12 @@ const ManageProjects = () => {
 
       <div className="sm:flex gap-3 items-center mb-10">
         <div className="flex items-center gap-2 my-10 sm:my-0">
-          <Search className="text-gray-400" />
+          <Search className="text-gray-400 dark:text-white" />
           <Input
             type="text"
             ref={searchInputRef}
             placeholder="⌘ + K / Ctrl + K to Search"
-            className="min-w-3xs border-gray-200 placeholder:text-gray-400"
+            className="min-w-3xs border-gray-200 placeholder:text-gray-400 dark:placeholder:text-white dark:text-white"
             aria-label="search"
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
@@ -212,11 +212,12 @@ const ManageProjects = () => {
 
         <div className="border-b border-gray-300 lg:w-7xl sm:block md:block lg:block hidden" />
 
-        <div className="flex items-center gap-4 p-2 bg-white rounded-lg shadow-sm justify-around">
+        <div className="flex items-center gap-4 p-2 bg-white dark:bg-gray-500 rounded-lg shadow-sm justify-around">
           {/* New Project Button */}
+
           <Link
             href="/admin/projects/add"
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors rounded-md hover:bg-gray-100 hover:text-gray-900 hover:cursor-pointer">
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-white transition-colors rounded-md hover:bg-gray-100 dark:hover:bg-gray-400 hover:text-gray-900 hover:cursor-pointer">
             <FilePlus />
             <span className="w-19">New Project</span>
           </Link>
@@ -224,7 +225,7 @@ const ManageProjects = () => {
           <button
             onClick={handleRevalidate}
             disabled={isRefreshing}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors rounded-md hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed hover:cursor-pointer">
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-white transition-colors rounded-md hover:bg-gray-100 dark:hover:bg-gray-400 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed hover:cursor-pointer">
             <VscRefresh
               className={`w-5 h-5 ${isRevalidating ? "animate-spin" : ""}`}
             />
@@ -244,7 +245,7 @@ const ManageProjects = () => {
       ) : filteredProjects.length === 0 ? (
         <div className="text-center py-20 my-20">
           <div className="text-center py-10">
-            <p className="text-gray-500">
+            <p className="text-gray-500 dark:text-white">
               {searchKeyword
                 ? "Tidak ada proyek yang cocok."
                 : "Anda belum membuat proyek apapun."}
@@ -254,10 +255,12 @@ const ManageProjects = () => {
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
           {filteredProjects.map((project) => (
-            <Card key={project.id} className="h-full flex flex-col">
+            <Card
+              key={project.id}
+              className="h-full flex flex-col dark:bg-gray-600 dark:text-white">
               <CardHeader>
-                <CardTitle className="">{project.judul}</CardTitle>
-                <CardDescription className="">
+                <CardTitle>{project.judul}</CardTitle>
+                <CardDescription className="dark:text-white">
                   {project.category}
                 </CardDescription>
               </CardHeader>
@@ -265,7 +268,9 @@ const ManageProjects = () => {
               <CardContent className="flex-grow">
                 <div className="space-y-4">
                   <div className="flex items-center justify-start gap-3 pb-5">
-                    <span className="text-sm text-gray-500">Status:</span>
+                    <span className="text-sm text-gray-500 dark:text-white">
+                      Status:
+                    </span>
                     <StatusDropdown
                       currentStatus={project.status}
                       onStatusChange={(newStatus) =>
@@ -275,7 +280,9 @@ const ManageProjects = () => {
                   </div>
 
                   <div className="text-sm">
-                    <p className="text-gray-500">Terakhir diperbarui:</p>
+                    <p className="text-gray-500 dark:text-white">
+                      Terakhir diperbarui:
+                    </p>
                     <p>
                       {new Date(project.updatedAt).toLocaleDateString("id-ID", {
                         day: "numeric",

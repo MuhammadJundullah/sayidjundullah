@@ -95,12 +95,13 @@ export default function InputForm() {
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel className="dark:text-white">Username</FormLabel>
               <FormControl>
                 <Input
                   placeholder="type ur username"
                   {...field}
                   autoComplete="false"
+                  className="dark:text-white"
                 />
               </FormControl>
               <FormMessage />
@@ -113,13 +114,14 @@ export default function InputForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="dark:text-white">Password</FormLabel>
               <FormControl>
                 <Input
                   type="password"
                   placeholder="ur passsword"
                   {...field}
                   autoComplete="false"
+                  className="dark:text-white"
                 />
               </FormControl>
               <FormMessage />

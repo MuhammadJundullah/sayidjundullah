@@ -89,7 +89,7 @@ export default function Projects({ data, techstack }: Props) {
                         threshold={0.1}
                         delay={animationDelay}>
                         <div className="h-full font-medium">
-                          <div className="w-80 h-92 border border-gray-300 shadow-xs rounded-md p-2 align">
+                          <div className="w-80 h-92 border border-gray-300 shadow-xs rounded-md p-2 align dark:bg-gray-500">
                             <Image
                               src={project.photo || ""}
                               alt={project.photo || ""}

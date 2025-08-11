@@ -23,13 +23,18 @@ export default function NavMenu() {
             <NavigationMenuLink
               asChild
               className={navigationMenuTriggerStyle()}>
-              <Link href="/" target="_blank">
+              <Link
+                href="/"
+                target="_blank"
+                className="dark:bg-gray-700 dark:text-white">
                 Show Porto
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuTrigger>Manage</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="dark:bg-gray-700 dark:text-white">
+              Manage
+            </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[300px] gap-4">
                 <li>
@@ -81,7 +86,9 @@ export default function NavMenu() {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuTrigger>Features</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="dark:bg-gray-700 dark:text-white">
+              Features
+            </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[200px] gap-4">
                 <li>
@@ -108,7 +115,7 @@ export default function NavMenu() {
                   await signOut({ redirect: false });
                   window.location.href = "/login";
                 }}
-                className="text-white bg-black hover:bg-gray-800 hover:text-white hover:cursor-pointer">
+                className="text-white bg-black dark:text-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-300 hover:text-white dark:hover:text-black hover:cursor-pointer">
                 Logout
               </Button>
             </NavigationMenuLink>

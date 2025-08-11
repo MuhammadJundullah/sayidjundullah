@@ -84,3 +84,11 @@ model TechStack {
   createdAt     DateTime? @default(now()) @map("created_at")
   updatedAt     DateTime? @default(now()) @map("updated_at")
 }
+
+model About {
+   id        Int       @id @default(autoincrement())
+   about     String
+   what_i_do String
+  createdAt     DateTime? @default(now()) @map("created_at")
+  cpdatedAt     DateTime? @default(now()) @map("updated_at")
+}

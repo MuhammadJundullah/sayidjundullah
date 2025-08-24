@@ -154,12 +154,12 @@ export default function EditProject({
     <div className="md:w-6xl flex flex-col justify-center text-black">
       <Link
         href="/admin/projects"
-        className="flex items-center gap-3 hover:text-black text-gray-400 my-10 transition-all duration-300">
+        className="flex items-center gap-3 hover:text-black dark:hover:text-white text-gray-400 my-10 transition-all duration-300">
         <FaArrowLeft />
         <span>Kembali</span>
       </Link>
       <form className="py-3">
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8 dark:text-white">
           <div className="grid w-full gap-1.5">
             <Label htmlFor="tech">Nama Projek</Label>
             <Input
@@ -168,6 +168,7 @@ export default function EditProject({
               value={project.judul}
               name="judul"
               onChange={handleChange}
+              className="dark:placeholder:text-white dark:text-white"
             />
           </div>
 
@@ -177,7 +178,7 @@ export default function EditProject({
               <select
                 id="category"
                 name="category"
-                className="select bg-gray-100 rounded-2xl px-3 py-2"
+                className="select bg-gray-100 dark:bg-gray-500 rounded-2xl px-3 py-2"
                 value={project.category}
                 onChange={handleChange}>
                 <option value="" disabled>
@@ -200,6 +201,7 @@ export default function EditProject({
               name="url"
               value={project.url}
               onChange={handleChange}
+              className="dark:placeholder:text-white dark:text-white"
             />
           </div>
 
@@ -232,6 +234,7 @@ export default function EditProject({
               name="photo"
               onChange={handleFileChange}
               accept="image/*"
+              className="dark:placeholder:text-white dark:text-white"
               required
             />
           </div>
@@ -244,6 +247,7 @@ export default function EditProject({
               name="tech"
               value={project.tech}
               onChange={handleChange}
+              className="dark:placeholder:text-white dark:text-white"
             />
           </div>
 
@@ -255,6 +259,7 @@ export default function EditProject({
               name="site"
               value={project.site}
               onChange={handleChange}
+              className="dark:placeholder:text-white dark:text-white"
             />
           </div>
 
@@ -264,7 +269,7 @@ export default function EditProject({
               <select
                 id="status"
                 name="status"
-                className="select bg-gray-100 rounded-2xl px-3 py-2"
+                className="select bg-gray-100 dark:bg-gray-500 rounded-2xl px-3 py-2"
                 value={project.status}
                 onChange={handleChange}>
                 <option value="" disabled>

@@ -8,41 +8,41 @@ const prisma = globalForPrisma.prisma || new PrismaClient();
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 export async function POST(req: NextRequest) {
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-    if (!token) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    
-    try {   
-        const data = await req.formData();
-        console.log(data);
-        const about = data.get("about")?.toString() || "";
-        const whatIDo = data.get("whatIDo")?.toString() || "";
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-        await prisma.about.create({
-            data: {
-                about: about,
-                what_i_do: whatIDo
-            }
-        })
+  try {
+    const data = await req.formData();
+    console.log(data);
+    const about = data.get("about")?.toString() || "";
+    const whatIDo = data.get("whatIDo")?.toString() || "";
+    const role = data.get("role")?.toString() || "";
 
-        return NextResponse.json(
-        {
-            message: "About created successfully.",
-            success: true,
-        },
-        { status: 201 }
-        );
+    await prisma.about.create({
+      data: {
+        about: about,
+        what_i_do: whatIDo,
+        role: role,
+      },
+    });
 
-    } catch (err) {
-        console.log("Error create about: ", err)
-         return NextResponse.json(
-           { error: `Error creating project: ${err}` },
-           { status: 500 }
-         );
-    }
-    
+    return NextResponse.json(
+      {
+        message: "About created successfully.",
+        success: true,
+      },
+      { status: 201 }
+    );
+  } catch (err) {
+    console.log("Error create about: ", err);
+    return NextResponse.json(
+      { error: `Error creating project: ${err}` },
+      { status: 500 }
+    );
+  }
 }
 
 export async function PUT(req: NextRequest) {
@@ -81,6 +81,7 @@ export async function PUT(req: NextRequest) {
       data: {
         about: data.about,
         what_i_do: data.what_i_do,
+        role: data.role,
       },
     });
 
@@ -88,7 +89,7 @@ export async function PUT(req: NextRequest) {
       {
         message: "About updated successfully.",
         success: true,
-        data: about
+        data: about,
       },
       { status: 200 }
     );

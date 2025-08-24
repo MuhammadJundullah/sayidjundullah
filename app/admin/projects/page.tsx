@@ -190,7 +190,7 @@ const ManageProjects = () => {
     <div className="mx-auto sm:px-4 max-w-6xl">
       <div className="sm:my-10">
         <h1 className="text-3xl font-bold dark:text-white">Manage Projects</h1>
-        <p className="text-gray-500 font-medium dark:text-white">
+        <p className="text-gray-500 font-medium dark:text-gray-300">
           Kelola proyek kamu dengan rapi dan profesional dengan mengarsipkan
           proyek yang tidak relevan.
         </p>

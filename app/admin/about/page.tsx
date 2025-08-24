@@ -9,11 +9,13 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { VscRefresh } from "react-icons/vsc";
 import { SquarePen, Save, X } from "lucide-react";
+import { Input } from "@/components/ui/input"; // Import komponen Input
 
 interface About {
   id: string;
   about: string;
   what_i_do: string;
+  role: string; // Tambahkan properti role
   createdAt: string;
   updatedAt: string;
 }
@@ -28,6 +30,7 @@ const ManageAbout = () => {
   const [editedAbout, setEditedAbout] = useState({
     about: "",
     what_i_do: "",
+    role: "", // Tambahkan properti role di state
   });
 
   const fetchAboutData = async () => {
@@ -41,6 +44,7 @@ const ManageAbout = () => {
         setEditedAbout({
           about: data.data[0].about,
           what_i_do: data.data[0].what_i_do,
+          role: data.data[0].role,
         });
       } else {
         setAboutData(null);
@@ -116,8 +120,8 @@ const ManageAbout = () => {
   return (
     <div className="mx-auto sm:px-4 max-w-6xl">
       <div className="sm:my-10">
-        <h1 className="text-3xl font-bold">Manage About</h1>
-        <p className="text-gray-500 font-medium">
+        <h1 className="text-3xl dark:text-white font-bold">Manage About</h1>
+        <p className="text-gray-500 dark:text-white font-medium">
           Kelola data diri kamu dengan rapi dan profesional.
         </p>
       </div>
@@ -158,6 +162,12 @@ const ManageAbout = () => {
               {!isEditing ? (
                 <>
                   <div className="mb-4">
+                    <h3 className="font-semibold">Role:</h3>
+                    <p className="text-gray-700 mt-1 whitespace-pre-wrap">
+                      {aboutData.role}
+                    </p>
+                  </div>
+                  <div className="mb-4">
                     <h3 className="font-semibold">Tentang Saya:</h3>
                     <p className="text-gray-700 mt-1 whitespace-pre-wrap">
                       {aboutData.about}
@@ -177,6 +187,22 @@ const ManageAbout = () => {
                 </>
               ) : (
                 <>
+                  <div className="mb-4">
+                    <label htmlFor="role" className="font-semibold">
+                      Role:
+                    </label>
+                    <Input
+                      id="role"
+                      value={editedAbout.role}
+                      onChange={(e) =>
+                        setEditedAbout({
+                          ...editedAbout,
+                          role: e.target.value,
+                        })
+                      }
+                      className="mt-1"
+                    />
+                  </div>
                   <div className="mb-4">
                     <label htmlFor="about-me" className="font-semibold">
                       Tentang Saya:

@@ -86,9 +86,10 @@ model TechStack {
 }
 
 model About {
-   id        Int       @id @default(autoincrement())
-   about     String
-   what_i_do String
+   id           Int       @id @default(autoincrement())
+   about        String
+   what_i_do    String
+   role         String?
   createdAt     DateTime? @default(now()) @map("created_at")
   cpdatedAt     DateTime? @default(now()) @map("updated_at")
 }

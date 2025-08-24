@@ -5,7 +5,11 @@ import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import HeaderScroll from "@/app/_components/HeaderScrool/HeaderScrool";
 
-const Hello = () => {
+interface dataType {
+  data: string;
+}
+
+const Hello = (data: dataType) => {
   const BlurText = dynamic(
     () => import("@/app/_components/BlurText/BlurText"),
     {
@@ -34,7 +38,7 @@ const Hello = () => {
 
           <h1 className="sm:shadow-none shadow-2xl sm:flex bg-gray-700 sm:bg-white dark:bg-gray-700  font-light dark:text-white sm:text-black subpixel-antialiased sm:mx-auto py-5 sm:py-0 sm:px-0 px-5 rounded-xl transition-all duration-300 hover:scale-105">
             <BlurText
-              text="Hello 👋, i am Sayid Muhammad Jundullah, Web Application Developer."
+              text={`Hello 👋, i am Sayid Muhammad Jundullah, ${data.data}`}
               delay={150}
               className="sm:text-4xl text-center text-2xl font-bold"
               animateBy="words"

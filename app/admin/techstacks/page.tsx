@@ -143,8 +143,10 @@ const ManageTechstacks = () => {
   return (
     <div className="mx-auto sm:px-4 max-w-6xl">
       <div className="sm:my-10">
-        <h1 className="text-3xl font-bold">Manage Techstacks</h1>
-        <p className="text-gray-500 font-medium">
+        <h1 className="text-3xl dark:text-white font-bold">
+          Manage Techstacks
+        </h1>
+        <p className="text-gray-500 dark:text-gray-300 font-medium">
           Kelola techstack kamu dengan rapi dan profesional.
         </p>
       </div>
@@ -156,7 +158,7 @@ const ManageTechstacks = () => {
             type="text"
             ref={searchInputRef}
             placeholder="⌘ + K / Ctrl + K to Search"
-            className="min-w-3xs border-gray-200 placeholder:text-gray-400"
+            className="min-w-3xs border-gray-200 placeholder:text-gray-400 dark:placeholder:text-white"
             aria-label="search"
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}

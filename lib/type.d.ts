@@ -32,11 +32,13 @@ export type ProjectsType = {
   category: string;
   categoryslug: string;
   url: string;
-  photo: string | null;
+  photo: string;
   tech: string;
   site: string;
-  data: string[];
   desc: string;
+  createdAt: string;
+  updatedAt: string;
+  status: "published" | "archived";
 };
 
 export type ApiResponse = ProjectsType[] | { message: string } | null;
@@ -45,12 +47,12 @@ export type CertificatesType = {
   id: string;
   name: string;
   desc: string;
-  photo: string;
-  status: "published" | "archived";
   date: string;
   site: string;
-  created_at: string;
-  updated_at: string;
+  photo: string;
+  createdAt: string;
+  updatedAt: string;
+  status: "published" | "archived";
 };
 
 export type EducationsType = {

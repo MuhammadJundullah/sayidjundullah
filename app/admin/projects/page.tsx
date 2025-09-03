@@ -5,9 +5,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Loading from "@/app/_components/Loading";
 import StatusDropdown from "../_components/StatusDropdown";
-import { SquarePen, Delete, Search, FilePlus } from "lucide-react";
-import { VscRefresh } from "react-icons/vsc";
-import { Input } from "@/components/ui/input";
+import { SquarePen, Delete } from "lucide-react";
+import Header from "@/app/admin/_components/Header";
 import {
   Card,
   CardContent,
@@ -18,27 +17,12 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Toast } from "@/app/login/_components/Toast";
-
-interface Project {
-  id: string;
-  judul: string;
-  slug: string;
-  category: string;
-  categoryslug: string;
-  url: string;
-  photo: string;
-  tech: string;
-  site: string;
-  desc: string;
-  createdAt: string;
-  updatedAt: string;
-  status: "published" | "archived";
-}
+import { ProjectsType } from "@/lib/type";
 
 const ManageProjects = () => {
   const { toast, showToast } = useToast();
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<ProjectsType[]>([]);
+  const [filteredProjects, setFilteredProjects] = useState<ProjectsType[]>([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -188,51 +172,15 @@ const ManageProjects = () => {
 
   return (
     <div className="mx-auto sm:px-4 max-w-6xl">
-      <div className="sm:my-10">
-        <h1 className="text-3xl font-bold dark:text-white">Manage Projects</h1>
-        <p className="text-gray-500 font-medium dark:text-gray-300">
-          Kelola proyek kamu dengan rapi dan profesional dengan mengarsipkan
-          proyek yang tidak relevan.
-        </p>
-      </div>
-
-      <div className="sm:flex gap-3 items-center mb-10">
-        <div className="flex items-center gap-2 my-10 sm:my-0">
-          <Search className="text-gray-400 dark:text-white" />
-          <Input
-            type="text"
-            ref={searchInputRef}
-            placeholder="⌘ + K / Ctrl + K to Search"
-            className="min-w-3xs border-gray-200 placeholder:text-gray-400 dark:placeholder:text-white dark:text-white"
-            aria-label="search"
-            value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
-          />
-        </div>
-
-        <div className="border-b border-gray-300 lg:w-7xl sm:block md:block lg:block hidden" />
-
-        <div className="flex items-center gap-4 p-2 bg-white dark:bg-gray-500 rounded-lg shadow-sm justify-around">
-          {/* New Project Button */}
-
-          <Link
-            href="/admin/projects/add"
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-white transition-colors rounded-md hover:bg-gray-100 dark:hover:bg-gray-400 hover:text-gray-900 hover:cursor-pointer">
-            <FilePlus />
-            <span className="w-19">New Project</span>
-          </Link>
-
-          <button
-            onClick={handleRevalidate}
-            disabled={isRefreshing}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-white transition-colors rounded-md hover:bg-gray-100 dark:hover:bg-gray-400 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed hover:cursor-pointer">
-            <VscRefresh
-              className={`w-5 h-5 ${isRevalidating ? "animate-spin" : ""}`}
-            />
-            <span>{isRevalidating ? "Revalidating..." : "Revalidate"}</span>
-          </button>
-        </div>
-      </div>
+      <Header
+        dynamicText="Projects"
+        searchKeyword={searchKeyword}
+        setSearchKeyword={setSearchKeyword}
+        isRevalidating={isRevalidating}
+        isRefreshing={isRefreshing}
+        handleRevalidate={handleRevalidate}
+        newLink="/admin/projects/add"
+      />
 
       {isLoading ? (
         <div className="text-center py-20 my-20">

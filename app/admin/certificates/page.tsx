@@ -1,15 +1,12 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Loading from "@/app/_components/Loading";
 import StatusDropdown from "../_components/StatusDropdown";
-import { SquarePen, Delete, Search, FilePlus } from "lucide-react";
+import { SquarePen, Delete } from "lucide-react";
 import Image from "next/image";
-import { VscRefresh } from "react-icons/vsc";
-
-import { Input } from "@/components/ui/input";
+import Header from "@/app/admin/_components/Header";
 import {
   Card,
   CardContent,
@@ -19,24 +16,13 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Toast } from "@/app/login/_components/Toast";
-
-interface Certificate {
-  id: string;
-  name: string;
-  desc: string;
-  date: string;
-  site: string;
-  photo: string;
-  createdAt: string;
-  updatedAt: string;
-  status: "published" | "archived";
-}
+import { CertificatesType } from "@/lib/type";
 
 const ManageCertificates = () => {
   const { toast, showToast } = useToast();
-  const [Certificates, setCertificates] = useState<Certificate[]>([]);
+  const [Certificates, setCertificates] = useState<CertificatesType[]>([]);
   const [filteredCertificates, setFilteredCertificates] = useState<
-    Certificate[]
+    CertificatesType[]
   >([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -184,49 +170,15 @@ const ManageCertificates = () => {
 
   return (
     <div className="mx-auto sm:px-4 max-w-6xl">
-      <div className="sm:my-10">
-        <h1 className="text-3xl font-bold">Manage Certificates</h1>
-        <p className="text-gray-500 font-medium">
-          Kelola sertifikat kamu dengan rapi dan profesional.
-        </p>
-      </div>
-
-      <div className="sm:flex gap-3 items-center mb-10">
-        <div className="flex items-center gap-2 my-10 sm:my-0">
-          <Search className="text-gray-400" />
-          <Input
-            type="text"
-            ref={searchInputRef}
-            placeholder="⌘ + K / Ctrl + K to Search"
-            className="min-w-3xs border-gray-200 placeholder:text-gray-400"
-            aria-label="search"
-            value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
-          />
-        </div>
-
-        <div className="border-b border-gray-300 lg:w-7xl sm:block md:block lg:block hidden" />
-
-        <div className="flex items-center gap-4 p-2 bg-white rounded-lg shadow-sm justify-around">
-          {/* New Certificate Button */}
-          <Link
-            href="/admin/certificates/add"
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors rounded-md hover:bg-gray-100 hover:text-gray-900 hover:cursor-pointer">
-            <FilePlus />
-            <span className="w-19">New Certificate</span>
-          </Link>
-
-          <button
-            onClick={handleRevalidate}
-            disabled={isRefreshing}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors rounded-md hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed hover:cursor-pointer">
-            <VscRefresh
-              className={`w-5 h-5 ${isRevalidating ? "animate-spin" : ""}`}
-            />
-            <span>{isRevalidating ? "Revalidating..." : "Revalidate"}</span>
-          </button>
-        </div>
-      </div>
+      <Header
+        dynamicText="Certificates"
+        searchKeyword={searchKeyword}
+        setSearchKeyword={setSearchKeyword}
+        isRevalidating={isRevalidating}
+        isRefreshing={isRefreshing}
+        handleRevalidate={handleRevalidate}
+        newLink="/admin/certifications/add"
+      />
 
       {isLoading ? (
         <div className="text-center py-20 my-20">
@@ -252,9 +204,6 @@ const ManageCertificates = () => {
                 <CardTitle className="text-center">
                   {certificate.desc}
                 </CardTitle>
-                {/* <CardDescription className="">
-                  {certificate.name}
-                </CardDescription> */}
               </CardHeader>
 
               <Image

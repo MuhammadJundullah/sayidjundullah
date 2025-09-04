@@ -41,7 +41,11 @@ export default function TechStack({ data }: techStackProps) {
                       className="flex justify-between items-center w-full py-4 text-left transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-lg px-4">
                       <div className="flex items-center space-x-4">
                         <Image
-                          src={data.image}
+                          src={
+                            typeof data.image === "string"
+                              ? data.image
+                              : "/placeholder.jpg"
+                          }
                           alt={data.name}
                           width={40}
                           height={40}

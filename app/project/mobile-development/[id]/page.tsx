@@ -52,7 +52,9 @@ export default async function Page({
           </h2>
           <div className="my-10 flex justify-center items-center">
             <Image
-              src={item.photo || ""}
+              src={
+                typeof item.photo === "string" ? item.photo : "/placeholder.jpg"
+              }
               alt={item.judul || ""}
               width={800}
               height={600}

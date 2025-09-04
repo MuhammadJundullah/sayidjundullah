@@ -32,7 +32,7 @@ export type ProjectsType = {
   category: string;
   categoryslug: string;
   url: string;
-  photo?: File | string;
+  photo?: File | string | null;
   tech: string;
   site: string;
   desc: string;

@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { FaArrowLeft } from "react-icons/fa";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Toast } from "@/app/login/_components/Toast";
 import Loading from "@/app/_components/Loading";
+import TextInput from "../../_components/TextInput";
+import PhotoUpload from "../../_components/PhotoUpload";
+import TextAreaInput from "../../_components/TextAreaInput";
+import SelectInput from "../../_components/SelectInput";
+import BackButton from "../../_components/BackButton";
+import SubmitButton from "../../_components/SubmitButton";
 
 export default function AddProject() {
   const { toast, showToast } = useToast();
@@ -61,7 +61,7 @@ export default function AddProject() {
     setProject((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!window.confirm("Apakah Anda yakin ingin menambahkan project?")) {
@@ -116,14 +116,24 @@ export default function AddProject() {
     }
   };
 
+  const statusOptions = [
+    { value: "published", label: "Published" },
+    { value: "archived", label: "Archived" },
+  ];
+
+  const categoryOptions = [
+    { value: "Data Analytics", label: "Data Analytics" },
+    { value: "Data Science", label: "Data Science" },
+    { value: "Data Engineering", label: "Data Engineering" },
+    { value: "Web Development", label: "Web Development" },
+    { value: "Mobile Development<", label: "Mobile Development" },
+  ];
+
   return (
     <div className="sm:mx-auto sm:w-6xl flex flex-col justify-center text-black">
-      <Link
-        href="/admin/projects"
-        className="flex items-center gap-3 hover:text-black text-gray-400 my-5">
-        <FaArrowLeft />
-        <span>Kembali</span>
-      </Link>
+      <div>
+        <BackButton href="/admin/projects" />
+      </div>
 
       {isLoading ? (
         <div className="flex items-center justify-center h-screen w-full">
@@ -132,124 +142,94 @@ export default function AddProject() {
       ) : (
         <form className="py-3" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-8">
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="judul">Nama Projek</Label>
-              <Input
-                type="text"
-                name="judul"
-                value={project.judul}
-                onChange={handleChange}
-                placeholder="Nama Projek"
-                required
-              />
-            </div>
+            <TextInput
+              id="judul"
+              label="Nama Proyek"
+              type="text"
+              name="judul"
+              value={project.judul}
+              onChange={handleChange}
+              placeholder="Nama Proyek"
+              required
+            />
 
-            <div className="grid w-xs gap-1.5">
-              <Label htmlFor="status">Kategori</Label>
-              <select
-                name="category"
-                value={project.category}
-                onChange={handleChange}
-                className="select bg-gray-100 rounded-2xl px-3 py-2"
-                required>
-                <option value="" disabled>
-                  Pilih kategori
-                </option>
-                <option value="Data Analytics">Data Analytics</option>
-                <option value="Data Science">Data Science</option>
-                <option value="Data Engineering">Data Engineering</option>
-                <option value="Web Development">Web Development</option>
-                <option value="Mobile Development">Mobile Development</option>
-              </select>
-            </div>
+            <SelectInput
+              id="category"
+              label="Kategori"
+              name="category"
+              value={project.category}
+              onChange={handleChange}
+              options={categoryOptions}
+              placeholder="Pilih kategori proyek"
+              required
+            />
 
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="url">URL Repository Github</Label>
-              <Input
-                type="text"
-                name="url"
-                value={project.url}
-                onChange={handleChange}
-                placeholder="URL Repository Github"
-                required
-              />
-            </div>
+            <TextInput
+              id="url"
+              label="URL Repository Github"
+              type="text"
+              name="url"
+              value={project.url}
+              onChange={handleChange}
+              placeholder="URL Repository Github"
+              required
+            />
 
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="photo">Ubah Foto</Label>
-              <Input
-                type="file"
-                id="photo"
-                name="photo"
-                onChange={handleFileChange}
-                accept="image/*"
-                required
-              />
-            </div>
+            <PhotoUpload
+              id="image"
+              label="Lampirkan Foto"
+              name="image"
+              onChange={handleFileChange}
+              accept="image/png, image/jpeg"
+              hint="*Hanya format .png atau .jpeg"
+              required
+            />
 
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="tech">Teknologi terkait (framework dsb.)</Label>
-              <Input
-                type="text"
-                name="tech"
-                value={project.tech}
-                onChange={handleChange}
-                placeholder="Teknologi terkait"
-                required
-              />
-            </div>
+            <TextInput
+              id="tech"
+              label="Teknologi terkait (framework dsb.)"
+              type="text"
+              name="tech"
+              value={project.tech}
+              onChange={handleChange}
+              placeholder="Teknologi terkait. ex Laravel, Next.js, etc."
+              required
+            />
 
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="site">URL Deploy/Dashboard link</Label>
-              <Input
-                type="text"
-                name="site"
-                value={project.site}
-                onChange={handleChange}
-                placeholder="URL Deploy/Dashboard link"
-                required
-              />
-            </div>
+            <TextInput
+              id="site"
+              label="URL Deploy/Dashboard link"
+              type="text"
+              name="site"
+              value={project.site}
+              onChange={handleChange}
+              placeholder="URL Deploy/Dashboard link."
+              required
+            />
 
-            <div className="grid w-xs gap-1.5">
-              <Label htmlFor="status">Status</Label>
-              <select
-                name="status"
-                value={project.status}
-                onChange={handleChange}
-                className="select bg-gray-100 rounded-2xl px-3 py-2"
-                required>
-                <option value="" disabled>
-                  Pilih status
-                </option>
-                <option value="published">Published</option>
-                <option value="archived">Archived</option>
-              </select>
-            </div>
+            <SelectInput
+              id="status"
+              label="Status"
+              name="status"
+              value={project.status}
+              onChange={handleChange}
+              options={statusOptions}
+              placeholder="Pilih status"
+              required
+            />
 
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="desc">Description (bisa pakai tag HTML)</Label>
-              <Textarea
-                name="desc"
-                value={project.desc}
-                onChange={handleTextareaChange}
-                placeholder="Deskripsi"
-                required
-              />
-            </div>
+            <TextAreaInput
+              id="desc"
+              label="Description (bisa pakai tag HTML)"
+              name="desc"
+              value={project.desc}
+              onChange={handleTextareaChange}
+              placeholder="Project Description."
+              required
+            />
           </div>
 
-          <div className="flex gap-3 items-center">
-            <Button
-              type="submit"
-              ref={submitRef}
-              className="mt-5 my-10 text-white bg-black hover:cursor-pointer">
-              Add Project
-            </Button>
-            <span className="text-gray-500">
-              ⌘ + Return / Ctrl + Enter to Save
-            </span>
-          </div>
+          <SubmitButton label="Tambah proyek" onClick={handleSubmit} />
         </form>
       )}
       {toast && <Toast message={toast.message} type={toast.type} />}

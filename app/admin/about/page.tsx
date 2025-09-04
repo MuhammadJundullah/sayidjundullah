@@ -30,7 +30,7 @@ const ManageAbout = () => {
   const [editedAbout, setEditedAbout] = useState({
     about: "",
     what_i_do: "",
-    role: "", // Tambahkan properti role di state
+    role: "",
   });
 
   const fetchAboutData = async () => {

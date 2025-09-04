@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { FaArrowLeft } from "react-icons/fa";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Toast } from "@/app/login/_components/Toast";
 import Loading from "@/app/_components/Loading";
+import TextInput from "@/app/admin/_components/TextInput";
+import TextAreaInput from "../../_components/TextAreaInput";
+import PhotoUpload from "../../_components/PhotoUpload";
+import BackButton from "../../_components/BackButton";
+import SubmitButton from "../../_components/SubmitButton";
 
 export default function AddTechstack() {
   const { toast, showToast } = useToast();
@@ -50,7 +50,7 @@ export default function AddTechstack() {
     setTechstack((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!window.confirm("Apakah Anda yakin ingin menambahkan techstack?")) {
@@ -93,12 +93,9 @@ export default function AddTechstack() {
 
   return (
     <div className="sm:mx-auto sm:w-6xl flex flex-col justify-center text-black">
-      <Link
-        href="/admin/techstacks"
-        className="flex items-center gap-3 hover:text-black text-gray-400 my-5">
-        <FaArrowLeft />
-        <span>Kembali</span>
-      </Link>
+      <div>
+        <BackButton href="/admin/techstacks" />
+      </div>
 
       {isLoading ? (
         <div className="flex items-center justify-center py-20 w-full">
@@ -111,58 +108,39 @@ export default function AddTechstack() {
       ) : (
         <form className="py-3 pb-20 mb-20" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-8">
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="name">Nama Techstack</Label>
-              <Input
-                type="text"
-                name="name"
-                value={techstack.name}
-                onChange={handleChange}
-                placeholder="Python, Django, JavaScript, Node.js, etc."
-                required
-              />
-            </div>
+            <TextInput
+              id="name"
+              label="Nama Techstack"
+              type="text"
+              name="name"
+              value={techstack.name}
+              onChange={handleChange}
+              placeholder="Python, Django, JavaScript, Node.js, etc."
+              required
+            />
 
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="description">Deskripsi</Label>
-              <textarea
-                name="description"
-                value={techstack.description}
-                onChange={handleChange}
-                placeholder="Master in this tech stack, because has 3 projects using this techstack."
-                className="w-full p-2 border border-gray-300 rounded-md text-sm"
-                required
-              />
-            </div>
+            <TextAreaInput
+              id="description"
+              label="Deskripsi"
+              name="description"
+              value={techstack.description}
+              onChange={handleChange}
+              placeholder="Master in this tech stack, because has 3 projects using this techstack."
+              required
+            />
 
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="image">Foto</Label>
-              <Input
-                type="file"
-                id="image"
-                name="image"
-                onChange={handleFileChange}
-                accept="image/*"
-                required
-              />
-              <p className="text-gray-500 text-xs">
-                *png & without background.
-              </p>
-            </div>
+            <PhotoUpload
+              id="project-image"
+              label="Foto Proyek"
+              name="image"
+              onChange={handleFileChange}
+              accept="image/png, image/jpeg"
+              hint="*Hanya format .png atau .jpeg, tanpa background."
+              required
+            />
           </div>
 
-          <div className="flex gap-3 items-center pb-20">
-            <Button
-              type="submit"
-              disabled={isLoading}
-              ref={submitRef}
-              className="mt-5 my-10 text-white bg-black hover:cursor-pointer">
-              Add Techstack
-            </Button>
-            <span className="text-gray-500">
-              ⌘ + Return / Ctrl + Enter to Save
-            </span>
-          </div>
+          <SubmitButton label="Tambah techstack" onClick={handleSubmit} />
         </form>
       )}
       {toast && <Toast message={toast.message} type={toast.type} />}

@@ -91,8 +91,16 @@ export default function Projects({ data, techstack }: Props) {
                         <div className="h-full font-medium">
                           <div className="w-80 h-92 border border-gray-300 shadow-xs rounded-md p-2 align dark:bg-gray-500">
                             <Image
-                              src={project.photo || ""}
-                              alt={project.photo || ""}
+                              src={
+                                typeof project.photo === "string"
+                                  ? project.photo
+                                  : "/placeholder.jpg"
+                              }
+                              alt={
+                                typeof project.photo === "string"
+                                  ? project.photo
+                                  : "/placeholder.jpg"
+                              }
                               height={200}
                               width={320}
                               className="w-full h-48 object-cover rounded-t-lg"

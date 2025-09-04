@@ -1,31 +1,20 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { FaArrowLeft } from "react-icons/fa";
 import { useEffect, useState, use } from "react";
 import Loading from "@/app/_components/Loading";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import Image from "next/image";
 import { useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Toast } from "@/app/login/_components/Toast";
-
-interface Project {
-  judul: string;
-  slug: string;
-  category: string;
-  categoryslug: string;
-  url: string;
-  photo?: File | string;
-  tech: string;
-  site: string;
-  desc: string;
-  status: "published" | "archived";
-}
+import BackButton from "@/app/admin/_components/BackButton";
+import TextInput from "@/app/admin/_components/TextInput";
+import SelectInput from "@/app/admin/_components/SelectInput";
+import TextAreaInput from "@/app/admin/_components/TextAreaInput";
+import { ProjectsType } from "@/lib/type";
+import SubmitButton from "@/app/admin/_components/SubmitButton";
+import UpdatePhotoInput from "@/app/admin/_components/UpdatePhotoInput";
 
 export default function EditProject({
   params,
@@ -33,7 +22,7 @@ export default function EditProject({
   params: Promise<{ id: string }>;
 }) {
   const { toast, showToast } = useToast();
-  const [project, setProject] = useState<Project | null>(null);
+  const [project, setProject] = useState<ProjectsType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { id } = use(params);
   const router = useRouter();
@@ -43,7 +32,7 @@ export default function EditProject({
     const handleKeyDown = (e: KeyboardEvent) => {
       // Shortcut: Cmd+S (Mac) atau Ctrl+S (Windows)
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") {
-        e.preventDefault(); 
+        e.preventDefault();
         buttonRef.current?.click();
       }
     };
@@ -150,48 +139,48 @@ export default function EditProject({
     }
   };
 
+  const statusOptions = [
+    { value: "published", label: "Published" },
+    { value: "archived", label: "Archived" },
+  ];
+
+  const categoryOptions = [
+    { value: "Data Analytics", label: "Data Analytics" },
+    { value: "Data Science", label: "Data Science" },
+    { value: "Data Engineering", label: "Data Engineering" },
+    { value: "Web Development", label: "Web Development" },
+    { value: "Mobile Development<", label: "Mobile Development" },
+  ];
+
   return (
     <div className="md:w-6xl flex flex-col justify-center text-black">
-      <Link
-        href="/admin/projects"
-        className="flex items-center gap-3 hover:text-black dark:hover:text-white text-gray-400 my-10 transition-all duration-300">
-        <FaArrowLeft />
-        <span>Kembali</span>
-      </Link>
+      <div>
+        <BackButton href="/admin/projects" />
+      </div>
+
       <form className="py-3">
         <div className="flex flex-col gap-8 dark:text-white">
-          <div className="grid w-full gap-1.5">
-            <Label htmlFor="tech">Nama Projek</Label>
-            <Input
-              type="text"
-              placeholder="Nama Projek"
-              value={project.judul}
-              name="judul"
-              onChange={handleChange}
-              className="dark:placeholder:text-white dark:text-white"
-            />
-          </div>
+          <TextInput
+            id="judul"
+            label="Nama Proyek"
+            type="text"
+            name="judul"
+            value={project.judul}
+            onChange={handleChange}
+            placeholder="Nama Proyek"
+            required
+          />
 
-          <div className="grid w-xs gap-1.5">
-            <Label htmlFor="status">Kategori</Label>
-            <div className="grid w-full gap-1.5">
-              <select
-                id="category"
-                name="category"
-                className="select bg-gray-100 dark:bg-gray-500 rounded-2xl px-3 py-2"
-                value={project.category}
-                onChange={handleChange}>
-                <option value="" disabled>
-                  Pilih status
-                </option>
-                <option value="Data Analyst">Data Analyst</option>
-                <option value="Data Science">Data Science</option>
-                <option value="Data Engineering">Data Engineering</option>
-                <option value="Web Development">Web Development</option>
-                <option value="Mobile Development">Mobile Development</option>
-              </select>
-            </div>
-          </div>
+          <SelectInput
+            id="category"
+            label="Kategori"
+            name="category"
+            value={project.category}
+            onChange={handleChange}
+            options={categoryOptions}
+            placeholder="Pilih kategori proyek"
+            required
+          />
 
           <div className="grid w-full gap-1.5">
             <Label htmlFor="tech">URL Repository Github</Label>
@@ -205,105 +194,59 @@ export default function EditProject({
             />
           </div>
 
-          <div className="grid w-full gap-1.5">
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="photo">Ubah Foto</Label>
-              <div className="sm:w-lg aspect-[2/1] relative mb-8">
-                <Image
-                  src={
-                    typeof project.photo === "string"
-                      ? project.photo
-                      : project.photo instanceof File
-                      ? URL.createObjectURL(project.photo)
-                      : "https://res.cloudinary.com/dislphwb0/image/upload/v1748565484/404_vzvale.jpg"
-                  }
-                  alt="Project Photo"
-                  fill
-                  className="rounded-2xl object-cover overflow-hidden my-3 border-4"
-                  onLoad={(e) => {
-                    if (project.photo instanceof File) {
-                      URL.revokeObjectURL(e.currentTarget.src);
-                    }
-                  }}
-                />
-              </div>
-            </div>
-            <Input
-              type="file"
-              placeholder="Photo"
-              name="photo"
-              onChange={handleFileChange}
-              accept="image/*"
-              className="dark:placeholder:text-white dark:text-white"
-              required
-            />
-          </div>
+          <UpdatePhotoInput
+            id="photo"
+            label="Ubah Foto"
+            name="imaphotoge"
+            image={project.photo || "null"}
+            onChange={handleFileChange}
+            alt="Project Photo"
+          />
 
-          <div className="grid w-full gap-1.5">
-            <Label htmlFor="tech">Teknologi terkait (framework dsb.)</Label>
-            <Input
-              type="text"
-              placeholder="Teknologi terkait (framework dsb.)"
-              name="tech"
-              value={project.tech}
-              onChange={handleChange}
-              className="dark:placeholder:text-white dark:text-white"
-            />
-          </div>
+          <TextInput
+            id="tech"
+            label="Teknologi terkait (framework dsb.)"
+            type="text"
+            name="tech"
+            value={project.tech}
+            onChange={handleChange}
+            placeholder="Teknologi terkait. ex Laravel, MongoDB, Next.js, etc."
+            required
+          />
 
-          <div className="grid w-full gap-1.5">
-            <Label htmlFor="site">URL Deploy/Dashboard link</Label>
-            <Input
-              type="text"
-              placeholder="URL Deploy/Dashboard link"
-              name="site"
-              value={project.site}
-              onChange={handleChange}
-              className="dark:placeholder:text-white dark:text-white"
-            />
-          </div>
+          <TextInput
+            id="site"
+            label="URL Deploy/Dashboard link"
+            type="text"
+            name="site"
+            value={project.site}
+            onChange={handleChange}
+            placeholder="URL Deploy/Dashboard link."
+            required
+          />
 
-          <div className="grid w-xs gap-1.5">
-            <Label htmlFor="status">Status (Published / Archived)</Label>
-            <div className="grid w-full gap-1.5">
-              <select
-                id="status"
-                name="status"
-                className="select bg-gray-100 dark:bg-gray-500 rounded-2xl px-3 py-2"
-                value={project.status}
-                onChange={handleChange}>
-                <option value="" disabled>
-                  Pilih status
-                </option>
-                <option value="published">Published</option>
-                <option value="archived">Archived</option>
-              </select>
-            </div>
-          </div>
+          <SelectInput
+            id="status"
+            label="Status"
+            name="status"
+            value={project.status}
+            onChange={handleChange}
+            options={statusOptions}
+            placeholder="Pilih status"
+            required
+          />
 
-          <div className="grid w-full gap-1.5">
-            <Label htmlFor="desc">
-              Description (jika anda menggunakan tag html, nantinya akan di
-              eksekusi di dashboard porto){" "}
-            </Label>
-            <Textarea
-              placeholder="Deskripsi"
-              name="desc"
-              value={project.desc}
-              onChange={handleTextareaChange}
-            />
-          </div>
+          <TextAreaInput
+            id="desc"
+            label="Description (bisa pakai tag HTML)"
+            name="desc"
+            value={project.desc}
+            onChange={handleTextareaChange}
+            placeholder="Project Description."
+            required
+          />
         </div>
-        <div className="flex gap-3 items-center">
-          <Button
-            type="submit"
-            ref={buttonRef}
-            className="mt-5 my-10 text-white bg-black hover:cursor-pointer"
-            onClick={handleSubmit}>
-            Simpan Perubahan
-          </Button>
-          <span className="text-gray-500">⌘ + S / Ctrl + S</span>
-        </div>
+        <SubmitButton label="Simpan Perubahan" onClick={handleSubmit} />
       </form>
       {toast && <Toast message={toast.message} type={toast.type} />}
     </div>

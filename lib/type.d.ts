@@ -32,7 +32,7 @@ export type ProjectsType = {
   category: string;
   categoryslug: string;
   url: string;
-  photo: string;
+  photo?: File | string;
   tech: string;
   site: string;
   desc: string;
@@ -65,7 +65,7 @@ export type EducationsType = {
 export type TechStackType = {
   id: string;
   name: string;
-  image: string;
+  image?: File | string;
   description: string;
 };
 

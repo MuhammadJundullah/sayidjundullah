@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="flex justify-between items-center md:mx-auto mx-5 max-w-6xl sm:space-y-3 sm:py-5 py-3">
           <div>
             <p className="text-sm text-gray-400 dark:text-white py-2">
-              Last updated on August 5, 2025
+              Last updated on Sept 4, 2025
             </p>
             <div>
               <p className="sm:text-xl text-3xs text-gray-900 dark:text-white">

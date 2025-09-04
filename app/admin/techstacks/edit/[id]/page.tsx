@@ -1,23 +1,17 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { FaArrowLeft } from "react-icons/fa";
 import { useEffect, useState, use } from "react";
 import Loading from "@/app/_components/Loading";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Label } from "@/components/ui/label";
-import Image from "next/image";
 import { useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Toast } from "@/app/login/_components/Toast";
-
-interface TechStack {
-  name: string;
-  image?: File | string;
-  description: string;
-}
+import SubmitButton from "@/app/admin/_components/SubmitButton";
+import { TechStackType } from "@/lib/type";
+import TextInput from "@/app/admin/_components/TextInput";
+import TextAreaInput from "@/app/admin/_components/TextAreaInput";
+import UpdatePhotoInput from "@/app/admin/_components/UpdatePhotoInput";
+import BackButton from "@/app/admin/_components/BackButton";
 
 export default function EditTechStack({
   params,
@@ -25,7 +19,7 @@ export default function EditTechStack({
   params: Promise<{ id: string }>;
 }) {
   const { toast, showToast } = useToast();
-  const [techstack, setTechStack] = useState<TechStack | null>(null);
+  const [techstack, setTechStack] = useState<TechStackType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { id } = use(params);
   const router = useRouter();
@@ -88,7 +82,7 @@ export default function EditTechStack({
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setTechStack((prev) => (prev ? { ...prev, [name]: value } : prev));
@@ -132,80 +126,42 @@ export default function EditTechStack({
 
   return (
     <div className="md:w-6xl flex flex-col justify-center text-black">
-      <Link
-        href="/admin/techstacks"
-        className="flex items-center gap-3 hover:text-black text-gray-400 my-10 transition-all duration-300">
-        <FaArrowLeft />
-        <span>Kembali</span>
-      </Link>
+      <div>
+        <BackButton href="/admin/techstacks" />
+      </div>
       <form className="py-3">
         <div className="flex flex-col gap-8">
-          <div className="grid w-full gap-1.5">
-            <Label htmlFor="tech">Nama Techstack</Label>
-            <Input
-              type="text"
-              placeholder="Nama Techstack"
-              value={techstack.name}
-              name="name"
-              onChange={handleChange}
-            />
-          </div>
+          <TextInput
+            id="techstack-name"
+            label="Nama Techstack"
+            type="text"
+            name="name"
+            value={techstack.name}
+            onChange={handleChange}
+            placeholder="Python, Django, JavaScript, Node.js, etc."
+            required
+          />
 
-          <div className="grid w-full gap-1.5">
-            <Label htmlFor="tech">Deskripsi</Label>
-            <Input
-              type="text"
-              placeholder="Deskrpsi, seperti penguasaan terkait techstack."
-              name="description"
-              value={techstack.description}
-              onChange={handleChange}
-            />
-          </div>
+          <TextAreaInput
+            id="description"
+            label="Deskripsi"
+            name="description"
+            value={techstack.description}
+            onChange={handleChange}
+            placeholder="Master in this tech stack, because has 3 projects using this techstack."
+            required
+          />
 
-          <div className="grid w-full gap-1.5">
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="photo">Ubah Foto</Label>
-              <div className="sm:w-lg aspect-[2/1] relative mb-8">
-                <Image
-                  src={
-                    typeof techstack.image === "string"
-                      ? techstack.image
-                      : techstack.image instanceof File
-                      ? URL.createObjectURL(techstack.image)
-                      : "https://res.cloudinary.com/dislphwb0/image/upload/v1748565484/404_vzvale.jpg"
-                  }
-                  alt="TechStack Photo"
-                  fill
-                  sizes="100"
-                  className="rounded-2xl object-cover overflow-hidden my-3 border-4"
-                  onLoad={(e) => {
-                    if (techstack.image instanceof File) {
-                      URL.revokeObjectURL(e.currentTarget.src);
-                    }
-                  }}
-                />
-              </div>
-            </div>
-            <Input
-              type="file"
-              placeholder="image"
-              name="image"
-              onChange={handleFileChange}
-              accept="image/*"
-              required
-            />
-          </div>
+          <UpdatePhotoInput
+            id="techstack-photo"
+            label="Ubah Foto"
+            name="image"
+            image={techstack.image || "null"}
+            onChange={handleFileChange}
+            alt="TechStack Photo"
+          />
         </div>
-        <div className="flex gap-3 items-center">
-          <Button
-            type="submit"
-            ref={buttonRef}
-            className="mt-5 my-10 text-white bg-black hover:cursor-pointer"
-            onClick={handleSubmit}>
-            Simpan Perubahan
-          </Button>
-          <span className="text-gray-500">⌘ + S / Ctrl + S</span>
-        </div>
+        <SubmitButton label="Simpan Perubahan" onClick={handleSubmit} />
       </form>
       {toast && <Toast message={toast.message} type={toast.type} />}
     </div>

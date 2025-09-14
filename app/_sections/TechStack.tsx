@@ -26,7 +26,7 @@ export default function TechStack({ data }: techStackProps) {
           <div className="flex items-center my-10">
             <span className="flex-1 h-px bg-gray-300 sm:hidden"></span>{" "}
             <h1 className="text-4xl sm:text-5xl font-mono font-light text-black dark:text-white px-4">
-              TechStack
+              TechStacks
             </h1>
             <span className="flex-1 h-px bg-gray-300"></span>
           </div>
@@ -38,7 +38,7 @@ export default function TechStack({ data }: techStackProps) {
                   <div className="border border-gray-200 rounded-lg">
                     <button
                       onClick={() => handleToggle(data.id)}
-                      className="flex justify-between items-center w-full py-4 text-left transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-lg px-4">
+                      className="flex justify-between items-center w-full py-4 text-left transition-colors duration-200 bg-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-lg px-4">
                       <div className="flex items-center space-x-4">
                         <Image
                           src={

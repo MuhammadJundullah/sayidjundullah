@@ -5,7 +5,9 @@ import React from "react";
 const ManageWorkExperiences = () => {
   return (
     <div className="flex items-center justify-center min-h-screen w-screen">
-      <span>Manage Work Experiences Page On Development.</span>
+      <span className="dark:text-white">
+        Manage Work Experiences Page On Development.
+      </span>
     </div>
   );
 };

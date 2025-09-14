@@ -65,8 +65,10 @@ export type EducationsType = {
 export type TechStackType = {
   id: string;
   name: string;
-  image?: File | string;
   description: string;
+  image?: File | string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type aboutType = {

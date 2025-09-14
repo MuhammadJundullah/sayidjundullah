@@ -30,6 +30,7 @@ const ManageCertificates = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isRevalidating, setRevalidating] = useState(false);
 
+  // handle search shortcut
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -169,15 +170,16 @@ const ManageCertificates = () => {
   };
 
   return (
-    <div className="mx-auto sm:px-4 max-w-6xl">
+    <div className="mx-auto sm:px-4 max-w-6xl min-h-screen">
       <Header
         dynamicText="Certificates"
         searchKeyword={searchKeyword}
         setSearchKeyword={setSearchKeyword}
         isRevalidating={isRevalidating}
+        ref={searchInputRef}
         isRefreshing={isRefreshing}
         handleRevalidate={handleRevalidate}
-        newLink="/admin/certifications/add"
+        newLink="certificates/add"
       />
 
       {isLoading ? (

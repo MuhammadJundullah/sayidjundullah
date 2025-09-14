@@ -171,10 +171,11 @@ const ManageProjects = () => {
   };
 
   return (
-    <div className="mx-auto sm:px-4 max-w-6xl">
+    <div className="mx-auto sm:px-4 max-w-6xl min-h-screen">
       <Header
         dynamicText="Projects"
         searchKeyword={searchKeyword}
+        ref={searchInputRef}
         setSearchKeyword={setSearchKeyword}
         isRevalidating={isRevalidating}
         isRefreshing={isRefreshing}

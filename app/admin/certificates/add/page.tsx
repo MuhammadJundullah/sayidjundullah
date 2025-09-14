@@ -1,14 +1,15 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { FaArrowLeft } from "react-icons/fa";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Toast } from "@/app/login/_components/Toast";
 import Loading from "@/app/_components/Loading";
+import BackButton from "@/app/admin/_components/BackButton";
+import TextInput from "@/app/admin/_components/TextInput";
+import PhotoUpload from "@/app/admin/_components/PhotoUpload";
+import DateInput from "../../_components/DateInput";
+import SelectInput from "../../_components/SelectInput";
+import SubmitButton from "../../_components/SubmitButton";
 
 export default function AddCertificate() {
   const { toast, showToast } = useToast();
@@ -42,7 +43,16 @@ export default function AddCertificate() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setCertificate((prev) => ({ ...prev, photo: e.target.files![0] }));
+      const file = e.target.files[0];
+      const maxSize = 2 * 1024 * 1024; // 2 MB dalam bytes
+
+      if (file.size > maxSize) {
+        showToast("Ukuran file maksimal adalah 2 MB.", "error");
+        // Anda bisa menambahkan logika lain di sini, seperti mengosongkan input file
+        e.target.value = "";
+      } else {
+        setCertificate((prev) => ({ ...prev, photo: e.target.files![0] }));
+      }
     }
   };
 
@@ -53,7 +63,7 @@ export default function AddCertificate() {
     setCertificate((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!window.confirm("Apakah Anda yakin ingin menambahkan certificate?")) {
@@ -61,7 +71,7 @@ export default function AddCertificate() {
     }
 
     try {
-      setIsLoading(true); 
+      setIsLoading(true);
       const formData = new FormData();
 
       formData.append("name", certificate.name);
@@ -100,14 +110,16 @@ export default function AddCertificate() {
     }
   };
 
+  const statusOptions = [
+    { value: "published", label: "Published" },
+    { value: "archived", label: "Archived" },
+  ];
+
   return (
     <div className="sm:mx-auto sm:w-6xl flex flex-col justify-center text-black">
-      <Link
-        href="/admin/certificates"
-        className="flex items-center gap-3 hover:text-black text-gray-400 my-5">
-        <FaArrowLeft />
-        <span>Kembali</span>
-      </Link>
+      <div>
+        <BackButton href="/admin/projects" />
+      </div>
 
       {isLoading ? (
         <div className="flex items-center justify-center h-screen w-full">
@@ -116,93 +128,71 @@ export default function AddCertificate() {
       ) : (
         <form className="py-3" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-8">
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="judul">Nama Sertifikat</Label>
-              <Input
-                type="text"
-                name="name"
-                value={certificate.name}
-                onChange={handleChange}
-                placeholder="Udemy Certification"
-                required
-              />
-            </div>
+            <TextInput
+              id="name"
+              label="Nama Sertifikat"
+              type="text"
+              name="name"
+              value={certificate.name}
+              onChange={handleChange}
+              placeholder="Udemy Certification"
+              required
+            />
 
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="url">Deskripsi</Label>
-              <Input
-                type="text"
-                name="desc"
-                value={certificate.desc}
-                onChange={handleChange}
-                placeholder="Learning Data Science, Machine Learning, AI on Telkom University"
-                required
-              />
-            </div>
+            <TextInput
+              id="desc"
+              label="Deskripsi"
+              type="text"
+              name="desc"
+              value={certificate.desc}
+              onChange={handleChange}
+              placeholder="Learning Data Science, Machine Learning, AI on Telkom University"
+              required
+            />
 
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="photo">Ubah Foto</Label>
-              <Input
-                type="file"
-                id="photo"
-                name="photo"
-                onChange={handleFileChange}
-                accept="image/*"
-                required
-              />
-            </div>
+            <PhotoUpload
+              id="photo"
+              label="Foto Sertifikat"
+              name="photo"
+              onChange={handleFileChange}
+              accept="image/png, image/jpeg"
+              hint="*Hanya format .png atau .jpeg, max. 2 MB"
+              required
+            />
 
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="tech">Tanggal diperoleh sertifikat</Label>
-              <Input
-                type="date"
-                name="date"
-                value={certificate.date}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <DateInput
+              id="certificate-date"
+              label="Tanggal sertifikat diperoleh"
+              name="date"
+              value={certificate.date}
+              onChange={handleChange}
+              required
+            />
 
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="site">
-                Site (misalnya url verifikasi sertifikat, boleh link drive. dsb)
-              </Label>
-              <Input
-                type="text"
-                name="site"
-                value={certificate.site}
-                onChange={handleChange}
-                placeholder="http://example.com/certificate.pdf"
-                required
-              />
-            </div>
+            <TextInput
+              id="desc"
+              label="Site (misalnya url verifikasi sertifikat, boleh link drive. dsb)"
+              type="text"
+              name="desc"
+              value={certificate.site}
+              onChange={handleChange}
+              placeholder="http://example.com/certificate.pdf"
+              required
+            />
 
-            <div className="grid w-xs gap-1.5">
-              <Label htmlFor="status">Status</Label>
-              <select
-                name="status"
-                value={certificate.status}
-                onChange={handleChange}
-                className="select bg-gray-100 rounded-2xl px-3 py-2"
-                required>
-                <option value="">Pilih status</option>
-                <option value="published">Published</option>
-                <option value="archived">Archived</option>
-              </select>
-            </div>
+            <SelectInput
+              id="status"
+              label="Status"
+              name="status"
+              value={certificate.status}
+              onChange={handleChange}
+              options={statusOptions}
+              placeholder="Pilih status"
+              required
+            />
           </div>
 
-          <div className="flex gap-3 items-center">
-            <Button
-              type="submit"
-              ref={submitRef}
-              className="mt-5 my-10 text-white bg-black hover:cursor-pointer">
-              Add Certificate
-            </Button>
-            <span className="text-gray-500">
-              ⌘ + Return / Ctrl + Enter to Save
-            </span>
-          </div>
+          <SubmitButton label="Tambah Sertifikat" onClick={handleSubmit} />
         </form>
       )}
       {toast && <Toast message={toast.message} type={toast.type} />}

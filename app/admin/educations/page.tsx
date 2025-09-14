@@ -3,7 +3,9 @@ import React from "react";
 const ManageEducations = () => {
   return (
     <div className="flex items-center justify-center min-h-screen w-screen">
-      <span>Manage Educations Page On Development.</span>
+      <span className="dark:text-white">
+        Manage Educations Page On Development.
+      </span>
     </div>
   );
 };

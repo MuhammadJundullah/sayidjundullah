@@ -16,26 +16,21 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Toast } from "@/app/login/_components/Toast";
-
-interface Techstack {
-  id: string;
-  name: string;
-  description: string;
-  image: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { TechStackType } from "@/lib/type";
 
 const ManageTechstacks = () => {
   const { toast, showToast } = useToast();
-  const [Techstacks, setTechstacks] = useState<Techstack[]>([]);
-  const [filteredTechstacks, setFilteredTechstacks] = useState<Techstack[]>([]);
+  const [Techstacks, setTechstacks] = useState<TechStackType[]>([]);
+  const [filteredTechstacks, setFilteredTechstacks] = useState<TechStackType[]>(
+    []
+  );
   const [searchKeyword, setSearchKeyword] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isRevalidating, setRevalidating] = useState(false);
 
+  // handle search shortcut
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -138,13 +133,14 @@ const ManageTechstacks = () => {
       alert("Failed to revalidate " + err);
     }
   };
-
+  
   return (
-    <div className="mx-auto sm:px-4 max-w-6xl">
+    <div className="mx-auto sm:px-4 max-w-6xl min-h-screen">
       <Header
         dynamicText="Techstacks"
         searchKeyword={searchKeyword}
         setSearchKeyword={setSearchKeyword}
+        ref={searchInputRef}
         isRevalidating={isRevalidating}
         isRefreshing={isRefreshing}
         handleRevalidate={handleRevalidate}
@@ -162,7 +158,7 @@ const ManageTechstacks = () => {
       ) : filteredTechstacks.length === 0 ? (
         <div className="text-center py-20 ">
           <div className="py-10">
-            <p className="text-gray-500 py-20">
+            <p className="text-gray-500 py-20 dark:text-white">
               {searchKeyword
                 ? "Tidak ada Techstack yang cocok."
                 : "Belum ada Techstack."}
@@ -173,13 +169,15 @@ const ManageTechstacks = () => {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
           {filteredTechstacks.map((techstack) => (
             <Card key={techstack.id} className="h-full flex flex-col">
-              <Image
-                src={techstack.image}
-                alt={techstack.name}
-                width={100}
-                height={50}
-                className="rounded-lg p-2 mx-auto"
-              />
+              {techstack.image && typeof techstack.image === "string" && (
+                <Image
+                  src={techstack.image}
+                  alt={techstack.name}
+                  width={100}
+                  height={50}
+                  className="rounded-lg p-2 mx-auto"
+                />
+              )}
 
               <CardHeader>
                 <CardTitle>{techstack.name}</CardTitle>

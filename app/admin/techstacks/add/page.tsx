@@ -39,7 +39,16 @@ export default function AddTechstack() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setTechstack((prev) => ({ ...prev, image: e.target.files![0] }));
+      const file = e.target.files[0];
+      const maxSize = 2 * 1024 * 1024;
+
+      if (file.size > maxSize) {
+        showToast("Ukuran file maksimal adalah 2 MB.", "error");
+        // Anda bisa menambahkan logika lain di sini, seperti mengosongkan input file
+        e.target.value = "";
+      } else {
+        setTechstack((prev) => ({ ...prev, image: e.target.files![0] }));
+      }
     }
   };
 
@@ -131,11 +140,11 @@ export default function AddTechstack() {
 
             <PhotoUpload
               id="project-image"
-              label="Foto Proyek"
+              label="Logo techstack"
               name="image"
               onChange={handleFileChange}
               accept="image/png, image/jpeg"
-              hint="*Hanya format .png atau .jpeg, tanpa background."
+              hint="*Hanya format .png atau .jpeg, tanpa background, max. 2 MB."
               required
             />
           </div>

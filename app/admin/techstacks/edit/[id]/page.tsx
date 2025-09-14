@@ -71,13 +71,21 @@ export default function EditTechStack({
   }
 
   if (!techstack) {
-    return <div>TechStack not found</div>;
+    return <div className="dark:text-white">TechStack not found</div>;
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setTechStack((prev) => (prev ? { ...prev, image: file } : prev));
+      const maxSize = 2 * 1024 * 1024;
+
+      if (file.size > maxSize) {
+        showToast("Ukuran file maksimal adalah 2 MB.", "error");
+        // Anda bisa menambahkan logika lain di sini, seperti mengosongkan input file
+        e.target.value = "";
+      } else {
+        setTechStack((prev) => (prev ? { ...prev, image: file } : prev));
+      }
     }
   };
 

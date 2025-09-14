@@ -21,7 +21,7 @@ export default function Educations({ data }: EducationsProps) {
               Educations
             </h1>
           </span>
-          <span className="h-px flex-1 bg-gray-600 "></span>
+          <span className="h-px flex-1 bg-gray-300"></span>
         </span>
         <div className="my-20">
           {educations.length === 0 ? (

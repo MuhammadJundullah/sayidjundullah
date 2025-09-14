@@ -74,13 +74,22 @@ export default function EditProject({
   }
 
   if (!project) {
-    return <div>Project not found</div>;
+    return <div className="dark:text-white">Project not found</div>;
   }
 
+  // handle file (photo) change state
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setProject((prev) => (prev ? { ...prev, photo: file } : prev));
+      const maxSize = 2 * 1024 * 1024;
+
+      if (file.size > maxSize) {
+        showToast("Ukuran file maksimal adalah 2 MB.", "error");
+        // Anda bisa menambahkan logika lain di sini, seperti mengosongkan input file
+        e.target.value = "";
+      } else {
+        setProject((prev) => (prev ? { ...prev, photo: file } : prev));
+      }
     }
   };
 

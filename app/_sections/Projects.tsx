@@ -5,26 +5,24 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FaArrowUpRightFromSquare } from "react-icons/fa6";
-import type { ProjectsType, TechStackType } from "@/lib/type";
+import type { ProjectsType } from "@/lib/type";
 import CustomAnimatedContent from "@/app/_components/AnimatedContent/CustomAnimateContent";
 
 interface Props {
   data: ProjectsType[];
-  techstack: TechStackType[];
 }
 
-export default function Projects({ data, techstack }: Props) {
+export default function Projects({ data }: Props) {
   const [projects] = useState<ProjectsType[]>(data);
   const [selectedTech, setSelectedTech] = useState("");
-  const [techStacks] = useState<TechStackType[]>(techstack);
 
   const filteredProjects = useMemo(() => {
     if (!selectedTech) {
       return projects;
     }
-    const techQuery = selectedTech.toLowerCase();
+    const categoryQuery = selectedTech.toLowerCase();
     return projects.filter((project) =>
-      project.tech.toLowerCase().includes(techQuery)
+      project.category.toLowerCase().includes(categoryQuery)
     );
   }, [projects, selectedTech]);
 
@@ -47,11 +45,13 @@ export default function Projects({ data, techstack }: Props) {
               onChange={(e) => setSelectedTech(e.target.value)}
               className="appearance-none w-full p-3 text-sm text-gray-700 font-bold dark:text-black bg-white dark:bg-gray-300 border border-gray-300 rounded-md shadow-sm pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 cursor-pointer hover:border-gray-400">
               <option value="">Show all</option>
-              {techStacks.map((techstack, index) => (
-                <option key={index} value={techstack.name}>
-                  {techstack.name}
-                </option>
-              ))}
+
+              <option value="Data Analytics">Data Analytics</option>
+              <option value="Data Science">Data Science</option>
+              <option value="Data Engineering">Data Engineering</option>
+              <option value="Web Development">Web Development</option>
+              <option value="Mobile Development">Mobile Development</option>
+              <option value="AI ML">AI/ML</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-black">
               <svg
@@ -64,7 +64,7 @@ export default function Projects({ data, techstack }: Props) {
           </div>
         </div>
         <p className="py-1 text-sm text-gray-700 dark:text-white font-bold">
-          filter by techstacks
+          filter by projects category.
         </p>
 
         <div className="sm:my-20 my-8">

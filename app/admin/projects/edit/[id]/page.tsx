@@ -159,6 +159,7 @@ export default function EditProject({
     { value: "Data Engineering", label: "Data Engineering" },
     { value: "Web Development", label: "Web Development" },
     { value: "Mobile Development<", label: "Mobile Development" },
+    { value: "Ai Ml", label: "AI/ML" },
   ];
 
   return (

@@ -49,7 +49,7 @@ export default async function Home(): Promise<React.JSX.Element> {
       <Hello data={about.data.role} />
       <About data={about.data} />
       <WorkExperiences data={workExperiences.data} />
-      <Projects data={projects.data} techstack={techStacks.data} />
+      <Projects data={projects.data} />
       <TechStack data={techStacks.data} />
       <Certificates data={certificates.data} />
       <Education data={educations.data} />

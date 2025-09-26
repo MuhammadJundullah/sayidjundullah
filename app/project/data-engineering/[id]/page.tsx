@@ -42,7 +42,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           </div>
           {data.map((item) => (
             <div key={item.id} className="mb-8">
-              <h2 className="sm:text-5xl text-3xl font-semibold my-4 dark:text-white">
+              <h2 className="sm:text-5xl text-3xl sm:bg-white sm:text-center sm:border dark:text-white sm:border-gray-300 font-semibold my-4 sm:dark:text-black sm:sticky top-5 sm:dark:bg-white sm:rounded-3xl sm:p-3 sm:shadow-xl">
                 {item.judul}
               </h2>
               <div className="my-10 flex justify-center items-center">
@@ -59,7 +59,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                   className="my-4"
                   dangerouslySetInnerHTML={{ __html: item.desc }}
                 />
-                <div className="w-full ">
+                <div className="w-full sticky top-5 h-fit">
                   <p className="py-2">
                     <strong>Category:</strong> {item.category}
                   </p>
@@ -73,7 +73,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-500 underline dark:text-white">
-                      Github Repository
+                      Github Repository.
                     </a>
                   </p>
                 </div>

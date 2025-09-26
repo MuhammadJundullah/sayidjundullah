@@ -10,7 +10,7 @@ const HeaderScroll = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollThreshold = 50; // Jarak scroll untuk mengaktifkan efek
+      const scrollThreshold = 50;
       if (window.scrollY > scrollThreshold) {
         setScrolled(true);
       } else {

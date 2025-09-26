@@ -24,9 +24,8 @@ const Hello = (data: dataType) => {
 
   return (
     <section id="hello">
-      <div className="flex h-screen sm:space-y-10 sm:pt-5 py-5 sm:mt-2 p-4 lg:item-center sm:py-30">
+      <div className=" flex h-screen sm:space-y-10 sm:pt-5 py-5 sm:mt-2 lg:item-center justify-center sm:py-30">
         <HeaderScroll />
-
         <div className="h-full text-center items-center flex flex-col justify-evenly sm:w-6xl sm:pt-30 pt-20 sm:mt-10">
           <Image
             src="/static-image/ahmad.png"
@@ -36,7 +35,7 @@ const Hello = (data: dataType) => {
             className="rounded-lg sm:rounded-full mx-auto sm:w-70 sm:h-70 object-cover shadow-lg transition-all duration-300 hover:scale-105 bg-white dark:border"
           />
 
-          <h1 className="sm:shadow-none shadow-2xl sm:flex bg-gray-700 sm:bg-white dark:bg-gray-700  font-light dark:text-white sm:text-black subpixel-antialiased sm:mx-auto py-5 sm:py-0 sm:px-0 px-5 rounded-xl transition-all duration-300 hover:scale-105">
+          <h1 className="sm:flex font-light dark:text-white sm:text-black subpixel-antialiased sm:mx-auto py-5 sm:py-0 sm:px-0 px-5 rounded-xl transition-all duration-300 hover:scale-105">
             <BlurText
               text={`Hello 👋, i am Sayid Muhammad Jundullah, ${data.data}`}
               delay={150}

@@ -3,10 +3,13 @@ import Link from "next/link";
 import { fetchDataFromAPI } from "@/lib/actions";
 import Loading from "@/app/_components/Loading";
 import { FaArrowLeft } from "react-icons/fa6";
-// import { ProjectsType } from "@/lib/type";
 import { notFound } from "next/navigation";
 
-export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
 
   const response = await fetchDataFromAPI(id);
@@ -41,7 +44,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           </div>
           {data.map((item) => (
             <div key={item.id} className="mb-8">
-              <h2 className="sm:text-5xl text-3xl font-semibold my-4 dark:text-white">
+              <h2 className="sm:text-5xl text-3xl sm:bg-white sm:text-center sm:border dark:text-white sm:border-gray-300 font-semibold my-4 sm:dark:text-black sm:sticky top-5 sm:dark:bg-white sm:rounded-3xl sm:p-3 sm:shadow-xl">
                 {item.judul}
               </h2>
               <div className="flex flex-col md:flex-row mt-4 gap-5 dark:text-white">
@@ -49,7 +52,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                   className="my-4"
                   dangerouslySetInnerHTML={{ __html: item.desc }}
                 />
-                <div className="w-full">
+                <div className="w-full h-fit">
                   <p className="py-2">
                     <strong>Category:</strong> {item.category}
                   </p>

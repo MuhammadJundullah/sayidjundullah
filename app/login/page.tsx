@@ -14,7 +14,6 @@ const loginPage = () => {
             </span>
             <span className="dark:text-white"> Portofolio admin.</span>
           </h1>
-          {/* <span className="top-2 font-light">Build with Next.</span> */}
         </div>
         <InputForm />
       </div>

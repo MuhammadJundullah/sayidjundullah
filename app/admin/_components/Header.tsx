@@ -45,7 +45,7 @@ const Header = forwardRef<HTMLInputElement, HeaderProps>(
               type="text"
               ref={ref}
               placeholder={`⌘ + K / Ctrl + K to Search`}
-              className="min-w-3xs border-gray-200 placeholder:text-gray-400 dark:placeholder:text-white dark:text-white"
+              className="min-w-3xs border-gray-200 placeholder:text-gray-400 dark:placeholder:text-white dark:text-white placeholder:font-bold"
               aria-label="search"
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}

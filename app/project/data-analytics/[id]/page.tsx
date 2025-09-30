@@ -124,7 +124,7 @@ export default async function Page({
         </div>
         {/* Embedded Content */}
         {item.site && item.site !== "#" && (
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/50 dark:border-gray-700/50 shadow-sm my-5">
+          <div className="sm:block hidden bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/50 dark:border-gray-700/50 shadow-sm my-5">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
               Dashboard Visualizations
             </h2>

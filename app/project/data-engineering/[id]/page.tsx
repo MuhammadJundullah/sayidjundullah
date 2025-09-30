@@ -1,17 +1,18 @@
 import React from "react";
 import Link from "next/link";
 import { fetchDataFromAPI } from "@/lib/actions";
-import Loading from "@/app/_components/Loading";
 import Image from "next/image";
-import { FaArrowLeft } from "react-icons/fa6";
-// import { ProjectsType, ApiResponse } from "@/lib/type";
+import { FaArrowLeft, FaGithub } from "react-icons/fa";
 import { notFound } from "next/navigation";
 
-export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
 
   const res = await fetchDataFromAPI(id);
-
   const data = res.data;
 
   if (
@@ -19,71 +20,129 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
     (typeof data === "object" &&
       "message" in data &&
       data.message === "Project not found") ||
-    (Array.isArray(data) && data.length === 0)
+    (Array.isArray(data) && data.length === 0) ||
+    !Array.isArray(data)
   ) {
     notFound();
   }
 
-  if (!Array.isArray(data)) {
-    notFound();
-  }
+  const item = data[0];
 
   return (
-    <div className="sm:mx-auto mx-5 max-w-6xl flex flex-col justify-center min-h-screen">
-      {data ? (
-        <div className="container mx-auto py-8">
-          <div className="flex justify-between items-center py-4">
-            <Link
-              href="/#projects"
-              className="flex hover:text-black dark:hover:text-gray-300 text-gray-400 dark:text-white">
-              <FaArrowLeft className="mt-1" />
-              <span className="ml-2">Back to Projects</span>
-            </Link>
-          </div>
-          {data.map((item) => (
-            <div key={item.id} className="mb-8">
-              <h2 className="sm:text-5xl text-3xl sm:bg-white sm:text-center sm:border dark:text-white sm:border-gray-300 font-semibold my-4 sm:dark:text-black sm:sticky top-5 sm:dark:bg-white sm:rounded-3xl sm:p-3 sm:shadow-xl">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-cyan-50 dark:from-gray-900 dark:to-gray-800 sm:rounded-xl sm:my-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Navigation */}
+        <div className="mb-8">
+          <Link
+            href="/#projects"
+            className="inline-flex items-center gap-3 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 group">
+            <FaArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            <span className="font-medium">Back to Projects</span>
+          </Link>
+        </div>
+
+        {/* Main Content */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Left Column - Project Content */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Project Header */}
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/50 dark:border-gray-700/50 shadow-sm">
+              <h1 className="text-3xl lg:text-5xl font-bold text-gray-900 dark:text-white">
                 {item.judul}
-              </h2>
-              <div className="my-10 flex justify-center items-center">
-                <Image
-                  src={item.photo || ""}
-                  alt={item.judul || ""}
-                  width={800}
-                  height={600}
-                  className="rounded-lg border-2 border-gray-300 shadow-lg"
-                />
+              </h1>
+            </div>
+
+            {/* Architecture Diagram */}
+            {item.photo && (
+              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50 shadow-sm">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                  {/* <FaPipeline className="w-5 h-5 text-cyan-500" /> */}
+                  Architecture Diagram
+                </h2>
+                <div className="relative rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+                  <Image
+                    src={item.photo}
+                    alt={`${item.judul} architecture diagram`}
+                    width={800}
+                    height={600}
+                    className="w-full h-auto object-contain"
+                    priority
+                  />
+                </div>
               </div>
-              <div className="flex flex-col md:flex-row mt-4 gap-5 dark:text-white">
-                <p
-                  className="my-4"
-                  dangerouslySetInnerHTML={{ __html: item.desc }}
-                />
-                <div className="w-full sticky top-5 h-fit">
-                  <p className="py-2">
-                    <strong>Category:</strong> {item.category}
-                  </p>
-                  <p className="py-2">
-                    <strong>Tech Stack:</strong> {item.tech}
-                  </p>
-                  <p className="py-2">
-                    <strong>Source code:</strong>{" "}
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 underline dark:text-white">
-                      Github Repository.
-                    </a>
-                  </p>
+            )}
+
+            {/* Project Description */}
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/50 dark:border-gray-700/50 shadow-sm">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                Project Overview
+              </h2>
+              <div
+                className="prose prose-lg dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: item.desc }}
+              />
+            </div>
+          </div>
+
+          {/* Right Column - Project Details */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-8 space-y-6">
+              {/* Tech Stack */}
+              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50 shadow-sm">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                  Tech Stack
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {item.tech.split(",").map((tech: string, index: string) => (
+                    <span
+                      key={index}
+                      className="px-3 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium border border-slate-200 dark:border-slate-600">
+                      {tech.trim()}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Project Details */}
+              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50 shadow-sm">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                  Project Details
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                      Category
+                    </p>
+                    <p className="text-gray-900 dark:text-white font-medium">
+                      {item.category}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                      Repository
+                    </p>
+                    {item.url && item.url !== "#" ? (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
+                        <FaGithub className="w-4 h-4" />
+                        <span className="truncate">GitHub Repository</span>
+                      </a>
+                    ) : (
+                      <span className="text-gray-400 dark:text-gray-500 text-sm">
+                        Not Available
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          ))}
+          </div>
         </div>
-      ) : (
-        <Loading />
-      )}
+      </div>
     </div>
   );
 }
@@ -108,14 +167,23 @@ export async function generateMetadata({
   }
 
   const item = data.data[0];
+  const cleanDescription =
+    item.desc.replace(/<[^>]*>/g, "").substring(0, 160) + "...";
 
   return {
-    title: `${item.judul} - My Portfolio Project`,
-    description: item.desc.replace(/<[^>]*>/g, "").substring(0, 160) + "...",
+    title: `${item.judul} - Data Engineering Project`,
+    description: cleanDescription,
     openGraph: {
-      title: `${item.judul} - My Portfolio Project`,
-      description: item.desc.replace(/<[^>]*>/g, "").substring(0, 160) + "...",
+      title: `${item.judul} - Data Engineering Project`,
+      description: cleanDescription,
       images: item.photo ? [{ url: item.photo }] : [],
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${item.judul} - Data Engineering Project`,
+      description: cleanDescription,
+      images: item.photo ? [item.photo] : [],
     },
   };
 }

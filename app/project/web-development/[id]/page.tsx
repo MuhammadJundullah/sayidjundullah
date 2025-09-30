@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { fetchDataFromAPI } from "@/lib/actions";
 import Image from "next/image";
-import { FaArrowLeft } from "react-icons/fa6";
+import { FaArrowLeft, FaExternalLinkAlt, FaGithub } from "react-icons/fa";
 import { ProjectsType } from "@/lib/type";
 import { notFound } from "next/navigation";
 
@@ -14,7 +14,6 @@ export default async function Page({
   const { id } = await params;
 
   const res = await fetchDataFromAPI(id);
-
   const data: ProjectsType[] = res.data;
 
   if (
@@ -22,81 +21,138 @@ export default async function Page({
     (typeof data === "object" &&
       "message" in data &&
       data.message === "Project not found") ||
-    (Array.isArray(data) && data.length === 0)
+    (Array.isArray(data) && data.length === 0) ||
+    !Array.isArray(data)
   ) {
-    notFound();
-  }
-
-  if (!Array.isArray(data)) {
     notFound();
   }
 
   const item = data[0];
 
   return (
-    <div className="sm:mx-auto mx-5 max-w-6xl flex flex-col justify-center min-h-screen">
-      <div className="container sm:mx-auto py-8">
-        <div className="flex justify-between items-center py-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 sm:rounded-xl sm:my-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Navigation */}
+        <div className="mb-8">
           <Link
             href="/#projects"
-            className="flex hover:text-black dark:hover:text-gray-300 text-gray-400 dark:text-white">
-            <FaArrowLeft className="mt-1" />
-            <span className="ml-2">Back to Projects</span>
+            className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors duration-200 group">
+            <FaArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            <span className="font-medium">Back to Projects</span>
           </Link>
         </div>
-        {/* Render hanya satu item karena ini halaman detail */}
-        <div key={item.id} className="mb-8">
-          <h2 className="sm:text-5xl text-3xl sm:bg-white sm:text-center sm:border dark:text-white sm:border-gray-300 font-semibold my-4 sm:dark:text-black sm:sticky top-5 sm:dark:bg-white sm:rounded-3xl sm:p-3 sm:shadow-xl">
-            {item.judul}
-          </h2>
-          <div className="my-10 flex justify-center items-center">
-            <Image
-              src={
-                typeof item.photo === "string" ? item.photo : "/placeholder.jpg"
-              }
-              alt={item.judul || ""}
-              width={800}
-              height={600}
-              className="rounded-lg border-2 border-gray-300 shadow-lg"
-            />
+
+        {/* Main Content */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Left Column - Project Info */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Project Header */}
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/50 dark:border-gray-700/50 shadow-sm">
+              <h1 className="text-3xl lg:text-5xl font-bold dark:text-white bg-clip-text text-transparent">
+                {item.judul}
+              </h1>
+            </div>
+
+            {/* Project Image */}
+            <div className="relative group">
+              <div className="relative h-64 sm:h-80 lg:h-96 rounded-2xl overflow-hidden border-2 border-slate-200/50 dark:border-gray-700/50 shadow-lg">
+                <Image
+                  src={
+                    typeof item.photo === "string"
+                      ? item.photo
+                      : "/placeholder.jpg"
+                  }
+                  alt={item.judul || "Project screenshot"}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
+              </div>
+            </div>
+
+            {/* Project Description */}
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/50 dark:border-gray-700/50 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                About This Project
+              </h2>
+              <div
+                className="prose prose-lg dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: item.desc }}
+              />
+            </div>
           </div>
-          <div className="sm:flex flex-col sm:flex-row mt-4 sm:gap-5 dark:text-white">
-            <p
-              className="my-4"
-              dangerouslySetInnerHTML={{ __html: item.desc }}
-            />
-            <div className="w-full sticky top-5 h-fit">
-              <p className="py-2">
-                <strong>Site: </strong>
-                {item.site == "#" || null ? (
-                  "Not Available"
-                ) : (
-                  <a
-                    href={item.site}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 underline dark:text-white">
-                    {item.site}
-                  </a>
-                )}
-              </p>
-              <p className="py-2 ">
-                <strong>Tech Stack:</strong> {item.tech}
-              </p>
-              <p className="py-2">
-                <strong>Source code:</strong>{" "}
-                {item.url == "#" || null ? (
-                  "Not Available"
-                ) : (
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 underline dark:text-white">
-                    Github Repository
-                  </a>
-                )}
-              </p>
+
+          {/* Right Column - Project Details */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-8 space-y-6">
+              {/* Tech Stack */}
+              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/50 dark:border-gray-700/50 shadow-sm">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                  Tech Stack
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {item.tech.split(",").map((tech, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium border border-blue-200 dark:border-blue-800">
+                      {tech.trim()}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Project Links */}
+              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/50 dark:border-gray-700/50 shadow-sm">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                  Project Links
+                </h3>
+                <div className="space-y-3">
+                  {/* Live Site */}
+                  <div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
+                      Live Site
+                    </p>
+                    {item.site && item.site !== "#" ? (
+                      <a
+                        href={item.site}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                        <FaExternalLinkAlt className="w-4 h-4" />
+                        <span className="truncate">
+                          {item.site.replace(/^https?:\/\//, "")}
+                        </span>
+                      </a>
+                    ) : (
+                      <span className="text-slate-400 dark:text-slate-500 text-sm">
+                        Not Available
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Source Code */}
+                  <div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
+                      Source Code
+                    </p>
+                    {item.url && item.url !== "#" ? (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                        <FaGithub className="w-4 h-4" />
+                        <span className="truncate">GitHub Repository</span>
+                      </a>
+                    ) : (
+                      <span className="text-slate-400 dark:text-slate-500 text-sm">
+                        Not Available
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -125,14 +181,23 @@ export async function generateMetadata({
   }
 
   const item = data.data[0];
+  const cleanDescription =
+    item.desc.replace(/<[^>]*>/g, "").substring(0, 160) + "...";
 
   return {
-    title: `${item.judul} - My Portfolio Project`,
-    description: item.desc.replace(/<[^>]*>/g, "").substring(0, 160) + "...",
+    title: `${item.judul} - Web Development Project`,
+    description: cleanDescription,
     openGraph: {
-      title: `${item.judul} - My Portfolio Project`,
-      description: item.desc.replace(/<[^>]*>/g, "").substring(0, 160) + "...",
+      title: `${item.judul} - Web Development Project`,
+      description: cleanDescription,
       images: item.photo ? [{ url: item.photo }] : [],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${item.judul} - Web Development Project`,
+      description: cleanDescription,
+      images: item.photo ? [item.photo] : [],
     },
   };
 }

@@ -26,13 +26,13 @@ export default function NavMenu() {
               <Link
                 href="/"
                 target="_blank"
-                className="dark:bg-gray-700 dark:text-white">
+                className="dark:bg-gray-800 dark:text-white">
                 Show Porto
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="dark:bg-gray-700 dark:text-white">
+            <NavigationMenuTrigger className="dark:bg-gray-800 dark:text-white">
               Manage
             </NavigationMenuTrigger>
             <NavigationMenuContent>
@@ -86,7 +86,7 @@ export default function NavMenu() {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="dark:bg-gray-700 dark:text-white">
+            <NavigationMenuTrigger className="dark:bg-gray-800 dark:text-white">
               Features
             </NavigationMenuTrigger>
             <NavigationMenuContent>

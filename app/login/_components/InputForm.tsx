@@ -101,7 +101,7 @@ export default function InputForm() {
                   placeholder="type ur username"
                   {...field}
                   autoComplete="false"
-                  className="dark:text-white"
+                  className="placeholder:dark:text-gray-300 placeholder:dark:font-bold dark:text-white"
                 />
               </FormControl>
               <FormMessage />
@@ -121,7 +121,7 @@ export default function InputForm() {
                   placeholder="ur passsword"
                   {...field}
                   autoComplete="false"
-                  className="dark:text-white"
+                  className="placeholder:dark:text-gray-300 placeholder:dark:font-bold dark:text-white"
                 />
               </FormControl>
               <FormMessage />

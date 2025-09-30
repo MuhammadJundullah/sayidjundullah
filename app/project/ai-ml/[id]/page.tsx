@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { fetchDataFromAPI } from "@/lib/actions";
 import Image from "next/image";
-import { FaArrowLeft } from "react-icons/fa6";
+import { FaArrowLeft, FaExternalLinkAlt, FaGithub } from "react-icons/fa";
 import { ProjectsType } from "@/lib/type";
 import { notFound } from "next/navigation";
 
@@ -12,96 +12,135 @@ export default async function Page({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-
   const res = await fetchDataFromAPI(id);
-
   const data: ProjectsType[] = res.data;
 
+  // Error handling
   if (
     !data ||
     (typeof data === "object" &&
       "message" in data &&
       data.message === "Project not found") ||
-    (Array.isArray(data) && data.length === 0)
+    (Array.isArray(data) && data.length === 0) ||
+    !Array.isArray(data)
   ) {
-    notFound();
-  }
-
-  if (!Array.isArray(data)) {
     notFound();
   }
 
   const item = data[0];
 
   return (
-    <div className="sm:mx-auto mx-5 max-w-6xl flex flex-col justify-center min-h-screen">
-      <div className="container sm:mx-auto py-8">
-        <div className="flex justify-between items-center py-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 sm:rounded-xl sm:my-10">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="flex items-center mb-8">
           <Link
             href="/#projects"
-            className="flex hover:text-black dark:hover:text-gray-300 text-gray-400 dark:text-white">
-            <FaArrowLeft className="mt-1" />
-            <span className="ml-2">Back to Projects</span>
+            className="group flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">
+            <FaArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            <span className="ml-2 font-medium">Back to Projects</span>
           </Link>
         </div>
 
-        {/* Render hanya satu item karena ini halaman detail */}
-        <div key={item.id} className="mb-8">
-          <h2 className="sm:text-5xl text-3xl sm:bg-white sm:text-center sm:border dark:text-white sm:border-gray-300 font-semibold my-4 sm:dark:text-black sm:sticky top-5 sm:dark:bg-white sm:rounded-3xl sm:p-3 sm:shadow-xl">
-            {item.judul}
-          </h2>
-          <div className="my-10 flex justify-center items-center">
+        {/* Project Content */}
+        <article className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl overflow-hidden">
+          {/* Hero Image */}
+          <div className="relative h-64 sm:h-80 md:h-96">
             <Image
               src={
                 typeof item.photo === "string" ? item.photo : "/placeholder.jpg"
               }
-              alt={item.judul || ""}
-              width={800}
-              height={600}
-              className="rounded-lg border-2 border-gray-300 shadow-lg"
+              alt={item.judul || "Project image"}
+              fill
+              className="object-cover"
+              priority
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
           </div>
-          <div className="sm:flex flex-col sm:flex-row mt-4 sm:gap-5 dark:text-white">
-            <p
-              className="my-4"
-              dangerouslySetInnerHTML={{ __html: item.desc }}
-            />
 
-            <div className="w-full sticky top-30 h-fit">
-              <p className="py-2">
-                <strong>Site: </strong>
-                {item.site == "#" || null ? (
-                  "Not Available"
-                ) : (
-                  <a
-                    href={item.site}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 underline dark:text-white">
-                    {item.site}
-                  </a>
-                )}
-              </p>
-              <p className="py-2 ">
-                <strong>Tech Stack:</strong> {item.tech}
-              </p>
-              <p className="py-2">
-                <strong>Source code:</strong>{" "}
-                {item.url == "#" || null ? (
-                  "Not Available"
-                ) : (
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 underline dark:text-white">
-                    Github Repository.
-                  </a>
-                )}
-              </p>
+          {/* Content */}
+          <div className="p-6 sm:p-8">
+            {/* Title */}
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+              {item.judul}
+            </h1>
+
+            {/* Description */}
+            <div className="prose prose-lg dark:prose-invert max-w-none mb-8">
+              <div
+                className="text-gray-700 dark:text-gray-300 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: item.desc }}
+              />
+            </div>
+
+            {/* Project Details */}
+            <div className="bg-gray-50/50 dark:bg-gray-700/30 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4 text-lg">
+                Project Details
+              </h3>
+
+              <div className="space-y-4">
+                {/* Live Site */}
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600 dark:text-gray-400 font-medium">
+                    Live Site
+                  </span>
+                  {item.site && item.site !== "#" ? (
+                    <a
+                      href={item.site}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
+                      <FaExternalLinkAlt className="w-4 h-4 mr-2" />
+                      Visit Site
+                    </a>
+                  ) : (
+                    <span className="text-gray-400 dark:text-gray-500 text-sm">
+                      Not Available
+                    </span>
+                  )}
+                </div>
+
+                {/* Source Code */}
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600 dark:text-gray-400 font-medium">
+                    Source Code
+                  </span>
+                  {item.url && item.url !== "#" ? (
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+                      <FaGithub className="w-4 h-4 mr-2" />
+                      View Code
+                    </a>
+                  ) : (
+                    <span className="text-gray-400 dark:text-gray-500 text-sm">
+                      Not Available
+                    </span>
+                  )}
+                </div>
+
+                {/* Tech Stack */}
+                <div>
+                  <span className="text-gray-600 dark:text-gray-400 font-medium block mb-2">
+                    Tech Stack
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {item.tech.split(",").map((tech, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium">
+                        {tech.trim()}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </article>
       </div>
     </div>
   );
@@ -127,14 +166,23 @@ export async function generateMetadata({
   }
 
   const item = data.data[0];
+  const cleanDescription =
+    item.desc.replace(/<[^>]*>/g, "").substring(0, 160) + "...";
 
   return {
-    title: `${item.judul} - My Portfolio Project`,
-    description: item.desc.replace(/<[^>]*>/g, "").substring(0, 160) + "...",
+    title: `${item.judul} - Project Details`,
+    description: cleanDescription,
     openGraph: {
       title: `${item.judul} - My Portfolio Project`,
-      description: item.desc.replace(/<[^>]*>/g, "").substring(0, 160) + "...",
+      description: cleanDescription,
       images: item.photo ? [{ url: item.photo }] : [],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${item.judul} - My Portfolio Project`,
+      description: cleanDescription,
+      images: item.photo ? [item.photo] : [],
     },
   };
 }

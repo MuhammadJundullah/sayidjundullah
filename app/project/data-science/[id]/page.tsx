@@ -27,7 +27,7 @@ export default async function Page({
   const item = data[0];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-900 dark:to-gray-800 sm:rounded-xl sm:my-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Navigation */}
         <div className="mb-8">
@@ -124,7 +124,7 @@ export default async function Page({
         </div>
         {/* Embedded Content */}
         {item.site && item.site !== "#" && (
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/50 dark:border-gray-700/50 shadow-sm my-5">
+          <div className="sm:block hidden bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/50 dark:border-gray-700/50 shadow-sm my-5">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
               Dashboard Visualizations
             </h2>

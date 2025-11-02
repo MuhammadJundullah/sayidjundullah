@@ -17,6 +17,7 @@ jobs:
       CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
       CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      BASE_URL: ${{ secrets.BASE_URL }}
       
     permissions:
       contents: read #This is required for actions/checkout
@@ -60,3 +61,4 @@ jobs:
           package: .
 
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7E2F4F1069E444AD969A2E5D6DDFC2B9 }}
+

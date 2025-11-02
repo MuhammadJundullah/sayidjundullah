@@ -47,8 +47,8 @@ export default async function Page({
           {/* Left Column - Project Info */}
           <div className="lg:col-span-2 space-y-8">
             {/* Project Header */}
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/50 dark:border-gray-700/50 shadow-sm">
-              <h1 className="text-3xl lg:text-5xl font-bold dark:text-white bg-clip-text text-transparent">
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/50 dark:border-gray-700/50 shadow-sm">
+              <h1 className="text-3xl lg:text-5xl font-bold text-gray-900 dark:text-white">
                 {item.judul}
               </h1>
             </div>

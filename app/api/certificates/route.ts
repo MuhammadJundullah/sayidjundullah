@@ -1,12 +1,9 @@
 import { v2 as cloudinary } from "cloudinary";
-import { PrismaClient } from "@prisma/client";
-import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { z } from "zod";
-
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
-const prisma = globalForPrisma.prisma || new PrismaClient();
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+import { apiResponse, handleError } from "@/lib/api-utils";
 
 if (process.env.CLOUDINARY_URL) {
   cloudinary.config({
@@ -16,57 +13,42 @@ if (process.env.CLOUDINARY_URL) {
   console.error("CLOUDINARY_URL environment variable is required");
 }
 
+const certificateSchema = z.object({
+  name: z.string().min(1, "Name wajib diisi"),
+  desc: z.string().optional(),
+  date: z.string().refine((val) => !isNaN(Date.parse(val)), {
+    message: "Format tanggal tidak valid",
+  }),
+  site: z.string().url("URL tidak valid"),
+  status: z.string().nullable().optional(),
+});
+
+const patchCertificateSchema = z.object({
+  status: z.string(),
+});
+
 export async function GET(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
     const status = searchParams.get("status");
 
-    if (status){
-      const certificates = await prisma.certificates.findMany({
-        where: {status: status},
-        orderBy: [
-          {
-            status: "desc"
-          },
-        ],
-      });
-
-      return NextResponse.json(
-          {
-            message: "Certificates fetched successfully",
-            success: true,
-            data: certificates
-          }, {status: 200}
-      )
-
-    } else {
-      const certificates = await prisma.certificates.findMany({
-        orderBy: [
-          {
-            status: "desc"
-          },
-        ],
-
-      });
-
-      return NextResponse.json(
-          {
-            message: "Certificates fetched successfully.",
-            success: true,
-            data: certificates
-          },
-          {status: 200}
-      )
-    }
-
-  } catch (error) {
-    return NextResponse.json(
+    const certificates = await prisma.certificates.findMany({
+      where: status ? { status: status } : {},
+      orderBy: [
         {
-          message: `Error fetching data certifications: ${error}`,
-          success: false
+          status: "desc",
         },
-        {status: 500}
-    )
+      ],
+    });
+
+    return apiResponse(
+      true,
+      certificates,
+      "Certificates fetched successfully",
+      200
+    );
+  } catch (error) {
+    return handleError(error, "Error fetching data certifications");
   }
 }
 
@@ -74,7 +56,7 @@ export async function POST(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (!token) {
-    // return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return handleError(null, "Unauthorized", 401);
   }
 
   try {
@@ -86,25 +68,10 @@ export async function POST(req: NextRequest) {
     const site = formData.get("site")?.toString() || "";
     const status = formData.get("status")?.toString() || null;
 
-    const schema = z.object({
-      name: z.string().min(1, "Name wajib diisi"),
-      desc: z.string().optional(),
-      date: z.string().refine((val) => !isNaN(Date.parse(val)), {
-        message: "Format tanggal tidak valid",
-      }),
-      site: z.string().url("URL tidak valid"),
-      status: z.string().nullable().optional(),
-    });
-
-    const parsed = schema.safeParse({ name, desc, date, site, status });
+    const parsed = certificateSchema.safeParse({ name, desc, date, site, status });
 
     if (!parsed.success) {
-      return NextResponse.json(
-        {
-          error: parsed.error.flatten().fieldErrors,
-        },
-        { status: 400 }
-      );
+      return handleError(parsed.error.flatten().fieldErrors, "Invalid input", 400);
     }
 
     const photo = formData.get("photo");
@@ -140,28 +107,22 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(
-      {
-        message: "Certificate created successfully.",
-        certificate: newCertificate
-      }, { status: 201 }
+    return apiResponse(
+      true,
+      newCertificate,
+      "Certificate created successfully.",
+      201
     );
   } catch (error) {
-
-    return NextResponse.json(
-      { error: `Error creating certificate: ${error}` },
-      { status: 500 }
-    );
-
+    return handleError(error, "Error creating certificate");
   }
 }
 
 export async function DELETE(req: NextRequest) {
-
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (!token) {
-    // return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return handleError(null, "Unauthorized", 401);
   }
 
   try {
@@ -169,18 +130,12 @@ export async function DELETE(req: NextRequest) {
     const idParam = seacrhParams.get("id");
 
     if (!idParam) {
-      return NextResponse.json(
-        { error: "Need ID." },
-        { status: 400 }
-      );
+      return handleError(null, "Need ID.", 400);
     }
 
     const certificateId = parseInt(idParam);
     if (isNaN(certificateId)) {
-      return NextResponse.json(
-        { error: "Invalid ID." },
-        { status: 400 }
-      );
+      return handleError(null, "Invalid ID.", 400);
     }
 
     const certificateToDelete = await prisma.certificates.findUnique({
@@ -194,10 +149,7 @@ export async function DELETE(req: NextRequest) {
     });
 
     if (!certificateToDelete) {
-      return NextResponse.json(
-        { message: "Certificate not found." },
-        { status: 404 }
-      );
+      return handleError(null, "Certificate not found.", 404);
     }
 
     const photoUrl = certificateToDelete.photo;
@@ -221,39 +173,90 @@ export async function DELETE(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(
-      {
-        message: "Certificate deleted successfully.",
-        success: true,
-        data: deletedCertificate,
-      }, { status: 200 }
+    return apiResponse(
+      true,
+      deletedCertificate,
+      "Certificate deleted successfully.",
+      200
     );
   } catch (error) {
-
-    return NextResponse.json(
-      { error: `Failed deleted certificate: ${error}` },
-      { status: 500 }
-    );
-
+    return handleError(error, "Failed deleted certificate");
   }
 }
 
 export async function PUT(req: NextRequest) {
-  const token = await getToken({req, secret: process.env.NEXTAUTH_SECRET})
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (!token) {
-    return NextResponse.json({message: "Unauthorized."}, {status: 401})
+    return handleError(null, "Unauthorized", 401);
   }
 
+  try {
+    const id = req.nextUrl.searchParams.get("id");
+
+    if (!id) {
+      return handleError(null, "ID is required in query parameters.", 400);
+    }
+
+    const data = await req.json();
+
+    const parsed = certificateSchema.safeParse(data);
+
+    if (!parsed.success) {
+      return handleError(parsed.error.flatten().fieldErrors, "Invalid input", 400);
+    }
+
+    const certificate = await prisma.certificates.update({
+      where: {
+        id: parseInt(id),
+      },
+      data: parsed.data,
+    });
+
+    return apiResponse(true, certificate, "Certificate updated successfully.", 200);
+  } catch (err) {
+    return handleError(err, "Error updating certificate");
+  }
 }
 
 export async function PATCH(req: NextRequest) {
-  const token = await getToken({req, secret: process.env.NEXTAUTH_SECRET})
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (!token) {
-    return NextResponse.json({message: "Unauthorized."}, {status: 401})
+    return handleError(null, "Unauthorized", 401);
   }
 
+  try {
+    const id = req.nextUrl.searchParams.get("id");
+
+    if (!id) {
+      return handleError(null, "ID is required in query parameters.", 400);
+    }
+
+    const data = await req.json();
+
+    const parsed = patchCertificateSchema.safeParse(data);
+
+    if (!parsed.success) {
+      return handleError(parsed.error.flatten().fieldErrors, "Invalid input", 400);
+    }
+
+    const certificate = await prisma.certificates.update({
+      where: {
+        id: parseInt(id),
+      },
+      data: parsed.data,
+    });
+
+    return apiResponse(
+      true,
+      certificate,
+      "Certificate status updated successfully.",
+      200
+    );
+  } catch (err) {
+    return handleError(err, "Error updating certificate status");
+  }
 }
 
 

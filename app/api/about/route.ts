@@ -1,47 +1,45 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
+import { apiResponse, handleError } from "@/lib/api-utils";
+import { z } from "zod";
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
-const prisma = globalForPrisma.prisma || new PrismaClient();
-
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+const aboutSchema = z.object({
+  about: z.string().min(1, "About is required"),
+  what_i_do: z.string().min(1, "What I do is required"),
+  role: z.string().min(1, "Role is required"),
+});
 
 export async function POST(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (!token) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return handleError(null, "Unauthorized", 401);
   }
 
   try {
     const data = await req.formData();
-    console.log(data);
     const about = data.get("about")?.toString() || "";
     const whatIDo = data.get("whatIDo")?.toString() || "";
     const role = data.get("role")?.toString() || "";
 
+    const parsed = aboutSchema.safeParse({ about, what_i_do: whatIDo, role });
+
+    if (!parsed.success) {
+      return handleError(parsed.error.flatten().fieldErrors, "Invalid input", 400);
+    }
+
     await prisma.about.create({
       data: {
-        about: about,
-        what_i_do: whatIDo,
-        role: role,
+        about: parsed.data.about,
+        what_i_do: parsed.data.what_i_do,
+        role: parsed.data.role,
       },
     });
 
-    return NextResponse.json(
-      {
-        message: "About created successfully.",
-        success: true,
-      },
-      { status: 201 }
-    );
+    return apiResponse(true, null, "About created successfully.", 201);
   } catch (err) {
-    console.log("Error create about: ", err);
-    return NextResponse.json(
-      { error: `Error creating project: ${err}` },
-      { status: 500 }
-    );
+    return handleError(err, "Error creating about");
   }
 }
 
@@ -52,26 +50,22 @@ export async function PUT(req: NextRequest) {
   });
 
   if (!token) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return handleError(null, "Unauthorized", 401);
   }
 
   try {
     const id = req.nextUrl.searchParams.get("id");
 
     if (!id) {
-      return NextResponse.json(
-        { error: "ID is required in query parameters." },
-        { status: 400 }
-      );
+      return handleError(null, "ID is required in query parameters.", 400);
     }
 
     const data = await req.json();
 
-    if (!data.about || !data.what_i_do) {
-      return NextResponse.json(
-        { error: "Missing required fields." },
-        { status: 400 }
-      );
+    const parsed = aboutSchema.safeParse(data);
+
+    if (!parsed.success) {
+      return handleError(parsed.error.flatten().fieldErrors, "Invalid input", 400);
     }
 
     const about = await prisma.about.update({
@@ -79,79 +73,42 @@ export async function PUT(req: NextRequest) {
         id: parseInt(id),
       },
       data: {
-        about: data.about,
-        what_i_do: data.what_i_do,
-        role: data.role,
+        about: parsed.data.about,
+        what_i_do: parsed.data.what_i_do,
+        role: parsed.data.role,
       },
     });
 
-    return NextResponse.json(
-      {
-        message: "About updated successfully.",
-        success: true,
-        data: about,
-      },
-      { status: 200 }
-    );
+    return apiResponse(true, about, "About updated successfully.", 200);
   } catch (err) {
-    console.log("Error updating about: ", err);
-    return NextResponse.json(
-      { error: `Error updating about: ${err}` },
-      { status: 500 }
-    );
+    return handleError(err, "Error updating about");
   }
 }
 
 export async function GET(req: NextRequest) {
-    try {
-      const strId = req.nextUrl.searchParams.get("id") || "";
-      
-      if (!strId) {
-          const data = await prisma.about.findMany();
+  try {
+    const strId = req.nextUrl.searchParams.get("id") || "";
 
-          return NextResponse.json(
-            {
-              message: "About fetched successfully.",
-              success: true,
-              data: data,
-            },
-            { status: 200 }
-          );
-      }
+    if (!strId) {
+      const data = await prisma.about.findMany();
 
-        const id = parseInt(strId, 10)
-
-        const data = await prisma.about.findFirst({
-            where: {
-                id: id
-            },
-        })
-
-        if (!data) {
-             return NextResponse.json(
-               {
-                 message: "Not found.",
-                 success: false,
-               },
-               { status: 404 }
-             );
-        }
-
-        return NextResponse.json(
-        {
-            message: "About fetched successfully.",
-            success: true,
-            data: data
-        },
-        { status: 200 }
-        );
-    } catch (err) {
-        console.log("Error updating about: ", err);
-        return NextResponse.json(
-        { error: `Error updating about: ${err}` },
-        { status: 500 }
-        );
+      return apiResponse(true, data, "About fetched successfully.", 200);
     }
 
+    const id = parseInt(strId, 10);
 
+    const data = await prisma.about.findFirst({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!data) {
+      return handleError(null, "Not found.", 404);
+    }
+
+    return apiResponse(true, data, "About fetched successfully.", 200);
+  } catch (err) {
+    return handleError(err, "Error fetching about");
+  }
 }

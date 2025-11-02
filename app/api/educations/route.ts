@@ -1,18 +1,18 @@
 import prisma from "@/lib/prisma";
-import {NextResponse} from "next/server";
+import { apiResponse, handleError } from "@/lib/api-utils";
 
 export async function GET() {
   try {
     const educations = await prisma.educations.findMany({
       orderBy: { id: "desc" },
     });
-    return NextResponse.json({
-      message: "Educations fetched successfully.",
-      success: true,
-      data: educations
-      }, {status: 200}
-    )
+    return apiResponse(
+      true,
+      educations,
+      "Educations fetched successfully.",
+      200
+    );
   } catch (error) {
-    return NextResponse.json(`Error fetching educations : ${error}`)
+    return handleError(error, "Error fetching educations");
   }
 }

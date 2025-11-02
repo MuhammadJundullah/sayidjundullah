@@ -1,9 +1,16 @@
 import prisma from "@/lib/prisma";
-import { NextResponse, NextRequest } from "next/server";
+import { NextRequest } from "next/server";
+import { apiResponse, handleError } from "@/lib/api-utils";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const { searchParams } = new URL(req.url);
+    const skip = searchParams.get("skip");
+    const take = searchParams.get("take");
+
     const experiences = await prisma.experiences.findMany({
+      skip: skip ? parseInt(skip) : undefined,
+      take: take ? parseInt(take) : undefined,
       orderBy: { id: "desc" },
       select: {
         id: true,
@@ -30,23 +37,14 @@ export async function GET() {
       jobdesks: exp.jobdesks,
     }));
 
-    return NextResponse.json(
-      {
-        message: "Work experiences fetched successfully.",
-        success: true,
-        data: formatted,
-      },
-      { status: 200 }
+    return apiResponse(
+      true,
+      formatted,
+      "Work experiences fetched successfully.",
+      200
     );
   } catch (error) {
-    console.error("Error fetching work experiences:", error);
-    return NextResponse.json(
-      {
-        message: "Failed fetching work experiences",
-        success: false,
-      },
-      { status: 500 }
-    );
+    return handleError(error, "Failed fetching work experiences");
   }
 }
 
@@ -58,38 +56,27 @@ export async function POST(request: NextRequest) {
     const { company_name, position, duration, type, jobdesks } = body;
 
     if (!company_name || !position || !duration || !type) {
-      return NextResponse.json(
-        {
-          message:
-            "Missing required fields: company_name, position, duration, type",
-          success: false,
-        },
-        { status: 400 }
+      return handleError(
+        null,
+        "Missing required fields: company_name, position, duration, type",
+        400
       );
     }
 
     // Validasi jobdesks
     if (!jobdesks || !Array.isArray(jobdesks) || jobdesks.length === 0) {
-      return NextResponse.json(
-        {
-          message: "Jobdesks must be a non-empty array",
-          success: false,
-        },
-        { status: 400 }
-      );
+      return handleError(null, "Jobdesks must be a non-empty array", 400);
     }
 
     // Validasi setiap jobdesk harus punya description
     const invalidJobdesks = jobdesks.some(
-      (jd) => !jd.description || jd.description.trim() === ""
+      (jd: any) => !jd.description || jd.description.trim() === ""
     );
     if (invalidJobdesks) {
-      return NextResponse.json(
-        {
-          message: "Each jobdesk must have a valid description",
-          success: false,
-        },
-        { status: 400 }
+      return handleError(
+        null,
+        "Each jobdesk must have a valid description",
+        400
       );
     }
 
@@ -146,37 +133,19 @@ export async function POST(request: NextRequest) {
       jobdesks: newExperience.jobdesks,
     };
 
-    return NextResponse.json(
-      {
-        message: "Work experience created successfully.",
-        success: true,
-        data: formatted,
-      },
-      { status: 201 }
+    return apiResponse(
+      true,
+      formatted,
+      "Work experience created successfully.",
+      201
     );
   } catch (error) {
-    console.error("Error creating work experience:", error);
-
-    // Handle Prisma specific errors
     if (error instanceof Error) {
       if (error.message.includes("Unique constraint")) {
-        return NextResponse.json(
-          {
-            message: "Duplicate entry detected",
-            success: false,
-          },
-          { status: 409 }
-        );
+        return handleError(error, "Duplicate entry detected", 409);
       }
     }
-
-    return NextResponse.json(
-      {
-        message: "Failed creating work experience",
-        success: false,
-      },
-      { status: 500 }
-    );
+    return handleError(error, "Failed creating work experience");
   }
 }
 
@@ -189,34 +158,23 @@ export async function PUT(request: NextRequest) {
       body;
 
     if (!experience_id) {
-      return NextResponse.json(
-        {
-          message: "Missing required field: experience_id",
-          success: false,
-        },
-        { status: 400 }
-      );
+      return handleError(null, "Missing required field: experience_id", 400);
     }
 
     if (!company_name || !position || !duration || !type) {
-      return NextResponse.json(
-        {
-          message:
-            "Missing required fields: company_name, position, duration, type",
-          success: false,
-        },
-        { status: 400 }
+      return handleError(
+        null,
+        "Missing required fields: company_name, position, duration, type",
+        400
       );
     }
 
     // Validasi jobdesks jika ada
     if (jobdesks && (!Array.isArray(jobdesks) || jobdesks.length === 0)) {
-      return NextResponse.json(
-        {
-          message: "Jobdesks must be a non-empty array if provided",
-          success: false,
-        },
-        { status: 400 }
+      return handleError(
+        null,
+        "Jobdesks must be a non-empty array if provided",
+        400
       );
     }
 
@@ -226,12 +184,10 @@ export async function PUT(request: NextRequest) {
         (jd: any) => !jd.description || jd.description.trim() === ""
       );
       if (invalidJobdesks) {
-        return NextResponse.json(
-          {
-            message: "Each jobdesk must have a valid description",
-            success: false,
-          },
-          { status: 400 }
+        return handleError(
+          null,
+          "Each jobdesk must have a valid description",
+          400
         );
       }
     }
@@ -242,13 +198,7 @@ export async function PUT(request: NextRequest) {
     });
 
     if (!existingExperience) {
-      return NextResponse.json(
-        {
-          message: "Work experience not found",
-          success: false,
-        },
-        { status: 404 }
-      );
+      return handleError(null, "Work experience not found", 404);
     }
 
     // Update experience dengan jobdesks menggunakan transaction
@@ -314,37 +264,19 @@ export async function PUT(request: NextRequest) {
       jobdesks: updatedExperience.jobdesks,
     };
 
-    return NextResponse.json(
-      {
-        message: "Work experience updated successfully.",
-        success: true,
-        data: formatted,
-      },
-      { status: 200 }
+    return apiResponse(
+      true,
+      formatted,
+      "Work experience updated successfully.",
+      200
     );
   } catch (error) {
-    console.error("Error updating work experience:", error);
-
-    // Handle Prisma specific errors
     if (error instanceof Error) {
       if (error.message.includes("Record to update not found")) {
-        return NextResponse.json(
-          {
-            message: "Work experience not found",
-            success: false,
-          },
-          { status: 404 }
-        );
+        return handleError(error, "Work experience not found", 404);
       }
     }
-
-    return NextResponse.json(
-      {
-        message: "Failed updating work experience",
-        success: false,
-      },
-      { status: 500 }
-    );
+    return handleError(error, "Failed updating work experience");
   }
 }
 
@@ -359,13 +291,7 @@ export async function DELETE(request: NextRequest) {
       const jobdeskIdNum = parseInt(jobdesk_id);
 
       if (isNaN(jobdeskIdNum)) {
-        return NextResponse.json(
-          {
-            message: "Invalid jobdesk_id format",
-            success: false,
-          },
-          { status: 400 }
-        );
+        return handleError(null, "Invalid jobdesk_id format", 400);
       }
 
       // Cek apakah jobdesk exists
@@ -375,13 +301,7 @@ export async function DELETE(request: NextRequest) {
       });
 
       if (!existingJobdesk) {
-        return NextResponse.json(
-          {
-            message: "Jobdesk not found",
-            success: false,
-          },
-          { status: 404 }
-        );
+        return handleError(null, "Jobdesk not found", 404);
       }
 
       // Delete jobdesk
@@ -389,16 +309,14 @@ export async function DELETE(request: NextRequest) {
         where: { id: jobdeskIdNum },
       });
 
-      return NextResponse.json(
+      return apiResponse(
+        true,
         {
-          message: "Jobdesk deleted successfully.",
-          success: true,
-          data: {
-            deleted_jobdesk_id: jobdeskIdNum,
-            experience_id: existingJobdesk.experiences_id,
-          },
+          deleted_jobdesk_id: jobdeskIdNum,
+          experience_id: existingJobdesk.experiences_id,
         },
-        { status: 200 }
+        "Jobdesk deleted successfully.",
+        200
       );
     }
 
@@ -407,13 +325,7 @@ export async function DELETE(request: NextRequest) {
       const experienceIdNum = parseInt(experience_id);
 
       if (isNaN(experienceIdNum)) {
-        return NextResponse.json(
-          {
-            message: "Invalid experience_id format",
-            success: false,
-          },
-          { status: 400 }
-        );
+        return handleError(null, "Invalid experience_id format", 400);
       }
 
       // Cek apakah experience exists
@@ -425,13 +337,7 @@ export async function DELETE(request: NextRequest) {
       });
 
       if (!existingExperience) {
-        return NextResponse.json(
-          {
-            message: "Work experience not found",
-            success: false,
-          },
-          { status: 404 }
-        );
+        return handleError(null, "Work experience not found", 404);
       }
 
       // Delete experience (jobdesks akan terhapus otomatis karena onDelete: Cascade)
@@ -439,49 +345,29 @@ export async function DELETE(request: NextRequest) {
         where: { id: experienceIdNum },
       });
 
-      return NextResponse.json(
+      return apiResponse(
+        true,
         {
-          message: "Work experience deleted successfully.",
-          success: true,
-          data: {
-            deleted_experience_id: experienceIdNum,
-            deleted_jobdesks_count: existingExperience.jobdesks.length,
-          },
+          deleted_experience_id: experienceIdNum,
+          deleted_jobdesks_count: existingExperience.jobdesks.length,
         },
-        { status: 200 }
+        "Work experience deleted successfully.",
+        200
       );
     }
 
     // Case 3: No parameter provided
-    return NextResponse.json(
-      {
-        message: "Missing required parameter: experience_id or jobdesk_id",
-        success: false,
-      },
-      { status: 400 }
+    return handleError(
+      null,
+      "Missing required parameter: experience_id or jobdesk_id",
+      400
     );
   } catch (error) {
-    console.error("Error deleting data:", error);
-
-    // Handle Prisma specific errors
     if (error instanceof Error) {
       if (error.message.includes("Record to delete does not exist")) {
-        return NextResponse.json(
-          {
-            message: "Data not found",
-            success: false,
-          },
-          { status: 404 }
-        );
+        return handleError(error, "Data not found", 404);
       }
     }
-
-    return NextResponse.json(
-      {
-        message: "Failed deleting data",
-        success: false,
-      },
-      { status: 500 }
-    );
+    return handleError(error, "Failed deleting data");
   }
 }

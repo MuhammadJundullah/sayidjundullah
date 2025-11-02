@@ -1,85 +1,51 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
+import prisma from "@/lib/prisma";
+import { apiResponse, handleError } from "@/lib/api-utils";
+import { z } from "zod";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import { v2 as cloudinary } from "cloudinary";
-import { Prisma, PrismaClient } from "@prisma/client";
-import { Readable } from "stream";
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
-const prisma = globalForPrisma.prisma || new PrismaClient();
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
-
-// streamToBuffer
-async function streamToBuffer(stream: Readable): Promise<Buffer> {
-  const chunks: Uint8Array[] = [];
-  for await (const chunk of stream) {
-    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
-  }
-  return Buffer.concat(chunks);
-}
-
-if (process.env.CLOUDINARY_URL) {
-  cloudinary.config({
-    secure: true,
-  });
-} else {
-  console.error("CLOUDINARY_URL environment variable is required");
-}
+const techStackSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  description: z.string().optional(),
+});
 
 export async function POST(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (!token) {
-    // return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+    return handleError(null, "Unauthorized.", 401);
   }
 
   try {
     const formData = await req.formData();
-    const name = formData.get("name")?.toString() || "";
-    const image = formData.get("image");
-    const description = formData.get("description")?.toString() || "";
+    const parsed = techStackSchema.safeParse({
+      name: formData.get("name"),
+      description: formData.get("description"),
+    });
 
-    let imageUrl;
+    if (!parsed.success) {
+      return handleError(parsed.error.flatten().fieldErrors, "Invalid input", 400);
+    }
 
-    if (image instanceof File && image.size > 0) {
-      const bytes = await image.arrayBuffer();
-      const buffer = Buffer.from(bytes);
+    const image = formData.get("image") as File;
+    const imageUrl = await uploadToCloudinary(image, "/portofolio/techstacks");
 
-      const uploadResult = await new Promise<any>((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: "/portofolio/techstacks" },
-          (error, result) => {
-            if (error) reject(error);
-            else resolve(result);
-          }
-        );
-        stream.end(buffer);
-      });
-
-      imageUrl = (uploadResult as any).secure_url || "default";
+    if (!imageUrl) {
+      return handleError(null, "Image upload failed.", 400);
     }
 
     await prisma.techStack.create({
       data: {
-        name: name,
-        description: description,
+        ...parsed.data,
         image: imageUrl,
       },
     });
 
-    return NextResponse.json(
-      {
-        message: "Techstack created successfully.",
-        success: true,
-      },
-      { status: 201 }
-    );
+    return apiResponse(true, null, "Techstack created successfully.", 201);
   } catch (error) {
-    console.log(error);
-
-    return NextResponse.json(
-      { error: `Error creating Techstack: ${error}` },
-      { status: 500 }
-    );
+    return handleError(error, "Error creating Techstack");
   }
 }
 
@@ -92,21 +58,11 @@ export async function GET(req: NextRequest) {
     if (strId) {
       const id = parseInt(strId, 10);
 
-      let whereClause: Prisma.TechStackWhereInput = {};
-
-      whereClause = { id };
-      const techStack = await prisma.techStack.findMany({
-        where: whereClause,
+      const techStack = await prisma.techStack.findUnique({
+        where: { id },
       });
 
-      return NextResponse.json(
-        {
-          message: "TechStack fetched successfully.",
-          success: true,
-          data: techStack,
-        },
-        { status: 200 }
-      );
+      return apiResponse(true, techStack, "TechStack fetched successfully.", 200);
     }
 
     if (filter) {
@@ -116,35 +72,14 @@ export async function GET(req: NextRequest) {
         select: { [selectClause]: true },
       });
 
-      return NextResponse.json(
-        {
-          message: "TechStack fetched successfully.",
-          success: true,
-          data: techStack,
-        },
-        { status: 200 }
-      );
+      return apiResponse(true, techStack, "TechStack fetched successfully.", 200);
     }
 
     const techStack = await prisma.techStack.findMany();
 
-    return NextResponse.json(
-      {
-        message: "TechStack fetched successfully.",
-        success: true,
-        data: techStack,
-      },
-      { status: 200 }
-    );
+    return apiResponse(true, techStack, "TechStack fetched successfully.", 200);
   } catch (error) {
-    console.log(error);
-    return NextResponse.json(
-      {
-        message: `Failed fetching techStacks : ${error}`,
-        success: false,
-      },
-      { status: 500 }
-    );
+    return handleError(error, "Failed fetching techStacks");
   }
 }
 
@@ -152,7 +87,7 @@ export async function DELETE(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (!token) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return handleError(null, "Unauthorized", 401);
   }
 
   try {
@@ -170,13 +105,7 @@ export async function DELETE(req: NextRequest) {
     });
 
     if (!techstackToDelete) {
-      return NextResponse.json(
-        {
-          message: "Techstack not found",
-          success: false,
-        },
-        { status: 404 }
-      );
+      return handleError(null, "Techstack not found", 404);
     }
 
     const imageUrl = techstackToDelete.image;
@@ -200,24 +129,9 @@ export async function DELETE(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(
-      {
-        message: "Delete techstack successfully.",
-        success: true,
-      },
-      {
-        status: 200,
-      }
-    );
+    return apiResponse(true, null, "Delete techstack successfully.", 200);
   } catch (error) {
-    console.log(error);
-
-    return NextResponse.json(
-      {
-        message: `Failed delete techstack : ${error}`,
-      },
-      { status: 500 }
-    );
+    return handleError(error, "Failed delete techstack");
   }
 }
 
@@ -229,29 +143,19 @@ export async function PUT(req: NextRequest) {
     const id = strId ? parseInt(strId, 10) : NaN;
 
     if (isNaN(id)) {
-      return NextResponse.json(
-        { message: "ID is required and must be a valid number." },
-        { status: 400 }
-      );
+      return handleError(null, "ID is required and must be a valid number.", 400);
     }
 
     const formData = await req.formData();
 
-    console.log(formData);
-
-    const updateData: Prisma.TechStackUpdateInput = {};
-
-    const fieldsToProcess: (keyof Prisma.TechStackUpdateInput)[] = [
-      "name",
-      "description",
-    ];
-
-    fieldsToProcess.forEach((field) => {
-      const value = formData.get(field);
-      if (value !== null) {
-        updateData[field] = value.toString();
-      }
+    const parsed = techStackSchema.safeParse({
+      name: formData.get("name"),
+      description: formData.get("description"),
     });
+
+    if (!parsed.success) {
+      return handleError(parsed.error.flatten().fieldErrors, "Invalid input", 400);
+    }
 
     const newImageFile = formData.get("image") as File | null;
     const deletePhotoExplicitly = formData.get("deleteImage") === "true";
@@ -261,91 +165,38 @@ export async function PUT(req: NextRequest) {
     });
 
     if (!currentProject) {
-      return NextResponse.json(
-        { message: "Project not found" },
-        { status: 404 }
-      );
+      return handleError(null, "Project not found", 404);
     }
 
     let finalImageUrl: string | null = currentProject.image;
-    let photoDeletionPublicId: string | null = null;
-    let uploadResult = null;
 
-    if (newImageFile && newImageFile.size > 0) {
-      const buffer = await streamToBuffer(newImageFile.stream() as any);
-      uploadResult = await new Promise<any>((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          { folder: "/portofolio/techstacks" },
-          (err, result) => {
-            if (err) reject(err);
-            else resolve(result);
-          }
-        );
-        uploadStream.end(buffer);
-      });
-      finalImageUrl = uploadResult.secure_url;
-
-      if (currentProject.image) {
-        const match = currentProject.image.match(/\/v\d+\/(.+)\.\w+$/);
-        photoDeletionPublicId = match ? match[1] : null;
-      }
-    } else if (deletePhotoExplicitly && currentProject.image) {
-      const match = currentProject.image.match(/\/v\d+\/(.+)\.\w+$/);
-      photoDeletionPublicId = match ? match[1] : null;
+    if (newImageFile) {
+      finalImageUrl = await uploadToCloudinary(
+        newImageFile,
+        "/portofolio/techstacks"
+      );
+    } else if (deletePhotoExplicitly) {
       finalImageUrl = null;
     }
 
-    const updatedTechStacksResult = await prisma.$transaction(async (tx) => {
-      if (photoDeletionPublicId) {
-        try {
-          await cloudinary.uploader.destroy(photoDeletionPublicId);
-        } catch (err) {
-          console.error("Failed to delete old photo from Cloudinary:", err);
-        }
-      }
-
-      // Memperbarui image hanya jika ada perubahan
-      if (finalImageUrl !== currentProject.image) {
-        updateData.image = finalImageUrl || "default";
-      }
-
-      if (Object.keys(updateData).length === 0) {
-        throw new Error("No valid fields to update or no changes detected.");
-      }
-
-      console.log(updateData);
-
-      return tx.techStack.update({
-        where: {
-          id: currentProject.id,
-        },
-        data: updateData,
-        select: {
-          id: true,
-          name: true,
-          description: true,
-          image: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      });
+    const updatedTechStacksResult = await prisma.techStack.update({
+      where: {
+        id: currentProject.id,
+      },
+      data: {
+        ...parsed.data,
+        image: finalImageUrl as string,
+      },
     });
 
-    return NextResponse.json(
-      {
-        message: "TechStack updated successfully.",
-        success: true,
-        data: updatedTechStacksResult,
-      },
-      { status: 200 }
+    return apiResponse(
+      true,
+      updatedTechStacksResult,
+      "TechStack updated successfully.",
+      200
     );
   } catch (error) {
-    console.error("Failed update techstack:", error);
-    return NextResponse.json(
-      {
-        message: `Failed update techstack : ${error}`,
-      },
-      { status: 500 }
-    );
+    return handleError(error, "Failed update techstack");
   }
 }
+

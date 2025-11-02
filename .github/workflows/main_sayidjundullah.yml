@@ -12,6 +12,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env: 
+      CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
+      CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+      CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      
     permissions:
       contents: read #This is required for actions/checkout
 
@@ -52,4 +58,5 @@ jobs:
           app-name: 'sayidjundullah'
           slot-name: 'Production'
           package: .
+
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7E2F4F1069E444AD969A2E5D6DDFC2B9 }}

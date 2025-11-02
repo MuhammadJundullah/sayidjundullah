@@ -4,7 +4,7 @@ import { NextResponse, NextRequest } from "next/server";
 export async function GET() {
   try {
     const experiences = await prisma.experiences.findMany({
-      orderBy: { id: "asc" },
+      orderBy: { id: "desc" },
       select: {
         id: true,
         company_name: true,

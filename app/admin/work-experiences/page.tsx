@@ -1,320 +1,285 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import Loading from "@/app/_components/Loading";
+import { SquarePen, Trash2, Briefcase } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import Header from "../_components/Header";
+import { Toast } from "@/app/login/_components/Toast";
+
+interface WorkExperience {
+  experience_id: number;
+  company_name: string;
+  position: string;
+  duration: string;
+  type: string;
+  created_at: string;
+  updated_at: string;
+}
 
 const ManageWorkExperiences = () => {
+  const { toast, showToast } = useToast();
+  const [experiences, setExperiences] = useState<WorkExperience[]>([]);
+  const [filteredExperiences, setFilteredExperiences] = useState<
+    WorkExperience[]
+  >([]);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const [isRevalidating, setRevalidating] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Handle search shortcut
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // Fetch work experiences
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/work-experiences");
+        if (!response.ok) throw new Error("Gagal memuat data work experiences");
+        const result = await response.json();
+
+        if (result.success) {
+          setExperiences(result.data);
+          setFilteredExperiences(result.data);
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Terjadi kesalahan");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Search logic
+  const handleSearch = useCallback(
+    (keyword: string) => {
+      const filtered = experiences.filter(
+        (exp) =>
+          exp.company_name.toLowerCase().includes(keyword.toLowerCase()) ||
+          exp.position.toLowerCase().includes(keyword.toLowerCase())
+      );
+      setFilteredExperiences(filtered);
+    },
+    [experiences]
+  );
+
+  // Debounce search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      handleSearch(searchKeyword);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchKeyword, handleSearch]);
+
+  // Refresh data
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/work-experiences");
+      const result = await response.json();
+
+      if (result.success) {
+        setExperiences(result.data);
+        setFilteredExperiences(result.data);
+      }
+    } catch (error) {
+      console.error("Refresh error:", error);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  };
+
+  // Delete work experience
+  const handleDelete = async (experienceId: number) => {
+    if (
+      !confirm(
+        "Yakin ingin menghapus work experience ini beserta semua jobdesk-nya?"
+      )
+    )
+      return;
+
+    try {
+      const response = await fetch(
+        `/api/work-experiences?experience_id=${experienceId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.success) {
+        handleRefresh();
+      } else {
+        alert(result.message || "Gagal menghapus work experience");
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Terjadi kesalahan saat menghapus");
+    }
+  };
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen w-full">
+        <div className="text-red-500 text-center p-4">
+          <p>{error}</p>
+          <Button
+            variant="outline"
+            className="mt-4"
+            onClick={() => window.location.reload()}>
+            Coba Lagi
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  const handleRevalidate = async () => {
+    try {
+      setRevalidating(true);
+      const res = await fetch("/api/revalidate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_REVALIDATE_SECRET}`,
+        },
+        body: JSON.stringify({
+          paths: ["/"],
+          tags: ["work-experiences"],
+        }),
+      });
+      setRevalidating(false);
+
+      const data = await res.json();
+      if (data.success) {
+        showToast("Static Project Data has been revalidating!", "success");
+      }
+    } catch (err) {
+      alert("Failed to revalidate " + err);
+    }
+  };
+
   return (
-    <div className="flex items-center justify-center min-h-screen w-screen">
-      <span className="dark:text-white">
-        Manage Work Experiences Page On Development.
-      </span>
+    <div className="mx-auto sm:px-4 max-w-6xl h-screen">
+      <Header
+        dynamicText="Work Experiences"
+        searchKeyword={searchKeyword}
+        ref={searchInputRef}
+        setSearchKeyword={setSearchKeyword}
+        isRevalidating={isRevalidating}
+        isRefreshing={isRefreshing}
+        handleRevalidate={handleRevalidate}
+        newLink="/admin/work-experiences/add"
+      />
+
+       {isLoading ? (
+        <div className="text-center py-20 my-20">
+          <div className="text-center py-10">
+            <div className="flex items-center justify-center ">
+              <Loading />
+            </div>
+          </div>
+        </div>
+        ) : filteredExperiences.length === 0 ? (
+        <div className="text-center py-20">
+          <Briefcase className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+          <p className="text-gray-500">
+            {searchKeyword
+              ? "Tidak ada work experience yang cocok."
+              : "Belum ada work experience. Tambahkan yang pertama!"}
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+          {filteredExperiences.map((exp) => (
+            <Card key={exp.experience_id} className="h-full flex flex-col">
+              <CardHeader>
+                <CardTitle className="line-clamp-2">{exp.position}</CardTitle>
+                <CardDescription className="line-clamp-1">
+                  {exp.company_name}
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent className="flex-grow">
+                <div className="space-y-3">
+                  <div className="text-sm">
+                    <p className="text-gray-500">Duration:</p>
+                    <p className="font-medium">{exp.duration}</p>
+                  </div>
+
+                  <div className="text-sm">
+                    <p className="text-gray-500">Type:</p>
+                    <p className="font-medium">{exp.type}</p>
+                  </div>
+
+                  <div className="text-sm">
+                    <p className="text-gray-500">Terakhir diperbarui:</p>
+                    <p>
+                      {new Date(exp.updated_at).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+
+              <CardFooter className="flex justify-end gap-2">
+                <Button
+                  variant="ghost"
+                  className="flex items-center gap-2 hover:cursor-pointer text-red-500 hover:text-red-700 hover:bg-red-50"
+                  onClick={() => handleDelete(exp.experience_id)}>
+                  <Trash2 size={16} />
+                  Hapus
+                </Button>
+
+                <Link
+                  href={`/admin/work-experiences/edit?id=${exp.experience_id}`}>
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2 hover:cursor-pointer border-gray-300">
+                    <SquarePen size={16} />
+                    Edit
+                  </Button>
+                </Link>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      )}
+      {toast && <Toast message={toast.message} type={toast.type} />}
     </div>
   );
 };
 
 export default ManageWorkExperiences;
-
-// "use client";
-
-// import React, { useEffect, useState, useCallback, useRef } from "react";
-// import Link from "next/link";
-// import { Button } from "@/components/ui/button";
-// import Loading from "@/app/_components/Loading";
-// import StatusDropdown from "../_components/StatusDropdown";
-// import {
-//   SquarePen,
-//   Delete,
-//   Search,
-//   FilePlus,
-//   RefreshCwIcon,
-// } from "lucide-react";
-
-// import { Input } from "@/components/ui/input";
-// import {
-//   Card,
-//   CardContent,
-//   CardDescription,
-//   CardHeader,
-//   CardTitle,
-//   CardFooter,
-// } from "@/components/ui/card";
-
-// interface Project {
-//   id: string;
-//   judul: string;
-//   slug: string;
-//   category: string;
-//   categoryslug: string;
-//   url: string;
-//   photo: string;
-//   tech: string;
-//   site: string;
-//   desc: string;
-//   updated_at: string;
-//   status: "published" | "archived";
-// }
-
-// const ManageProjects = () => {
-//   const [projects, setProjects] = useState<Project[]>([]);
-//   const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
-//   const [searchKeyword, setSearchKeyword] = useState("");
-//   const [isLoading, setIsLoading] = useState(true);
-//   const [error, setError] = useState<string | null>(null);
-//   const searchInputRef = useRef<HTMLInputElement>(null);
-//   const [isRefreshing, setIsRefreshing] = useState(false);
-
-//   // handle search shortcut
-//   useEffect(() => {
-//     const handleKeyDown = (e: KeyboardEvent) => {
-//       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-//         e.preventDefault();
-//         searchInputRef.current?.focus();
-//       }
-//     };
-
-//     window.addEventListener("keydown", handleKeyDown);
-//     return () => window.removeEventListener("keydown", handleKeyDown);
-//   }, []);
-
-//   // handle fetch data projects with client side rendering
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const response = await fetch("/api/projects");
-//         if (!response.ok) throw new Error("Gagal memuat data proyek");
-//         const data = await response.json();
-//         setProjects(data);
-//         setFilteredProjects(data);
-//       } catch (err) {
-//         setError(err instanceof Error ? err.message : "Terjadi kesalahan");
-//       } finally {
-//         setIsLoading(false);
-//       }
-//     };
-
-//     fetchData();
-//   }, []);
-
-//   // logic search
-//   const handleSearch = useCallback(
-//     (keyword: string) => {
-//       const filtered = projects.filter((project) =>
-//         project.judul.toLowerCase().includes(keyword.toLowerCase())
-//       );
-//       setFilteredProjects(filtered);
-//     },
-//     [projects]
-//   );
-
-//   // time to reload data after typing in search
-//   useEffect(() => {
-//     const timer = setTimeout(() => {
-//       handleSearch(searchKeyword);
-//     }, 100);
-
-//     return () => clearTimeout(timer);
-//   }, [searchKeyword, handleSearch]);
-
-//   // for refresh data without reload page
-//   const handleRefresh = async () => {
-//     setIsRefreshing(true);
-//     setIsLoading(true);
-//     const response = await fetch("/api/projects");
-//     const data = await response.json();
-//     setProjects(data);
-//     setIsLoading(false);
-//     setIsRefreshing(false);
-//   };
-
-//   // handle delete project
-//   const handleDelete = async (slug: string) => {
-//     if (!confirm("Yakin ingin menghapus project ini?")) return;
-
-//     try {
-//       const response = await fetch(`/api/projects?slug=${slug}`, {
-//         method: "DELETE",
-//       });
-
-//       if (response.ok) {
-//         handleRefresh();
-//       }
-//     } catch (error) {
-//       console.error("Delete error:", error);
-//     }
-//   };
-
-//   // handle update status only
-//   const handleStatusUpdate = async (
-//     projectId: string,
-//     newStatus: "published" | "archived"
-//   ) => {
-//     try {
-//       const response = await fetch(`/api/projects?statuschange=${projectId}`, {
-//         method: "PATCH",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({ status: newStatus }),
-//       });
-
-//       if (!response.ok) {
-//         throw new Error("Gagal memperbarui status");
-//       }
-
-//       setProjects((prevProjects) =>
-//         prevProjects.map((project) =>
-//           project.id === projectId ? { ...project, status: newStatus } : project
-//         )
-//       );
-//     } catch (err) {
-//       setError(err instanceof Error ? err.message : "Gagal memperbarui status");
-//     }
-//   };
-
-//   // show loading before data loaded
-//   if (isLoading) {
-//     return (
-//       <div className="flex items-center justify-center h-screen w-7xl">
-//         <Loading />
-//       </div>
-//     );
-//   }
-
-//   if (error) {
-//     return (
-//       <div className="flex items-center justify-center h-screen w-7xl absolute">
-//         <div className="text-red-500 text-center p-4">
-//           <p>{error}</p>
-//           <Button
-//             variant="outline"
-//             className="mt-4"
-//             onClick={() => window.location.reload()}>
-//             Coba Lagi
-//           </Button>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="mx-auto sm:px-4 max-w-6xl">
-//       <div className="sm:my-10">
-//         <h1 className="text-3xl font-bold">Manage Projects</h1>
-//         <p className="text-gray-500 font-medium">
-//           Kelola proyek kamu dengan rapi dan profesional dengan mengarsipkan
-//           proyek yang tidak relevan.
-//         </p>
-//       </div>
-
-//       <div className="sm:flex gap-3 items-center mb-10">
-//         <div className="flex items-center gap-2 my-10 sm:my-0">
-//           <Search className="text-gray-400" />
-//           <Input
-//             type="text"
-//             ref={searchInputRef}
-//             placeholder="⌘ + K / Ctrl + K to Search"
-//             className="min-w-3xs border-gray-200 placeholder:text-gray-400"
-//             aria-label="search"
-//             value={searchKeyword}
-//             onChange={(e) => setSearchKeyword(e.target.value)}
-//           />
-//         </div>
-
-//         <div className="border-b border-gray-300 lg:w-7xl sm:block md:block lg:block hidden" />
-
-//         <div className="flex items-center gap-4 p-2 bg-white rounded-lg shadow-sm justify-around">
-//           {/* New Project Button */}
-//           <Link
-//             href="/admin/projects/add"
-//             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors rounded-md hover:bg-gray-100 hover:text-gray-900 hover:cursor-pointer">
-//             <FilePlus />
-//             <span className="w-19">New Project</span>
-//           </Link>
-
-//           {/* Refresh Button */}
-//           <button
-//             onClick={handleRefresh}
-//             disabled={isRefreshing}
-//             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors rounded-md hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed hover:cursor-pointer">
-//             <RefreshCwIcon
-//               className={`w-5 h-5 ${isRefreshing ? "animate-spin" : ""}`}
-//             />
-//             <span>{isRefreshing ? "Refreshing..." : "Refresh"}</span>
-//           </button>
-//         </div>
-//       </div>
-
-//       {filteredProjects.length === 0 ? (
-//         <div className="text-center py-20 ">
-//           <p className="text-gray-500">
-//             {searchKeyword
-//               ? "Tidak ada proyek yang cocok."
-//               : "Tidak ada proyek ditemukan"}
-//           </p>
-//         </div>
-//       ) : (
-//         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-//           {filteredProjects.map((project) => (
-//             <Card key={project.id} className="h-full flex flex-col">
-//               <CardHeader>
-//                 <CardTitle className="">{project.judul}</CardTitle>
-//                 <CardDescription className="">
-//                   {project.category}
-//                 </CardDescription>
-//               </CardHeader>
-
-//               <CardContent className="flex-grow">
-//                 <div className="space-y-4">
-//                   <div className="flex items-center justify-start gap-3 pb-5">
-//                     <span className="text-sm text-gray-500">Status:</span>
-//                     <StatusDropdown
-//                       currentStatus={project.status}
-//                       onStatusChange={(newStatus) =>
-//                         handleStatusUpdate(project.id, newStatus)
-//                       }
-//                     />
-//                   </div>
-
-//                   <div className="text-sm">
-//                     <p className="text-gray-500">Terakhir diperbarui:</p>
-//                     <p>
-//                       {new Date(project.updated_at).toLocaleDateString(
-//                         "id-ID",
-//                         {
-//                           day: "numeric",
-//                           month: "long",
-//                           year: "numeric",
-//                         }
-//                       )}
-//                     </p>
-//                   </div>
-//                 </div>
-//               </CardContent>
-
-//               <CardFooter className="flex justify-end gap-2">
-//                 <Button
-//                   variant="ghost2"
-//                   className="flex items-center gap-2 hover:cursor-pointer text-red-500"
-//                   onClick={() => handleDelete(project.slug)}>
-//                   <Delete size={16} />
-//                   Hapus
-//                 </Button>
-
-//                 <Link href={`/admin/projects/edit/${project.slug}`}>
-//                   <Button
-//                     variant="outline"
-//                     className="flex items-center gap-2 hover:cursor-pointer border-gray-300">
-//                     <SquarePen size={16} />
-//                     Edit
-//                   </Button>
-//                 </Link>
-//               </CardFooter>
-//             </Card>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default ManageProjects;

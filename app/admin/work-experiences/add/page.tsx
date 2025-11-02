@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Toast } from "@/app/login/_components/Toast";
 import Loading from "@/app/_components/Loading";
@@ -12,89 +12,12 @@ import SubmitButton from "@/app/admin/_components/SubmitButton";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
 
-interface Jobdesk {
-  description: string;
-}
-
-interface WorkExperienceData {
-  experience_id: number;
-  company_name: string;
-  position: string;
-  duration: string;
-  type: string;
-  jobdesks: Jobdesk[];
-}
-
-export default function EditWorkExperience() {
+export default function AddWorkExperience() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const experienceId = searchParams.get("id");
-
   const { toast, showToast } = useToast();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const submitRef = useRef<HTMLButtonElement>(null);
 
-  const [experience, setExperience] = useState({
-    company_name: "",
-    position: "",
-    duration: "",
-    type: "",
-  });
-
-  const [jobdesks, setJobdesks] = useState<string[]>([""]);
-
-  // Fetch data work experience
-  useEffect(() => {
-    const fetchExperience = async () => {
-      if (!experienceId) {
-        showToast("ID work experience tidak ditemukan", "error");
-        router.push("/admin/work-experiences");
-        return;
-      }
-
-      // Hanya fetch data jika experience belum ada
-      if (experience.company_name) return;
-
-      try {
-        const response = await fetch("/api/work-experiences");
-        const result = await response.json();
-
-        if (result.success) {
-          const found = result.data.find(
-            (exp: WorkExperienceData) =>
-              exp.experience_id === parseInt(experienceId)
-          );
-
-          if (found) {
-            setExperience({
-              company_name: found.company_name,
-              position: found.position,
-              duration: found.duration,
-              type: found.type,
-            });
-            setJobdesks(
-              found.jobdesks.length > 0
-                ? found.jobdesks.map((jd: any) => jd.description)
-                : [""]
-            );
-          } else {
-            showToast("Work experience tidak ditemukan", "error");
-            router.push("/admin/work-experiences");
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching experience:", error);
-        showToast("Gagal memuat data work experience", "error");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchExperience();
-  }, [experienceId, router, showToast, experience.company_name]);
-
-  // Keyboard shortcut
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
@@ -106,6 +29,15 @@ export default function EditWorkExperience() {
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  const [experience, setExperience] = useState({
+    company_name: "",
+    position: "",
+    duration: "",
+    type: "",
+  });
+
+  const [jobdesks, setJobdesks] = useState<string[]>([""]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -142,16 +74,15 @@ export default function EditWorkExperience() {
     }
 
     if (
-      !window.confirm("Apakah Anda yakin ingin memperbarui work experience?")
+      !window.confirm("Apakah Anda yakin ingin menambahkan work experience?")
     ) {
       return;
     }
 
     try {
-      setIsSaving(true);
+      setIsLoading(true);
 
       const payload = {
-        experience_id: parseInt(experienceId!),
         company_name: experience.company_name,
         position: experience.position,
         duration: experience.duration,
@@ -160,7 +91,7 @@ export default function EditWorkExperience() {
       };
 
       const response = await fetch("/api/work-experiences", {
-        method: "PUT",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -170,21 +101,21 @@ export default function EditWorkExperience() {
       const result = await response.json();
 
       if (!result.success) {
-        throw new Error(result.message || "Gagal memperbarui work experience");
+        throw new Error(result.message || "Gagal menambahkan work experience");
       }
 
-      showToast("Work experience berhasil diperbarui!", "success");
+      showToast("Work experience berhasil ditambahkan!", "success");
 
       // Redirect setelah 1.5 detik
       setTimeout(() => {
         router.push("/admin/work-experiences");
       }, 1500);
     } catch (error) {
-      setIsSaving(false);
+      setIsLoading(false);
       showToast(
         error instanceof Error
           ? error.message
-          : "Gagal memperbarui work experience",
+          : "Gagal menambahkan work experience",
         "error"
       );
     }
@@ -198,21 +129,13 @@ export default function EditWorkExperience() {
     { value: "Internship", label: "Internship" },
   ];
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen w-full">
-        <Loading />
-      </div>
-    );
-  }
-
   return (
     <div className="sm:mx-auto sm:w-6xl flex flex-col justify-center text-black">
       <div>
         <BackButton href="/admin/work-experiences" />
       </div>
 
-      {isSaving ? (
+      {isLoading ? (
         <div className="flex items-center justify-center h-screen w-full">
           <Loading />
         </div>
@@ -313,7 +236,7 @@ export default function EditWorkExperience() {
 
           <SubmitButton
             ref={submitRef}
-            label="Update Work Experience"
+            label="Tambah Work Experience"
             onClick={handleSubmit}
           />
         </form>

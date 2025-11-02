@@ -62,51 +62,6 @@ export default async function Page({
               <h1 className="text-3xl lg:text-5xl font-bold text-gray-900 dark:text-white">
                 {item.judul}
               </h1>
-
-              {/* App Store Buttons */}
-              {item.site && item.site !== "#" && (
-                <div className="flex flex-wrap gap-4 mt-6">
-                  {isPlayStore && (
-                    <a
-                      href={item.site}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-all duration-200 hover:shadow-lg">
-                      <FaGooglePlay className="w-5 h-5" />
-                      <div className="text-left">
-                        <div className="text-xs">GET IT ON</div>
-                        <div className="font-bold">Google Play</div>
-                      </div>
-                    </a>
-                  )}
-                  {isAppStore && (
-                    <a
-                      href={item.site}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 px-6 py-3 bg-black hover:bg-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-xl transition-all duration-200 hover:shadow-lg">
-                      <FaAppStore className="w-5 h-5" />
-                      <div className="text-left">
-                        <div className="text-xs">Download on the</div>
-                        <div className="font-bold">App Store</div>
-                      </div>
-                    </a>
-                  )}
-                  {!isPlayStore &&
-                    !isAppStore &&
-                    item.site &&
-                    item.site !== "#" && (
-                      <a
-                        href={item.site}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-colors duration-200">
-                        <FaMobile className="w-4 h-4" />
-                        Live Demo
-                      </a>
-                    )}
-                </div>
-              )}
             </div>
 
             {/* App Screenshot */}

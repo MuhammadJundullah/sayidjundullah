@@ -31,15 +31,11 @@ jobs:
       - name: Build Next.js app
         run: npm run build
 
-      - name: Generate Prisma client (for safety)
-        run: npx prisma generate
-
       - name: Prepare deployment folder
         run: |
           mkdir deploy
           cp -r .next deploy/
           cp -r public deploy/
-          cp -r node_modules deploy/
           cp package.json deploy/
           cp package-lock.json deploy/
 

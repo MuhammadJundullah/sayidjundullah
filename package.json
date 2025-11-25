@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "npx prisma generate && next build && npx prisma migrate deploy",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "npx prisma generate"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { fetchDataFromAPI } from "@/lib/actions";
 import Image from "next/image";
 import { FaArrowLeft, FaExternalLinkAlt, FaGithub } from "react-icons/fa";
+import { FaSquareUpwork } from "react-icons/fa6";
 import { ProjectsType } from "@/lib/type";
 import { notFound } from "next/navigation";
 
@@ -150,6 +151,17 @@ export default async function Page({
                         Not Available
                       </span>
                     )}
+                  </div>
+                   <div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Let’s build your next website together! </p>
+                      <a
+                        href="https://www.upwork.com/freelancers/~018c1b59238a7ea8f7"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                        <FaSquareUpwork className="w-4 h-4" />
+                        <span className="truncate">Hire me on Upwork.</span>
+                      </a>
                   </div>
                 </div>
               </div>

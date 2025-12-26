@@ -15,6 +15,9 @@ const fontMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Sayid's Portofolio",
+  verification : {
+    google: "7feoSet_bBh3tPsyrc3rt6_PfSU1keiHDQiqheFNHso",
+  }
 };
 
 export default function RootLayout({

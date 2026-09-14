@@ -170,10 +170,10 @@ export default function AddCertificate() {
             />
 
             <TextInput
-              id="desc"
+              id="site"
               label="Site (misalnya url verifikasi sertifikat, boleh link drive. dsb)"
               type="text"
-              name="desc"
+              name="site"
               value={certificate.site}
               onChange={handleChange}
               placeholder="http://example.com/certificate.pdf"

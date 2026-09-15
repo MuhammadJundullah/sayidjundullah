@@ -55,7 +55,7 @@ export default function CertificatesComponent({ data }: CertificatesProps) {
                 const finalDirection = "vertical";
                 const finalDistance = animationDistance;
 
-                const imageUrl = `https://res.cloudinary.com/dislphwb0/image/upload/v1747003789/${certificate.name}`;
+                const imageUrl = `${certificate.photo}`;
 
                 return (
                   <div

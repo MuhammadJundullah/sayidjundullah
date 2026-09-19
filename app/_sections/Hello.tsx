@@ -28,7 +28,7 @@ const Hello = (data: dataType) => {
         <HeaderScroll />
         <div className="h-full text-center items-center flex flex-col justify-evenly sm:w-6xl sm:pt-30 pt-20 sm:mt-10">
           <Image
-            src="/static-image/ahmad.png"
+            src="/static-image/IMG_3515.jpeg"
             alt="Sayid Muhammad Jundullah"
             width={200}
             height={200}
